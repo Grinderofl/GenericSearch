@@ -1,0 +1,11 @@
+﻿@model Grinderofl.GenericSearch.Searches.MultipleTextOptionSearch
+
+<div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="form-group">
+        <p class="h6">@Html.GetModelDisplayName()</p>
+        <label class="col-form-label col-form-label-sm"></label>
+        <select multiple="multiple" asp-for="Is" asp-items="@Html.GetModelSelectList()" class="form-control form-control-sm">
+            <option value=""></option>
+        </select>
+    </div>
+</div>
