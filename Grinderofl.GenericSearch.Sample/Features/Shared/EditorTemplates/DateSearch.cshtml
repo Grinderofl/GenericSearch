@@ -1,0 +1,29 @@
+﻿@using Grinderofl.GenericSearch.Searches
+@model Grinderofl.GenericSearch.Searches.DateSearch
+
+<div class="col-sm-12 col-md-6 col-lg-4">
+    <div class="form-group">
+        <p class="h6">@Html.GetModelDisplayName()</p>
+
+        <label asp-for="Is"
+               class="col-form-label col-form-label-sm">Comparer</label>
+
+        <select asp-for="Is"
+                asp-items="@Html.GetEnumSelectList<DateSearch.Comparer>()"
+                class="form-control form-control-sm"></select>
+
+        <label asp-for="Term1"
+               class="col-form-label col-form-label-sm"></label>
+
+        <input type="text"
+               asp-for="Term1"
+               class="form-control form-control-sm" />
+
+        <label asp-for="Term2"
+               class="col-form-label col-form-label-sm"></label>
+
+        <input type="text"
+               asp-for="Term2"
+               class="form-control form-control-sm" />
+    </div>
+</div>
