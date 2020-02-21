@@ -7,7 +7,7 @@ trigger:
 jobs:
 - job: Build
   pool:
-	vmImage: 'windows-latest'
+    vmImage: 'windows-latest'
   variables:
     cake.buildTarget: 'CI'
     build.configuration: 'Release'
@@ -15,14 +15,11 @@ jobs:
   steps:
   - checkout: self
     clean: true
-
   - powershell: ./build.ps1 -Target "$(cake.buildTarget)" -Configuration "$(build.configuration)" -Verbosity "$(cake.verbosity)"
     displayName: 'Cake Build'
-
   - powershell: Write-Host '##vso[build.addbuildtag]PR'
     displayName: 'Mark as PR Build'
     condition: and(succeeded(), in(variables['Build.Reason'], 'PullRequest'))
-
   - powershell: Write-Host '##vso[build.addbuildtag]Release'
     displayName: 'Mark as Release Build'
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
