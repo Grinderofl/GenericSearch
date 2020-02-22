@@ -8,6 +8,7 @@ namespace Grinderofl.GenericSearch.Configuration
     public abstract class SearchConfigurationBase : ISearchConfiguration
     {
         internal List<ISearchExpression> SearchExpressions;
+        internal List<ISearchExpression> CustomSearchExpressions;
         internal List<ITransferExpression> TransferExpressions;
         internal ISortExpression SortExpression;
         internal IPageExpression PageExpression;
@@ -22,6 +23,7 @@ namespace Grinderofl.GenericSearch.Configuration
         Type ISearchConfiguration.ResultType => ResultType;
 
         IEnumerable<ISearchExpression> ISearchConfiguration.SearchExpressions => SearchExpressions;
+        IEnumerable<ISearchExpression> ISearchConfiguration.CustomSearchExpressions => CustomSearchExpressions;
         IEnumerable<ITransferExpression> ISearchConfiguration.TransferExpressions => TransferExpressions;
         ISortExpression ISearchConfiguration.SortExpression => SortExpression;
         IPageExpression ISearchConfiguration.PageExpression => PageExpression;
