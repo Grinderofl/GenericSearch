@@ -43,7 +43,7 @@ namespace Grinderofl.GenericSearch.Configuration
         private void InitialiseConfiguration()
         {
             SearchExpressions = InitialiseSearchExpressions();
-            CustomSearchExpressions = InitialiseCustomSearchExpressions
+            CustomSearchExpressions = InitialiseCustomSearchExpressions();
             TransferExpressions = InitialiseTransferExpressions();
             SortExpression = InitialiseSortExpression();
             PageExpression = InitialisePageExpression();
