@@ -4,6 +4,12 @@ assembly-informational-format: '{MajorMinorPatch}+{BranchName}+{CommitDate}'
 mode: Mainline
 continuous-delivery-fallback-tag: 
 branches:
+  alpha:
+	mode: ContinuousDeployment
+	tag: alpha
+  beta:
+    mode: ContinuousDeployment
+	tag: beta
   release:
     mode: ContinuousDelivery
     tag: ''
