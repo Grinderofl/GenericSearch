@@ -18,7 +18,7 @@ namespace Grinderofl.GenericSearch.ModelBinding
         {
             configuration ??= configurationProvider.ForRequestAndResultType(request.GetType(), result.GetType());
 
-            BindSearchProperties(request, result, configuration.SearchExpressions);
+            BindSearchProperties(request, result, configuration.SearchExpressions.Union(configuration.CustomSearchExpressions));
             BindPagingProperties(request, result, configuration.PageExpression);
             BindSortProperties(request, result, configuration.SortExpression);
             BindOtherProperties(request, result, configuration.TransferExpressions);
