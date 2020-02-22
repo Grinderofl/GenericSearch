@@ -5,11 +5,11 @@ mode: Mainline
 continuous-delivery-fallback-tag: 
 branches:
   alpha:
-	mode: ContinuousDeployment
-	tag: alpha
+    mode: ContinuousDeployment
+    tag: alpha
   beta:
     mode: ContinuousDeployment
-	tag: beta
+    tag: beta
   release:
     mode: ContinuousDelivery
     tag: ''
