@@ -5,11 +5,15 @@ mode: Mainline
 continuous-delivery-fallback-tag: 
 branches:
   alpha:
+    regex: ^alpha?[/-]
     mode: ContinuousDeployment
     tag: alpha
+    source-branches: ['master']
   beta:
+    regex: ^beta?[/-]
     mode: ContinuousDeployment
     tag: beta
+    source-branches: ['master']
   release:
     mode: ContinuousDelivery
     tag: ''
