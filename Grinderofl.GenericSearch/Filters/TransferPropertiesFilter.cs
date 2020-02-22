@@ -8,17 +8,20 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grinderofl.GenericSearch.ModelBinding;
 
 namespace Grinderofl.GenericSearch.Filters
 {
     public class TransferPropertiesFilter : IAsyncActionFilter, IAsyncPageFilter, IOrderedFilter
     {
         private readonly ISearchConfigurationProvider configurationProvider;
+        private readonly IResultBinder resultBinder;
         private readonly GenericSearchOptions options;
 
-        public TransferPropertiesFilter(ISearchConfigurationProvider configurationProvider, IOptions<GenericSearchOptions> options)
+        public TransferPropertiesFilter(ISearchConfigurationProvider configurationProvider, IOptions<GenericSearchOptions> options, IResultBinder resultBinder)
         {
             this.configurationProvider = configurationProvider;
+            this.resultBinder = resultBinder;
             this.options = options.Value;
         }
 
@@ -33,16 +36,20 @@ namespace Grinderofl.GenericSearch.Filters
             }
 
             var parameters = context.ActionDescriptor.Parameters;
-            var configuration = configurationProvider.ForRequestParametersAndResultType(context.ActionDescriptor.Parameters, model.GetType());
-            if (!ShouldTransferProperties(configuration))
+            var parameterDescriptor = parameters.FirstOrDefault(x => configurationProvider.HasRequestType(x.ParameterType));
+            if (parameterDescriptor == null)
             {
                 return;
             }
 
-            var parameterDescriptor = parameters.First(x => x.ParameterType == configuration.RequestType);
-            var request = context.ActionArguments[parameterDescriptor.Name];
+            var configuration = configurationProvider.ForRequestAndResultType(parameterDescriptor.ParameterType, model.GetType());
+            if (!ShouldBindProperties(configuration))
+            {
+                return;
+            }
 
-            TransferProperties(request, model, configuration);
+            var request = context.ActionArguments[parameterDescriptor.Name];
+            resultBinder.BindResult(request, model, configuration);
         }
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
@@ -56,16 +63,20 @@ namespace Grinderofl.GenericSearch.Filters
             }
 
             var parameters = context.ActionDescriptor.Parameters;
-            var configuration = configurationProvider.ForRequestParametersAndResultType(context.ActionDescriptor.Parameters, model.GetType());
-            if (!ShouldTransferProperties(configuration))
+            var parameterDescriptor = parameters.FirstOrDefault(x => configurationProvider.HasRequestType(x.ParameterType));
+            if (parameterDescriptor == null)
             {
                 return;
             }
 
-            var parameterDescriptor = parameters.First(x => x.ParameterType == configuration.RequestType);
-            var request = context.HandlerArguments[parameterDescriptor.Name];
+            var configuration = configurationProvider.ForRequestAndResultType(parameterDescriptor.ParameterType, model.GetType());
+            if (!ShouldBindProperties(configuration))
+            {
+                return;
+            }
 
-            TransferProperties(request, model, configuration);
+            var request = context.HandlerArguments[parameterDescriptor.Name];
+            resultBinder.BindResult(request, result, configuration);
         }
 
         private static object GetModel(IActionResult actionResult)
@@ -81,7 +92,7 @@ namespace Grinderofl.GenericSearch.Filters
             };
         }
 
-        private bool ShouldTransferProperties(ISearchConfiguration configuration)
+        private bool ShouldBindProperties(ISearchConfiguration configuration)
         {
             if (options.TransferRequestProperties)
             {
@@ -89,61 +100,6 @@ namespace Grinderofl.GenericSearch.Filters
             }
 
             return configuration.TransferBehaviour == ProfileBehaviour.Enabled;
-        }
-
-        private void TransferProperties(object query, object model, ISearchConfiguration configuration)
-        {
-            TransferSearchProperties(query, model, configuration.SearchExpressions);
-            //TransferSearchProperties(query, model, configuration.CustomSearchExpressions);
-            TransferPagingProperties(query, model, configuration.PageExpression);
-            TransferSortProperties(query, model, configuration.SortExpression);
-            TransferOtherProperties(query, model, configuration.TransferExpressions);
-        }
-
-        protected virtual void TransferSearchProperties(object query, object model, IEnumerable<ISearchExpression> searchExpressions)
-        {
-            foreach (var searchExpression in searchExpressions)
-            {
-                var queryPropertyValue = searchExpression.RequestProperty.GetValue(query);
-                searchExpression.ResultProperty.SetValue(model, queryPropertyValue);
-            }
-        }
-
-        protected virtual void TransferPagingProperties(object query, object model, IPageExpression pageExpression)
-        {
-            if (pageExpression == null || pageExpression == NullPageExpression.Instance)
-            {
-                return;
-            }
-
-            var queryPageValue = pageExpression.RequestPageProperty.GetValue(query);
-            pageExpression.ResultPageProperty.SetValue(model, queryPageValue);
-
-            var queryRowsValue = pageExpression.RequestRowsProperty.GetValue(query);
-            pageExpression.ResultRowsProperty.SetValue(model, queryRowsValue);
-        }
-
-        protected virtual void TransferSortProperties(object query, object model, ISortExpression sortExpression)
-        {
-            if (sortExpression == null || sortExpression == NullSortExpression.Instance)
-            {
-                return;
-            }
-
-            var ordxValue = sortExpression.RequestSortByProperty.GetValue(query);
-            sortExpression.ResultSortByProperty.SetValue(model, ordxValue);
-
-            var orddValue = sortExpression.RequestSortDirectionProperty.GetValue(query);
-            sortExpression.ResultSortDirectionProperty.SetValue(model, orddValue);
-        }
-
-        protected virtual void TransferOtherProperties(object query, object model, IEnumerable<ITransferExpression> transferExpressions)
-        {
-            foreach (var transferExpression in transferExpressions)
-            {
-                var queryPropertyValue = transferExpression.RequestProperty.GetValue(query);
-                transferExpression.ResultProperty.SetValue(model, queryPropertyValue);
-            }
         }
 
         public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)

@@ -10,9 +10,9 @@ namespace Grinderofl.GenericSearch.Configuration
     public class SearchConfigurationProvider : ISearchConfigurationProvider
     {
         private readonly IEnumerable<ISearchConfiguration> configurations;
-        private readonly Dictionary<Type, ISearchConfiguration> entityTypeRegistry = new Dictionary<Type, ISearchConfiguration>();
-        private readonly Dictionary<Type, ISearchConfiguration> requestTypeRegistry = new Dictionary<Type, ISearchConfiguration>();
-        private readonly Dictionary<Type, ISearchConfiguration> resultTypeRegistry = new Dictionary<Type, ISearchConfiguration>();
+        private readonly Dictionary<Type, ISearchConfiguration> entityTypeLookupRegistry = new Dictionary<Type, ISearchConfiguration>();
+        private readonly Dictionary<Type, ISearchConfiguration> requestTypeLookupRegistry = new Dictionary<Type, ISearchConfiguration>();
+        private readonly Dictionary<Type, ISearchConfiguration> resultTypeLookupRegistry = new Dictionary<Type, ISearchConfiguration>();
 
         public SearchConfigurationProvider(IEnumerable<ISearchConfiguration> configurations, IOptions<GenericSearchOptions> options)
         {
@@ -31,41 +31,46 @@ namespace Grinderofl.GenericSearch.Configuration
         {
             foreach (var configuration in configurations)
             {
-                entityTypeRegistry.Add(configuration.EntityType, configuration);
-                requestTypeRegistry.Add(configuration.RequestType, configuration);
-                resultTypeRegistry.Add(configuration.ResultType, configuration);
+                entityTypeLookupRegistry.Add(configuration.EntityType, configuration);
+                requestTypeLookupRegistry.Add(configuration.RequestType, configuration);
+                resultTypeLookupRegistry.Add(configuration.ResultType, configuration);
             }
         }
 
         public virtual ISearchConfiguration ForEntityType(Type entityType)
         {
-            return entityTypeRegistry.TryGetValue(entityType, out var configuration)
+            return entityTypeLookupRegistry.TryGetValue(entityType, out var configuration)
                        ? configuration
                        : null;
         }
 
         public virtual ISearchConfiguration ForRequestType(Type requestType)
         {
-            return requestTypeRegistry.TryGetValue(requestType, out var configuration)
+            return requestTypeLookupRegistry.TryGetValue(requestType, out var configuration)
                        ? configuration
                        : null;
         }
 
         public virtual ISearchConfiguration ForResultType(Type resultType)
         {
-            return resultTypeRegistry.TryGetValue(resultType, out var configuration)
+            return resultTypeLookupRegistry.TryGetValue(resultType, out var configuration)
                        ? configuration
                        : null;
         }
 
         public virtual ISearchConfiguration ForEntityAndRequestType(Type entityType, Type requestType)
         {
-            if (requestTypeRegistry.TryGetValue(requestType, out var configuration) && configuration.EntityType == entityType)
+            if (requestTypeLookupRegistry.TryGetValue(requestType, out var configuration) && configuration.EntityType == entityType)
             {
                 return configuration;
             }
 
             return configurations.FirstOrDefault(x => x.EntityType == entityType && x.RequestType == requestType);
+        }
+
+        public ISearchConfiguration ForRequestAndResultType(Type requestType, Type resultType)
+        {
+            return configurations.FirstOrDefault(x => x.RequestType == requestType && x.ResultType == resultType);
         }
 
         public ISearchConfiguration ForRequestParametersAndResultType(IEnumerable<ParameterDescriptor> actionDescriptorParameters, Type resultType)
@@ -76,6 +81,21 @@ namespace Grinderofl.GenericSearch.Configuration
         public ISearchConfiguration ForRequestParametersType(IEnumerable<ParameterDescriptor> actionDescriptorParameters)
         {
             return configurations.FirstOrDefault(x => actionDescriptorParameters.Any(ad => ad.ParameterType == x.RequestType));
+        }
+
+        public bool HasEntityType(Type entityType)
+        {
+            return entityTypeLookupRegistry.ContainsKey(entityType);
+        }
+
+        public bool HasRequestType(Type requestType)
+        {
+            return requestTypeLookupRegistry.ContainsKey(requestType);
+        }
+
+        public bool HasResultType(Type resultType)
+        {
+            return resultTypeLookupRegistry.ContainsKey(resultType);
         }
     }
 }

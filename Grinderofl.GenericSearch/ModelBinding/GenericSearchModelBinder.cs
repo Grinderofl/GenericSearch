@@ -26,14 +26,14 @@ namespace Grinderofl.GenericSearch.ModelBinding
                 bindingContext.Model = Activator.CreateInstance(bindingContext.ModelType);
             }
 
-            SetDefaultSearchProperties(configuration.SearchExpressions, bindingContext.Model);
-            SetDefaultSortProperties(configuration.SortExpression, bindingContext.Model);
-            SetDefaultPageProperties(configuration.PageExpression, bindingContext.Model);
+            BindSearchProperties(configuration.SearchExpressions, bindingContext.Model);
+            BindSortProperties(configuration.SortExpression, bindingContext.Model);
+            BindPageProperties(configuration.PageExpression, bindingContext.Model);
 
             await fallbackModelBinder.BindModelAsync(bindingContext);
         }
 
-        private void SetDefaultSearchProperties(IEnumerable<ISearchExpression> searchExpressions, object model)
+        private void BindSearchProperties(IEnumerable<ISearchExpression> searchExpressions, object model)
         {
             foreach (var searchExpression in searchExpressions)
             {
@@ -41,7 +41,7 @@ namespace Grinderofl.GenericSearch.ModelBinding
             }
         }
 
-        private void SetDefaultSortProperties(ISortExpression sortExpression, object model)
+        private void BindSortProperties(ISortExpression sortExpression, object model)
         {
             if (sortExpression == null || sortExpression == NullSortExpression.Instance)
             {
@@ -56,7 +56,7 @@ namespace Grinderofl.GenericSearch.ModelBinding
             }
         }
 
-        private void SetDefaultPageProperties(IPageExpression pageExpression, object model)
+        private void BindPageProperties(IPageExpression pageExpression, object model)
         {
             if (pageExpression == null || pageExpression == NullPageExpression.Instance)
             {
