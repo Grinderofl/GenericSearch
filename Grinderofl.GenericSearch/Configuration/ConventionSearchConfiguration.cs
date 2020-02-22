@@ -27,8 +27,8 @@ namespace Grinderofl.GenericSearch.Configuration
         public Type ResultType => profile.ResultType;
 
         public IEnumerable<ISearchExpression> SearchExpressions { get; private set; }
-        
-        public IEnumerable<ISearchExpression> CustomSearchExpressions {get private set's}
+
+        public IEnumerable<ISearchExpression> CustomSearchExpressions { get; private set; }
 
         public IEnumerable<ITransferExpression> TransferExpressions { get; private set; }
 
@@ -68,7 +68,7 @@ namespace Grinderofl.GenericSearch.Configuration
                 return profile.CustomSearchExpressions;
             }
 
-            return IEnumerable.Empty<ISearchExpression>();
+            return Enumerable.Empty<ISearchExpression>();
         }
 
         private IEnumerable<ISearchExpression> CreateSearchExpressions()

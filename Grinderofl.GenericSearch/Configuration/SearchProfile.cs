@@ -127,9 +127,26 @@ namespace Grinderofl.GenericSearch.Configuration
         {
             var requestPropertyInfo = expression.GetPropertyInfo();
             var search = SearchFactory.Create(requestPropertyInfo);
-            return AddSearchProperty(null, search).WithRequestProperty(expression);
+            var searchExpression = new SearchExpression<TRequest, TResult>(requestPropertyInfo, search);
+            searchExpression.WithRequestProperty(expression);
+            CustomSearchExpressions.Add(searchExpression);
+            return searchExpression;
         }
 
+        /// <summary>
+        /// Adds a custom search over the provider <typeparamref name="TRequest"/> property.
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public ISearchExpression<TRequest, TResult> AddCustom(ISearch search, Expression<Func<TRequest, object>> expression)
+        {
+            var requestPropertyInfo = expression.GetPropertyInfo();
+            var searchExpression = new SearchExpression<TRequest, TResult>(requestPropertyInfo, search);
+            searchExpression.WithRequestProperty(expression);
+            CustomSearchExpressions.Add(searchExpression);
+            return searchExpression;
+        }
+        
         /// <summary>
         /// Adds generic sorting functionality.
         /// </summary>
