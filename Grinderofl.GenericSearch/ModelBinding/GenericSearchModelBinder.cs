@@ -4,6 +4,8 @@ using Grinderofl.GenericSearch.Configuration.Expressions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Grinderofl.GenericSearch.ModelBinding
@@ -48,9 +50,22 @@ namespace Grinderofl.GenericSearch.ModelBinding
                 return;
             }
 
-            sortExpression.RequestSortDirectionProperty.SetValue(model, sortExpression.DefaultSortDirection);
+            var defaultSortDirectionValueAttribute = sortExpression.RequestSortDirectionProperty.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultSortDirectionValueAttribute != null)
+            {
+                sortExpression.RequestSortDirectionProperty.SetValue(model, defaultSortDirectionValueAttribute.Value);
+            }
+            else
+            {
+                sortExpression.RequestSortDirectionProperty.SetValue(model, sortExpression.DefaultSortDirection);
+            }
 
-            if (sortExpression.DefaultSortBy != null)
+            var defaultSortByValueAttribute = sortExpression.RequestSortByProperty.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultSortByValueAttribute != null)
+            {
+                sortExpression.RequestSortByProperty.SetValue(model, defaultSortByValueAttribute.Value);
+            }
+            else if (sortExpression.DefaultSortBy != null)
             {
                 sortExpression.RequestSortByProperty.SetValue(model, sortExpression.DefaultSortBy.Name);
             }
@@ -63,12 +78,25 @@ namespace Grinderofl.GenericSearch.ModelBinding
                 return;
             }
 
-            if (pageExpression.DefaultRows > 0)
+            var defaultRowsValueAttribute = pageExpression.RequestRowsProperty.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultRowsValueAttribute != null)
+            {
+                pageExpression.RequestRowsProperty.SetValue(model, defaultRowsValueAttribute.Value);
+            }
+            else if (pageExpression.DefaultRows > 0)
             {
                 pageExpression.RequestRowsProperty.SetValue(model, pageExpression.DefaultRows);
             }
 
-            pageExpression.RequestPageProperty.SetValue(model, pageExpression.DefaultPage);
+            var defaultPageValueAttribute = pageExpression.RequestPageProperty.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultPageValueAttribute != null)
+            {
+                pageExpression.RequestPageProperty.SetValue(model, defaultPageValueAttribute.Value);
+            }
+            else
+            {
+                pageExpression.RequestPageProperty.SetValue(model, pageExpression.DefaultPage);
+            }
         }
     }
 
