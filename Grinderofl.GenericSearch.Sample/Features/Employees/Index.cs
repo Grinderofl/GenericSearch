@@ -40,7 +40,6 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
                 Items = items;
             }
 
-            [Display(Name = "Name")]
             public TextSearch Name { get; set; }
 
             [Display(Name = "Birth Date")]
@@ -49,7 +48,6 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
             [Display(Name = "Hire Date")]
             public DateSearch HireDate { get; set; }
 
-            [Display(Name = "Country")]
             public SingleTextOptionSearch Country { get; set; }
 
             [Display(Name = "Phone")]

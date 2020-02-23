@@ -43,7 +43,7 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <returns></returns>
         public static string GetModelDisplayName(this IHtmlHelper html)
         {
-            return html.ViewData.ModelMetadata.DisplayName;
+            return html.ViewData.ModelMetadata.DisplayName ?? html.ViewData.ModelMetadata.Name;
         }
 
         /// <summary>
