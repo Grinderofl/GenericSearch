@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 1591
 using System.Collections.Generic;
+using System.Linq;
 using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Configuration.Expressions;
 
@@ -17,8 +18,8 @@ namespace Grinderofl.GenericSearch.ModelBinding
         public virtual void BindResult(object request, object result, ISearchConfiguration configuration = null)
         {
             configuration ??= configurationProvider.ForRequestAndResultType(request.GetType(), result.GetType());
-
-            BindSearchProperties(request, result, configuration.SearchExpressions);
+            
+            BindSearchProperties(request, result, configuration.SearchExpressions.Union(configuration.CustomSearchExpressions));
             BindPagingProperties(request, result, configuration.PageExpression);
             BindSortProperties(request, result, configuration.SortExpression);
             BindOtherProperties(request, result, configuration.TransferExpressions);

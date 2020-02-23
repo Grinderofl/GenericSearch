@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grinderofl.GenericSearch.ModelBinding
@@ -28,7 +29,7 @@ namespace Grinderofl.GenericSearch.ModelBinding
                 bindingContext.Model = Activator.CreateInstance(bindingContext.ModelType);
             }
 
-            BindSearchProperties(configuration.SearchExpressions, bindingContext.Model);
+            BindSearchProperties(configuration.SearchExpressions.Union(configuration.CustomSearchExpressions), bindingContext.Model);
             BindSortProperties(configuration.SortExpression, bindingContext.Model);
             BindPageProperties(configuration.PageExpression, bindingContext.Model);
 

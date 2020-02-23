@@ -12,6 +12,7 @@ namespace Grinderofl.GenericSearch.Configuration
         Type ResultType { get; }
 
         IEnumerable<ISearchExpression> SearchExpressions { get; }
+        IEnumerable<ISearchExpression> CustomSearchExpressions { get; }
         IEnumerable<ITransferExpression> TransferExpressions { get; }
         ISortExpression SortExpression { get; }
         IPageExpression PageExpression { get; }
