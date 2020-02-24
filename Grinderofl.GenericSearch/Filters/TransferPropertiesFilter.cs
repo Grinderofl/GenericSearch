@@ -12,7 +12,7 @@ using Grinderofl.GenericSearch.ModelBinding;
 
 namespace Grinderofl.GenericSearch.Filters
 {
-    public class TransferPropertiesFilter : IAsyncActionFilter, IAsyncPageFilter, IOrderedFilter
+    public class TransferPropertiesFilter : IAsyncActionFilter, IOrderedFilter
     {
         private readonly ISearchConfigurationProvider configurationProvider;
         private readonly IResultBinder resultBinder;
@@ -51,34 +51,7 @@ namespace Grinderofl.GenericSearch.Filters
             var request = context.ActionArguments[parameterDescriptor.Name];
             resultBinder.BindResult(request, model, configuration);
         }
-
-        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
-        {
-            var result = await next();
-
-            var model = GetModel(result.Result);
-            if (model == null)
-            {
-                return;
-            }
-
-            var parameters = context.ActionDescriptor.Parameters;
-            var parameterDescriptor = parameters.FirstOrDefault(x => configurationProvider.HasRequestType(x.ParameterType));
-            if (parameterDescriptor == null)
-            {
-                return;
-            }
-
-            var configuration = configurationProvider.ForRequestAndResultType(parameterDescriptor.ParameterType, model.GetType());
-            if (!ShouldBindProperties(configuration))
-            {
-                return;
-            }
-
-            var request = context.HandlerArguments[parameterDescriptor.Name];
-            resultBinder.BindResult(request, result, configuration);
-        }
-
+        
         private static object GetModel(IActionResult actionResult)
         {
             return actionResult switch
@@ -100,11 +73,6 @@ namespace Grinderofl.GenericSearch.Filters
             }
 
             return configuration.TransferBehaviour == ProfileBehaviour.Enabled;
-        }
-
-        public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
-        {
-            await Task.CompletedTask;
         }
 
         public int Order => 0;
