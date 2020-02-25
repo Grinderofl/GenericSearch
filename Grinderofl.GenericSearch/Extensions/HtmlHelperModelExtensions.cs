@@ -43,7 +43,6 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <summary>
         /// Helper method to retrieve the <see cref="PropertyInfo"/> of the current model property.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="htmlHelper"></param>
         /// <returns></returns>
         public static PropertyInfo GetPropertyInfoForModel(this IHtmlHelper htmlHelper)

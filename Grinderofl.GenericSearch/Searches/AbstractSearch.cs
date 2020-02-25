@@ -56,7 +56,7 @@ namespace Grinderofl.GenericSearch.Searches
 
                 if (property.Type.IsNullableType()) property = Expression.Property(property, "Value");
 
-                Expression searchExpression = null;
+                Expression searchExpression;
                 if (property.Type.IsCollectionType())
                 {
                     parameter = Expression.Parameter(property.Type.GetGenericArguments().First());

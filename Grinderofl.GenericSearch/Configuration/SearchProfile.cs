@@ -127,24 +127,18 @@ namespace Grinderofl.GenericSearch.Configuration
         {
             var requestPropertyInfo = expression.GetPropertyInfo();
             var search = SearchFactory.Create(requestPropertyInfo);
-            var searchExpression = new SearchExpression<TRequest, TResult>(requestPropertyInfo, search);
-            searchExpression.WithRequestProperty(expression);
-            CustomSearchExpressions.Add(searchExpression);
-            return searchExpression;
+            return AddCustom(search, expression);
         }
 
         /// <summary>
         /// Adds a custom search over the provider <typeparamref name="TRequest"/> property.
         /// </summary>
+        /// <param name="search"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
         public ISearchExpression<TRequest, TResult> AddCustom(ISearch search, Expression<Func<TRequest, object>> expression)
         {
-            var requestPropertyInfo = expression.GetPropertyInfo();
-            var searchExpression = new SearchExpression<TRequest, TResult>(requestPropertyInfo, search);
-            searchExpression.WithRequestProperty(expression);
-            CustomSearchExpressions.Add(searchExpression);
-            return searchExpression;
+            return AddCustomSearchProperty(expression, search);
         }
         
         /// <summary>
@@ -204,6 +198,20 @@ namespace Grinderofl.GenericSearch.Configuration
         public void TransferRequestProperties(ProfileBehaviour behaviour)
         {
             TransferBehaviour = behaviour;
+        }
+
+        private ISearchExpression<TRequest, TResult> AddCustomSearchProperty(Expression<Func<TRequest, object>> expression, ISearch search)
+        {
+            if (CustomSearchExpressions == null)
+            {
+                CustomSearchExpressions = new List<ISearchExpression>();
+            }
+
+            var requestPropertyInfo = expression.GetPropertyInfo();
+            var searchExpression = new SearchExpression<TRequest, TResult>(requestPropertyInfo, search);
+            searchExpression.WithRequestProperty(expression);
+            CustomSearchExpressions.Add(searchExpression);
+            return searchExpression;
         }
 
         private ISearchExpression<TRequest, TResult> AddSearchProperty(PropertyInfo entityPropertyInfo, ISearch search)
