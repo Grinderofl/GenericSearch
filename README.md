@@ -1,4 +1,5 @@
 # Generic Search for ASP.NET Core
+[![Build Status](https://dev.azure.com/sulenero/Grinderofl.GenericSearch/_apis/build/status/Grinderofl.GenericSearch?branchName=master)](https://dev.azure.com/sulenero/Grinderofl.GenericSearch/_build/latest?definitionId=11&branchName=master)
 
 The purpose of this library is to reduce the amount of boilerplate code required when creating search, sorting, and pagination functionality in ASP.NET MVC Core applications using a convention-based approach for rapid development.
 
