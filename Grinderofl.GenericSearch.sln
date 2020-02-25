@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grinderofl.GenericSearch", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grinderofl.GenericSearch.Sample", "Grinderofl.GenericSearch.Sample\Grinderofl.GenericSearch.Sample.csproj", "{8BC53A0A-E624-41CA-A323-D86D4E93F9F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grinderofl.GenericSearch.UnitTests", "Grinderofl.GenericSearch.UnitTests\Grinderofl.GenericSearch.UnitTests.csproj", "{5DA482B2-DCFF-4265-9805-F5A188BD8295}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8BC53A0A-E624-41CA-A323-D86D4E93F9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BC53A0A-E624-41CA-A323-D86D4E93F9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BC53A0A-E624-41CA-A323-D86D4E93F9F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DA482B2-DCFF-4265-9805-F5A188BD8295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DA482B2-DCFF-4265-9805-F5A188BD8295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DA482B2-DCFF-4265-9805-F5A188BD8295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DA482B2-DCFF-4265-9805-F5A188BD8295}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

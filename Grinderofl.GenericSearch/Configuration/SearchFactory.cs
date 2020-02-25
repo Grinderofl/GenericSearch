@@ -18,6 +18,9 @@ namespace Grinderofl.GenericSearch.Configuration
                 [typeof(DateSearch)] = propertyName => new DateSearch(propertyName),
                 [typeof(SingleDateOptionSearch)] = propertyName => new SingleDateOptionSearch(propertyName),
                 [typeof(DecimalSearch)] = propertyName => new DecimalSearch(propertyName),
+                [typeof(BooleanSearch)] = propertyName => new BooleanSearch(propertyName),
+                [typeof(OptionalBooleanSearch)] = propertyName => new OptionalBooleanSearch(propertyName),
+                [typeof(TrueBooleanSearch)] = propertyName => new TrueBooleanSearch(propertyName),
             };
 
         public static AbstractSearch Create<TSearch>(PropertyInfo info) where TSearch : AbstractSearch
@@ -26,7 +29,7 @@ namespace Grinderofl.GenericSearch.Configuration
             {
                 return SearchFactories[typeof(TSearch)](info.Name);
             }
-
+            
             throw new KeyNotFoundException($"Factory for the type '{typeof(TSearch)}' was not found.");
         }
 

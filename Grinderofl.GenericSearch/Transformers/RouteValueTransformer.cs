@@ -10,12 +10,10 @@ namespace Grinderofl.GenericSearch.Transformers
 {
     public class RouteValueTransformer : IRouteValueTransformer
     {
-        private readonly ISearchConfigurationProvider configurationProvider;
         private readonly IPropertyProcessorProvider processorProvider;
 
-        public RouteValueTransformer(ISearchConfigurationProvider configurationProvider, IPropertyProcessorProvider processorProvider)
+        public RouteValueTransformer(IPropertyProcessorProvider processorProvider)
         {
-            this.configurationProvider = configurationProvider;
             this.processorProvider = processorProvider;
         }
 
@@ -26,59 +24,54 @@ namespace Grinderofl.GenericSearch.Transformers
             var properties = requestType.GetProperties();
             var result = new RouteValueDictionary();
 
-            foreach (var property in properties)
+            foreach (var requestProperty in properties)
             {
-                if (processor.ShouldIgnoreRequestProperty(property))
+                if (processor.ShouldIgnoreRequestProperty(requestProperty))
                 {
                     continue;
                 }
 
-                var propertyValue = property.GetValue(request);
+                var propertyValue = requestProperty.GetValue(request);
 
-                // Ignore properties which have default value
-                if (processor.IsDefaultRequestPropertyValue(property, propertyValue))
-                {
-                    continue;
-                }
-
-                // Deal with AbstractSearch first
                 if (propertyValue is ISearch search)
                 {
-                    if (!search.IsActive())
-                    {
-                        continue;
-                    }
-
-                    var abstractSearchType = search.GetType();
-                    var abstractSearchProperties = abstractSearchType.GetProperties();
-                    foreach (var abstractSearchProperty in abstractSearchProperties)
+                    var searchType = search.GetType();
+                    var searchProperties = searchType.GetProperties();
+                    foreach (var searchProperty in searchProperties)
                     {
                         // Ignore properties that are never bound or bound from route
-                        if (processor.ShouldIgnoreRequestProperty(abstractSearchProperty))
+                        if (processor.ShouldIgnoreRequestProperty(searchProperty))
                         {
                             continue;
                         }
 
                         // Ignore properties which don't have a value, although all AbstractSearch inheritors should be initialized in the Query
-                        var abstractSearchPropertyValue = abstractSearchProperty.GetValue(search);
-                        if (abstractSearchPropertyValue == null)
+                        var searchPropertyValue = searchProperty.GetValue(search);
+                        if (searchPropertyValue == null)
                         {
                             continue;
                         }
 
                         // Ignore properties which have default value
-                        if (processor.IsDefaultRequestPropertyValue(abstractSearchProperty, abstractSearchPropertyValue))
+                        if (processor.IsDefaultRequestSearchPropertyValue(requestProperty, searchPropertyValue))
                         {
                             continue;
                         }
 
-                        AddPropertyValues($"{property.Name}.{abstractSearchProperty.Name}", abstractSearchPropertyValue, abstractSearchProperty, result);
+                        AddPropertyValues($"{requestProperty.Name}.{searchProperty.Name}", searchPropertyValue, searchProperty, result);
                     }
 
                     continue;
                 }
 
-                AddPropertyValues($"{property.Name}", propertyValue, property, result);
+                // Ignore properties which have default value
+                if (processor.IsDefaultRequestPropertyValue(requestProperty, propertyValue))
+                {
+                    continue;
+                }
+                
+
+                AddPropertyValues($"{requestProperty.Name}", propertyValue, requestProperty, result);
             }
 
             return result;

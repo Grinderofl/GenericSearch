@@ -19,6 +19,13 @@ namespace Grinderofl.GenericSearch.Configuration.Expressions
 
         public ISearch Search { get; }
 
+        //private ISearch search;
+        //public ISearch Search
+        //{
+        //    get { return search; }
+        //    private set { search = value; }
+        //}
+
         private PropertyInfo requestProperty;
         public PropertyInfo RequestProperty
         {

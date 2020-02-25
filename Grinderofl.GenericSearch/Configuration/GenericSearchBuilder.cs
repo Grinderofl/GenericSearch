@@ -60,6 +60,7 @@ namespace Grinderofl.GenericSearch.Configuration
             Services.AddSingleton<IRouteValueTransformer, RouteValueTransformer>();
             Services.AddSingleton<IRequestModelCacheProvider, RequestModelCacheProvider>();
             Services.AddSingleton<IResultBinder, GenericSearchResultBinder>();
+            Services.AddSingleton<IRequestBinder, GenericSearchRequestBinder>();
             
             Services.AddScoped<IGenericSearch, GenericSearch>();
             Services.AddScoped<IRequestModelCache, RequestModelCache>();

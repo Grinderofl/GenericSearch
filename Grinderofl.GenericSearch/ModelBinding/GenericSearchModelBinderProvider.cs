@@ -28,14 +28,16 @@ namespace Grinderofl.GenericSearch.ModelBinding
 
             var modelBinder = fallbackModelBinderProvider.GetBinder(context);
 
+            var requestBinder = context.Services.GetRequiredService<IRequestBinder>();
+
             var options = context.Services.GetRequiredService<IOptions<GenericSearchOptions>>();
             if (options.Value.CacheRequestModel)
             {
                 var cacheProvider = context.Services.GetRequiredService<IRequestModelCacheProvider>();
-                return new CachingGenericSearchModelBinder(modelTypeConfiguration, modelBinder, cacheProvider);
+                return new CachingGenericSearchModelBinder(requestBinder, modelTypeConfiguration, modelBinder, cacheProvider);
             }
-
-            return new GenericSearchModelBinder(modelTypeConfiguration, modelBinder);
+            
+            return new GenericSearchModelBinder(requestBinder, modelTypeConfiguration, modelBinder);
         }
 
 
