@@ -10,8 +10,8 @@ namespace Grinderofl.GenericSearch.ModelBinding
     {
         private readonly IRequestModelCacheProvider cacheProvider;
 
-        public CachingGenericSearchModelBinder(ISearchConfiguration configuration, IModelBinder fallbackModelBinder, IRequestModelCacheProvider cacheProvider)
-            : base(configuration, fallbackModelBinder)
+        public CachingGenericSearchModelBinder(IRequestBinder requestBinder, ISearchConfiguration configuration, IModelBinder fallbackModelBinder, IRequestModelCacheProvider cacheProvider)
+            : base(requestBinder, configuration, fallbackModelBinder)
         {
             this.cacheProvider = cacheProvider;
         }

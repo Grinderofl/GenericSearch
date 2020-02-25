@@ -1,4 +1,5 @@
 ﻿#pragma warning disable 1591
+using System;
 using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Configuration.Expressions;
 using Grinderofl.GenericSearch.Extensions;
@@ -6,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
+using Grinderofl.GenericSearch.Searches;
 
 namespace Grinderofl.GenericSearch.Processors
 {
@@ -19,10 +22,30 @@ namespace Grinderofl.GenericSearch.Processors
             this.configuration = configuration;
         }
 
+        public bool IsDefaultRequestSearchPropertyValue(PropertyInfo searchPropertyInfo, object value)
+        {
+            var defaultValue = searchPropertyInfo.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultValue != null)
+            {
+                return defaultValue.Value.Equals(value);
+            }
+
+            if (searchPropertyInfo.PropertyType == typeof(TrueBooleanSearch) || searchPropertyInfo.PropertyType == typeof(BooleanSearch))
+            {
+                return value.Equals(false);
+            }
+
+            if (searchPropertyInfo.PropertyType == typeof(OptionalBooleanSearch))
+            {
+                return value.Equals(null);
+            }
+
+            return false;
+        }
+
         public virtual bool ShouldIgnoreRequestProperty(PropertyInfo requestProperty)
         {
-            return requestProperty.HasAttribute<BindNeverAttribute>() ||
-                   requestProperty.HasAttribute<FromRouteAttribute>();
+            return requestProperty.HasAttribute<BindNeverAttribute>();
         }
 
         public virtual bool ShouldIgnoreEntityProperty(PropertyInfo entityProperty)
@@ -32,20 +55,9 @@ namespace Grinderofl.GenericSearch.Processors
 
         public virtual bool IsDefaultRequestPropertyValue(PropertyInfo propertyInfo, object value)
         {
-            // Check property for DefaultValueAttribute first
             var defaultValue = propertyInfo.GetCustomAttribute<DefaultValueAttribute>();
             if (defaultValue != null)
             {
-                if (defaultValue.Value == null && value == null)
-                {
-                    return true;
-                }
-
-                if (defaultValue.Value == null && value != null)
-                {
-                    return false;
-                }
-
                 return defaultValue.Value.Equals(value);
             }
 

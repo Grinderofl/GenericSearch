@@ -118,6 +118,27 @@ namespace Grinderofl.GenericSearch.Configuration
             return AddSearchProperty(entityPropertyInfo, search);
         }
 
+        public ISearchExpression<TRequest, TResult> AddBoolean(Expression<Func<TEntity, object>> expression)
+        {
+            var entityPropertyInfo = expression.GetPropertyInfo();
+            var search = new BooleanSearch(entityPropertyInfo.Name);
+            return AddSearchProperty(entityPropertyInfo, search);
+        }
+
+        public ISearchExpression<TRequest, TResult> AddTrueBoolean(Expression<Func<TEntity, object>> expression)
+        {
+            var entityPropertyInfo = expression.GetPropertyInfo();
+            var search = new TrueBooleanSearch(entityPropertyInfo.Name);
+            return AddSearchProperty(entityPropertyInfo, search);
+        }
+
+        public ISearchExpression<TRequest, TResult> AddOptionalBoolean(Expression<Func<TEntity, object>> expression)
+        {
+            var entityPropertyInfo = expression.GetPropertyInfo();
+            var search = new OptionalBooleanSearch(entityPropertyInfo.Name);
+            return AddSearchProperty(entityPropertyInfo, search);
+        }
+
         /// <summary>
         /// Adds a custom search over the provider <typeparamref name="TRequest"/> property.
         /// </summary>
