@@ -6,12 +6,12 @@
         @if (Model.HasPreviousPage)
         {
             <li class="page-item">
-                <a class="page-link" href="@Html.GetPageUrl(1)" aria-label="First Page">
+                <a class="page-link" href="@Html.GetUrlForPage(1)" aria-label="First Page">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="@Html.GetPageUrl(Model.PreviousPage)">
+                <a class="page-link" href="@Html.GetUrlForPage(Model.PreviousPage)">
                     <span aria-hidden="true">&lsaquo;</span>
                 </a>
             </li>
@@ -30,7 +30,7 @@
             else
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Html.GetPageUrl(page)">@(page)</a>
+                    <a class="page-link" href="@Html.GetUrlForPage(page)">@(page)</a>
                 </li>
             }
         }
@@ -38,12 +38,12 @@
         @if (Model.HasNextPage)
         {
             <li class="page-item">
-                <a class="page-link" href="@Html.GetPageUrl(Model.NextPage)" aria-label="Next Page">
+                <a class="page-link" href="@Html.GetUrlForPage(Model.NextPage)" aria-label="Next Page">
                     <span aria-hidden="true">&rsaquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="@Html.GetPageUrl(Model.Pages)" aria-label="Last Page">
+                <a class="page-link" href="@Html.GetUrlForPage(Model.Pages)" aria-label="Last Page">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

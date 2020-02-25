@@ -27,7 +27,7 @@
                 <label asp-for="Ordd" class="col-4 col-form-label col-form-label-sm">Direction</label>
                 <select asp-for="Ordd" asp-items="@Html.GetEnumSelectList<Direction>()" class="form-control form-control-sm col-8"></select>
                 <label asp-for="Ordx" class="col-4 col-form-label col-form-label-sm">Column</label>
-                <select asp-for="Ordx" asp-items="@Html.GetPropertySelectList<Index.Projection>()" class="col-8 form-control form-control-sm">
+                <select asp-for="Ordx" asp-items="@Html.GetPropertiesSelectList<Index.Projection>()" class="col-8 form-control form-control-sm">
                     <option value=""></option>
                 </select>
             </div>
