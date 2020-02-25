@@ -1,4 +1,5 @@
-﻿using Grinderofl.GenericSearch.Configuration;
+﻿using System;
+using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Extensions;
 using Grinderofl.GenericSearch.Processors;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Mvc.Rendering
@@ -20,7 +22,7 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// </summary>
         /// <param name="htmlHelper"></param>
         /// <returns></returns>
-        public static string GetModelPropertyName(this IHtmlHelper htmlHelper)
+        public static string GetPropertyNameForModel(this IHtmlHelper htmlHelper)
         {
             return htmlHelper.ViewContext.ViewData.ModelMetadata.PropertyName;
         }
@@ -31,19 +33,21 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <param name="html"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IEnumerable<SelectListItem> GetSelectList(this IHtmlHelper html, string key)
+        public static IReadOnlyList<SelectListItem> GetSelectList(this IHtmlHelper html, string key)
         {
-            return html.ViewData[key] as IEnumerable<SelectListItem>;
-        }
+            var selectList = html.ViewData[key];
+            
+            if (selectList is IReadOnlyList<SelectListItem> readyOnlySelectList)
+            {
+                return readyOnlySelectList;
+            }
 
-        /// <summary>
-        /// Helper method to retrieve the Display Name of the current model property. More reliable than @Html.DisplayNameForModel().
-        /// </summary>
-        /// <param name="html"></param>
-        /// <returns></returns>
-        public static string GetModelDisplayName(this IHtmlHelper html)
-        {
-            return html.ViewData.ModelMetadata.DisplayName ?? html.ViewData.ModelMetadata.Name;
+            if (selectList is IEnumerable<SelectListItem> selectListItemEnumerable)
+            {
+                return selectListItemEnumerable.ToArray();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -51,12 +55,34 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static IEnumerable<SelectListItem> GetModelSelectList(this IHtmlHelper html)
+        public static IReadOnlyList<SelectListItem> GetSelectListForModel(this IHtmlHelper html)
         {
-            var propertyName = html.GetModelPropertyName();
+            var propertyName = html.GetPropertyNameForModel();
             return html.GetSelectList(propertyName);
         }
 
+        /// <summary>
+        /// Helper method to retrieve a Select List from ViewData using the specified model property name as the index key
+        /// </summary>
+        /// <param name="html"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<SelectListItem> GetSelectListFor<T>(this IHtmlHelper<T> html, Expression<Func<T, object>> expression)
+        {
+            var propertyName = expression.GetPropertyInfo().Name;
+            return html.GetSelectList(propertyName);
+        }
+
+        /// <summary>
+        /// Helper method to retrieve the Display Name of the current model property. More reliable than @Html.DisplayNameForModel().
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        public static string GetDisplayNameForModel(this IHtmlHelper html)
+        {
+            return html.ViewData.ModelMetadata.DisplayName ?? html.ViewData.ModelMetadata.Name;
+        }
+        
         /// <summary>
         /// Helper method to generate URL for a specific page using the current query string
         /// </summary>
