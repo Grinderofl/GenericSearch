@@ -4,18 +4,20 @@ using Grinderofl.GenericSearch.ModelBinding;
 using Grinderofl.GenericSearch.Processors;
 using Moq;
 
+// ReSharper disable All
+
 namespace Grinderofl.GenericSearch.UnitTests.BooleanSearchTests
 {
-    public class TestBase
+    public abstract class TestBase
     {
         protected Mock<IPropertyProcessorProvider> ProcessorProvider { get; }
         protected ISearchConfiguration SearchConfiguration { get; }
         protected IRequestBinder RequestBinder { get; }
 
-        public TestBase()
+        protected TestBase()
         {
             var options = new GenericSearchOptions {ConventionOptions = {UseConventions = true}};
-            var profile = new TestProfile();
+            var profile = CreateProfile();
 
             SearchConfiguration = new ConventionSearchConfiguration(profile, options);
 
@@ -26,6 +28,11 @@ namespace Grinderofl.GenericSearch.UnitTests.BooleanSearchTests
                              .Returns(processor);
 
             RequestBinder = new GenericSearchRequestBinder();
+        }
+
+        protected virtual TestProfile CreateProfile()
+        {
+            return new TestProfile();
         }
     }
 }

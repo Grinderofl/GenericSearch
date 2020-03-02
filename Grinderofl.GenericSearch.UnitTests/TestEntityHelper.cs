@@ -14,6 +14,7 @@ namespace Grinderofl.GenericSearch.UnitTests
             yield return new TestEntity(true, false, false, false, false, false);
             yield return new TestEntity(true, true, false, false, false, false);
             yield return new TestEntity(true, false, true, true, true, true);
+            yield return new TestEntity(true, true, true, true, false, false);
         }
     }
 }

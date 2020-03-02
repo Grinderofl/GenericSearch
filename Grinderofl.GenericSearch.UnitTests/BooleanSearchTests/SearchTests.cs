@@ -52,7 +52,7 @@ namespace Grinderofl.GenericSearch.UnitTests.BooleanSearchTests
 
             // Act
             var result = entities.AsQueryable().Search(search).ToList();
-
+            
             // Assert
             result.Count.Should().Be(2);
             result[0].MatchAlways.Should().BeTrue();

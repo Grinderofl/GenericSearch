@@ -221,6 +221,20 @@ namespace Grinderofl.GenericSearch.Configuration
             TransferBehaviour = behaviour;
         }
 
+        public ISearchExpression<TRequest, TResult> IgnoreSearch(Expression<Func<TRequest, object>> expression)
+        {
+            if (IgnoredSearchExpressions == null)
+            {
+                IgnoredSearchExpressions = new List<ISearchExpression>();
+            }
+
+            var requestPropertyInfo = expression.GetPropertyInfo();
+            var search = SearchFactory.Create(requestPropertyInfo);
+            var searchExpression = new SearchExpression<TRequest, TResult>(requestPropertyInfo, search);
+            IgnoredSearchExpressions.Add(searchExpression);
+            return searchExpression;
+        }
+
         private ISearchExpression<TRequest, TResult> AddCustomSearchProperty(Expression<Func<TRequest, object>> expression, ISearch search)
         {
             if (CustomSearchExpressions == null)

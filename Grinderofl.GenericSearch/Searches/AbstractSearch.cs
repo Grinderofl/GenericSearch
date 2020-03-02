@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 
 namespace Grinderofl.GenericSearch.Searches
 {
@@ -18,7 +19,8 @@ namespace Grinderofl.GenericSearch.Searches
         {
         }
 
-        protected string Property { get; }
+        [JsonIgnore]
+        protected internal string Property { get; set; }
 
         public abstract bool IsActive();
 

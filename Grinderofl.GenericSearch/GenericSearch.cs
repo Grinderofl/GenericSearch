@@ -3,6 +3,7 @@ using Grinderofl.GenericSearch.Caching;
 using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Helpers;
 using System.Linq;
+using Grinderofl.GenericSearch.Searches;
 
 namespace Grinderofl.GenericSearch
 {
@@ -30,10 +31,11 @@ namespace Grinderofl.GenericSearch
             {
                 return query;
             }
-
-            foreach (var searchExpression in configuration.SearchExpressions)
+            
+            foreach (var searchExpression in configuration.SearchExpressions.Where(s => configuration.IgnoredSearchExpressions.All(i => i.RequestProperty != s.RequestProperty)))
             {
-                query = searchExpression.Search.ApplyToQuery(query);
+                var search = (ISearch) searchExpression.RequestProperty.GetValue(request);
+                query = search.ApplyToQuery(query);
             }
 
             return query;

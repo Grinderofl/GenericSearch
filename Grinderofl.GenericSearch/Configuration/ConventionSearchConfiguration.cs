@@ -28,6 +28,8 @@ namespace Grinderofl.GenericSearch.Configuration
 
         public IEnumerable<ISearchExpression> SearchExpressions { get; private set; }
 
+        public IEnumerable<ISearchExpression> IgnoredSearchExpressions { get; private set; }
+
         public IEnumerable<ISearchExpression> CustomSearchExpressions { get; private set; }
 
         public IEnumerable<ITransferExpression> TransferExpressions { get; private set; }
@@ -43,6 +45,7 @@ namespace Grinderofl.GenericSearch.Configuration
         private void InitialiseConfiguration()
         {
             SearchExpressions = InitialiseSearchExpressions();
+            IgnoredSearchExpressions = InitialiseIgnoredSearchExpressions();
             CustomSearchExpressions = InitialiseCustomSearchExpressions();
             TransferExpressions = InitialiseTransferExpressions();
             SortExpression = InitialiseSortExpression();
@@ -59,6 +62,16 @@ namespace Grinderofl.GenericSearch.Configuration
             }
 
             return CreateSearchExpressions().ToArray();
+        }
+
+        private IEnumerable<ISearchExpression> InitialiseIgnoredSearchExpressions()
+        {
+            if (profile.IgnoredSearchExpressions != null)
+            {
+                return profile.IgnoredSearchExpressions;
+            }
+
+            return Enumerable.Empty<ISearchExpression>();
         }
 
         private IEnumerable<ISearchExpression> InitialiseCustomSearchExpressions()

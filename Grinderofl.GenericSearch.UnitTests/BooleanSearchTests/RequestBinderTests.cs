@@ -33,5 +33,22 @@ namespace Grinderofl.GenericSearch.UnitTests.BooleanSearchTests
             request.MatchWhenNotNullDefaultFalse.Should().NotBeNull();
             request.MatchWhenNotNullDefaultFalse.Is.Should().BeFalse();
         }
+
+        [Fact]
+        public void RequestBinder_Clones()
+        {
+            var request1 = new TestRequest();
+            RequestBinder.BindRequest(request1, SearchConfiguration);
+
+            request1.MatchAlways.Is.Should().BeFalse();
+            request1.MatchAlways.Is = true;
+            request1.MatchAlways.Is.Should().BeTrue();
+
+            var request2 = new TestRequest();
+            RequestBinder.BindRequest(request2, SearchConfiguration);
+
+            request2.MatchAlways.Is.Should().BeFalse();
+
+        }
     }
 }

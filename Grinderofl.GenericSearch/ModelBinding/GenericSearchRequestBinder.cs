@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Configuration.Expressions;
 using Grinderofl.GenericSearch.Searches;
@@ -13,23 +14,38 @@ namespace Grinderofl.GenericSearch.ModelBinding
     {
         public void BindRequest(object request, ISearchConfiguration configuration)
         {
-            BindSearchProperties(configuration.SearchExpressions.Union(configuration.CustomSearchExpressions), request);
+            BindSearchProperties(configuration.SearchExpressions
+                .Union(configuration.CustomSearchExpressions)
+                .Union(configuration.IgnoredSearchExpressions), request);
             BindSortProperties(configuration.SortExpression, request);
             BindPageProperties(configuration.PageExpression, request);
         }
+
+        private static readonly PropertyInfo PropertyName = typeof(AbstractSearch)
+            .GetProperty(nameof(AbstractSearch.Property), BindingFlags.NonPublic |
+                                                          BindingFlags.Public |
+                                                          BindingFlags.Instance |
+                                                          BindingFlags.Static);
 
         private void BindSearchProperties(IEnumerable<ISearchExpression> searchExpressions, object model)
         {
             foreach (var searchExpression in searchExpressions)
             {
                 var search = searchExpression.Search;
-                ReplaceOptionalDefaultValue(searchExpression, search);
 
-                searchExpression.RequestProperty.SetValue(model, search);
+                var serialized = JsonSerializer.Serialize(search);
+                var deserialized = JsonSerializer.Deserialize(serialized, search.GetType());
+
+                ReplaceOptionalDefaultValue(searchExpression, deserialized);
+
+                var value = PropertyName.GetValue(search);
+                PropertyName.SetValue(deserialized, value);
+
+                searchExpression.RequestProperty.SetValue(model, deserialized);
             }
         }
 
-        private static void ReplaceOptionalDefaultValue(ISearchExpression searchExpression, ISearch search)
+        private static void ReplaceOptionalDefaultValue(ISearchExpression searchExpression, object search)
         {
             var defaultValue = searchExpression.RequestProperty.GetCustomAttribute<DefaultValueAttribute>();
             if (defaultValue != null)
