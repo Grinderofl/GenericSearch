@@ -54,7 +54,8 @@ namespace Grinderofl.GenericSearch.Transformers
                         }
 
                         // Ignore properties which have default value
-                        if (processor.IsDefaultRequestSearchPropertyValue(requestProperty, searchPropertyValue))
+                        if (processor.IsDefaultRequestPropertyValue(requestProperty, searchPropertyValue) ||
+                            processor.IsDefaultSearchPropertyValue(searchProperty, searchPropertyValue))
                         {
                             continue;
                         }
@@ -66,7 +67,7 @@ namespace Grinderofl.GenericSearch.Transformers
                 }
 
                 // Ignore properties which have default value
-                if (processor.IsDefaultRequestPropertyValue(requestProperty, propertyValue))
+                if (processor.IsDefaultSearchPropertyValue(requestProperty, propertyValue))
                 {
                     continue;
                 }

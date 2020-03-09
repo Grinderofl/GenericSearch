@@ -22,11 +22,21 @@ namespace Grinderofl.GenericSearch.Processors
             this.configuration = configuration;
         }
 
-        public bool IsDefaultRequestSearchPropertyValue(PropertyInfo searchPropertyInfo, object value)
+        public bool IsDefaultRequestPropertyValue(PropertyInfo searchPropertyInfo, object value)
         {
             var defaultValue = searchPropertyInfo.GetCustomAttribute<DefaultValueAttribute>();
             if (defaultValue != null)
             {
+                if (defaultValue.Value == null && value == null)
+                {
+                    return true;
+                }
+
+                if (defaultValue.Value == null && value != null)
+                {
+                    return false;
+                }
+
                 return defaultValue.Value.Equals(value);
             }
 
@@ -53,11 +63,21 @@ namespace Grinderofl.GenericSearch.Processors
             return !entityProperty.HasAttribute<DisplayAttribute>();
         }
 
-        public virtual bool IsDefaultRequestPropertyValue(PropertyInfo propertyInfo, object value)
+        public virtual bool IsDefaultSearchPropertyValue(PropertyInfo propertyInfo, object value)
         {
             var defaultValue = propertyInfo.GetCustomAttribute<DefaultValueAttribute>();
             if (defaultValue != null)
             {
+                if (defaultValue.Value == null && value == null)
+                {
+                    return true;
+                }
+
+                if (defaultValue.Value == null && value != null)
+                {
+                    return false;
+                }
+
                 return defaultValue.Value.Equals(value);
             }
 
