@@ -8,9 +8,9 @@
     <Authors>Nero Sule</Authors>
     <PackageId>Grinderofl.GenericSearch</PackageId>
     <PackageTags>generic search;search;genericsearch;entityframework;entityframeworkcore;efcore;generic filter;filter;generic sort;sort;generic pagination;pagination;generic paging;paging</PackageTags>
-    <PackageProjectUrl>https://github.com/Grinderofl/Grinderofl.GenericSearch</PackageProjectUrl>
+    <PackageProjectUrl>https://dev.azure.com/sulenero/Grinderofl.GenericSearch</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Grinderofl/Grinderofl.GenericSearch</RepositoryUrl>
+    <RepositoryUrl>https://dev.azure.com/sulenero/Grinderofl.GenericSearch</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
