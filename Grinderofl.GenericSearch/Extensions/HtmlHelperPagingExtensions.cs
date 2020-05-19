@@ -1,4 +1,11 @@
-﻿using Grinderofl.GenericSearch.Configuration;
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
+using Grinderofl.GenericSearch.Configuration;
+using Grinderofl.GenericSearch.Configuration.Internal.Caching;
+using Grinderofl.GenericSearch.Exceptions;
+using Grinderofl.GenericSearch.Internal;
+using Grinderofl.GenericSearch.Providers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -18,23 +25,31 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <returns></returns>
         public static string GetUrlForPage(this IHtmlHelper html, int page)
         {
-            var resultType = html.ViewData.Model.GetType();
-            var configurationProvider = html.GetRequestService<ISearchConfigurationProvider>();
-            var configuration = configurationProvider.ForResultType(resultType);
+            var modelCacheProvider = html.GetRequestService<IModelCacheProvider>();
+            var filterConfigurationProvider = html.GetRequestService<IFilterConfigurationProvider>();
+            var modelCache = modelCacheProvider.Provide();
+            if (modelCache.Model == null)
+            {
+                throw new ModelCacheException($"No model has been cached. Does the current action match the configured list action?");
+            }
 
+            var filterConfiguration = filterConfigurationProvider.Provide(modelCache.ModelType);
+            
             var httpContext = html.ViewContext.HttpContext;
             var query = QueryHelpers.ParseQuery(httpContext.Request.QueryString.Value);
+            
+            var configuration = filterConfiguration.PageConfiguration;
+            var pageNumber = configuration.RequestPageNumberProperty.Name.ToLowerInvariant();
+            var defaultPage = configuration.DefaultPageNumber;
 
-            var pageProperty = configuration.PageExpression.RequestPageProperty.Name.ToLowerInvariant();
-            var defaultPage = configuration.PageExpression.DefaultPage;
-
-            if (page == defaultPage)
+            var pageValue = page;
+            if (pageValue == defaultPage)
             {
-                query.Remove(pageProperty);
+                query.Remove(pageNumber);
             }
             else
             {
-                query[pageProperty] = page.ToString();
+                query[pageNumber] = pageValue.ToString();
             }
 
             return QueryString.Create(query).Value;

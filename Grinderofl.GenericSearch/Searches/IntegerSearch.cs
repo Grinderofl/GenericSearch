@@ -71,6 +71,16 @@ namespace Grinderofl.GenericSearch.Searches
             return searchExpression1 ?? searchExpression2;
         }
 
+        protected override string DebuggerDisplay()
+        {
+            if (!Term1.HasValue) return $"(Integer) {Property}";
+
+            if (Is == Comparer.InRange && Term2.HasValue) return $"(Integer) {Property} > {Term1} && {Property} < {Term2}";
+
+            return $"(Integer) {Property} {Is} {Term1}";
+
+        }
+
         private Expression GetFilterExpression(Expression property)
         {
             switch (Is)

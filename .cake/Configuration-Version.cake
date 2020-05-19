@@ -75,7 +75,7 @@ public class BuildVersion {
             settings.OutputType = GitVersionOutput.Json;
             var gitVersion = context.GitVersion(settings);
             Version = gitVersion.MajorMinorPatch;
-            SemVersion = gitVersion.LegacySemVerPadded;
+            SemVersion = gitVersion.MajorMinorPatch + gitVersion.PreReleaseTagWithDash;
             InformationalVersion = gitVersion.InformationalVersion;
             FullSemVersion = gitVersion.FullSemVer;
         }
@@ -86,7 +86,7 @@ public class BuildVersion {
             settings.OutputType = GitVersionOutput.BuildServer;
             context.GitVersion(settings);
             Version = context.EnvironmentVariable("GITVERSION_MAJORMINORPATCH");
-            SemVersion = context.EnvironmentVariable("GITVERSION_LEGACYSEMVERPADDED");
+            SemVersion = context.EnvironmentVariable("GITVERSION_MAJORMINORPATCH") + context.EnvironmentVariable("GITVERSION_PRERELEASETAGWITHDASH");
             InformationalVersion = context.EnvironmentVariable("GITVERSION_INFORMATIONALVERSION");
             FullSemVersion = context.EnvironmentVariable("GITVERSION_FULLSEMVER");
         }        

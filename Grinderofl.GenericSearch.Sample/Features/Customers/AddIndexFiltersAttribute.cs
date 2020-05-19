@@ -1,5 +1,4 @@
-﻿using Grinderofl.GenericSearch.Filters;
-using Grinderofl.GenericSearch.Sample.Data;
+﻿using Grinderofl.GenericSearch.Sample.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -7,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Grinderofl.GenericSearch.ActionFilters;
 
 namespace Grinderofl.GenericSearch.Sample.Features.Customers
 {

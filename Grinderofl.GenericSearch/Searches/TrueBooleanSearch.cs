@@ -22,5 +22,11 @@ namespace Grinderofl.GenericSearch.Searches
             => Is
                    ? Expression.Equal(property, Expression.Constant(true))
                    : null;
+
+        protected override string DebuggerDisplay()
+        {
+            if (!IsActive()) return $"(TrueBoolean) {Property}";
+            return $"(TrueBoolean) {Property}.Is = {Is}";
+        }
     }
 }

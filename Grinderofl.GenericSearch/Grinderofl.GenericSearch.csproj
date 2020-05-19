@@ -7,7 +7,7 @@
     <Copyright>Nero Sule</Copyright>
     <Authors>Nero Sule</Authors>
     <PackageId>Grinderofl.GenericSearch</PackageId>
-    <PackageTags>generic search;search;genericsearch;entityframework;entityframeworkcore;efcore;generic filter;filter;generic sort;sort;generic pagination;pagination;generic paging;paging</PackageTags>
+    <PackageTags>generic search;search;genericsearch;entityframework;entityframeworkcore;efcore;Generic Search;filter;generic sort;sort;generic pagination;pagination;generic paging;paging</PackageTags>
     <PackageProjectUrl>https://dev.azure.com/sulenero/Grinderofl.GenericSearch</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://dev.azure.com/sulenero/Grinderofl.GenericSearch</RepositoryUrl>
@@ -16,6 +16,12 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Old\**" />
+    <EmbeddedResource Remove="Old\**" />
+    <None Remove="Old\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

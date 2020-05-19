@@ -1,47 +1,48 @@
-﻿#pragma warning disable 1591
-using Grinderofl.GenericSearch.Caching;
-using Grinderofl.GenericSearch.Configuration;
+﻿using Grinderofl.GenericSearch.Configuration.Internal.Caching;
+using Grinderofl.GenericSearch.Internal;
+using Grinderofl.GenericSearch.Providers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Grinderofl.GenericSearch.ModelBinding
 {
+    /// <summary>
+    /// Provides the default implementation of creating model binders for request/parameter types for Generic Search types
+    /// </summary>
     public class GenericSearchModelBinderProvider : IModelBinderProvider
     {
         private readonly IModelBinderProvider fallbackModelBinderProvider;
 
+        /// <summary>
+        /// Initializes a new instance of default Generic Search model binder provider
+        /// </summary>
+        /// <param name="fallbackModelBinderProvider"></param>
         public GenericSearchModelBinderProvider(IModelBinderProvider fallbackModelBinderProvider)
         {
             this.fallbackModelBinderProvider = fallbackModelBinderProvider;
         }
 
+        /// <summary>
+        /// Creates a <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder" /> based on <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext" />.
+        /// </summary>
+        /// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext" />.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder" />.</returns>
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            var configurations = context.Services.GetRequiredService<ISearchConfigurationProvider>();
-            var modelTypeConfiguration = configurations.ForRequestType(context.Metadata.ModelType);
+            var configurationProvider = context.Services.GetRequiredService<IFilterConfigurationProvider>();
+            var configuration = configurationProvider.Provide(context.Metadata.ModelType);
 
-            if (modelTypeConfiguration == null)
+            if (configuration == null)
             {
                 return null;
             }
 
-            var modelBinder = fallbackModelBinderProvider.GetBinder(context);
 
-            var requestBinder = context.Services.GetRequiredService<IRequestBinder>();
-
-            var options = context.Services.GetRequiredService<IOptions<GenericSearchOptions>>();
-            if (options.Value.CacheRequestModel)
-            {
-                var cacheProvider = context.Services.GetRequiredService<IRequestModelCacheProvider>();
-                return new CachingGenericSearchModelBinder(requestBinder, modelTypeConfiguration, modelBinder, cacheProvider);
-            }
+            var modelCacheProvider = context.Services.GetRequiredService<IModelCacheProvider>();
             
-            return new GenericSearchModelBinder(requestBinder, modelTypeConfiguration, modelBinder);
+            var fallbackModelBinder = fallbackModelBinderProvider.GetBinder(context);
+            return new GenericSearchModelBinder(configuration, fallbackModelBinder, modelCacheProvider);
         }
-
-
     }
-
 
 }

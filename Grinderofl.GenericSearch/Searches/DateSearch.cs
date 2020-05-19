@@ -74,6 +74,16 @@ namespace Grinderofl.GenericSearch.Searches
             return searchExpression1 ?? searchExpression2;
         }
 
+        protected override string DebuggerDisplay()
+        {
+            if (!Term1.HasValue) return $"(Date)";
+
+            if (Is == Comparer.InRange && Term2.HasValue) return $"(Date) {Property} > {Term1} && {Property} < {Term2}";
+
+            return $"{Property} {Is} {Term1}";
+
+        }
+
         private Expression GetFilterExpression(Expression property)
         {
             switch (Is)

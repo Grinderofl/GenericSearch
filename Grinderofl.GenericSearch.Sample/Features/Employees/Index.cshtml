@@ -1,4 +1,5 @@
 ﻿@using Grinderofl.GenericSearch
+@using Grinderofl.GenericSearch.Searches
 @using Index = Grinderofl.GenericSearch.Sample.Features.Employees.Index;
 @model Grinderofl.GenericSearch.Sample.Features.Employees.Index.Model
 
@@ -11,14 +12,18 @@
 <form class="border-top" method="post">
     <h5>Filters</h5>
     <div class="form-row">
-        @Html.EditorFor(x => x.Name)
+        @Html.EditorFor(x => x.FirstName)
+        @Html.EditorFor(x => x.LastName)
         @Html.EditorFor(x => x.BirthDate)
-        @Html.EditorFor(x => x.HireDate)
     </div>
     <div class="form-row">
+        @Html.EditorFor(x => x.HireDate)
         @Html.EditorFor(x => x.HomePhone)
-        @Html.EditorFor(x => x.ReportsTo)
         @Html.EditorFor(x => x.Country)
+    </div>
+    <div class="form-row">
+        @Html.EditorFor(x => x.ReportsToFirstName)
+        @Html.EditorFor(x => x.ReportsToLastName)
     </div>
     <div class="form-row">
         <div class="col-6">
@@ -65,7 +70,8 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BirthDate)
@@ -80,7 +86,8 @@
                     @Html.DisplayFor(modelItem => item.HomePhone)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ReportsTo)
+                    @Html.DisplayFor(modelItem => item.ReportsToFirstName)
+                    @Html.DisplayFor(modelItem => item.ReportsToLastName)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>

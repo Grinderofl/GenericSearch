@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Grinderofl.GenericSearch.Filters;
+using Grinderofl.GenericSearch.ActionFilters;
 using Grinderofl.GenericSearch.Sample.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

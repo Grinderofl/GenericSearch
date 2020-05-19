@@ -31,5 +31,11 @@ namespace Grinderofl.GenericSearch.Searches
 
             return Expression.Equal(property, Expression.Constant(Is));
         }
+
+        protected override string DebuggerDisplay()
+        {
+            if (!IsActive()) return $"(SingleTextOption) {Property}";
+            return $"(SingleTextOption) {Property}.Is = {Is}";
+        }
     }
 }

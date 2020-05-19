@@ -60,7 +60,8 @@ namespace Grinderofl.GenericSearch.Sample
             services.AddMediatR(GetType().Assembly);
             services.AddAutoMapper(GetType().Assembly);
             services.AddGenericSearch(GetType().Assembly)
-                    .UseConventions();
+                    .UseConventions()
+                    .DefaultRowsPerPage(20);
 
             ConfigureOptions(services);
         }

@@ -1,7 +1,7 @@
 ﻿#pragma warning disable 1591
-using Grinderofl.GenericSearch.Extensions;
 using System;
 using System.Reflection;
+using Grinderofl.GenericSearch.Internal.Extensions;
 
 namespace Grinderofl.GenericSearch.Helpers
 {

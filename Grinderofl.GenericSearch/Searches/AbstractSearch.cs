@@ -1,13 +1,15 @@
 ﻿#pragma warning disable 1591
-using Grinderofl.GenericSearch.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
+using Grinderofl.GenericSearch.Internal.Extensions;
 
 namespace Grinderofl.GenericSearch.Searches
 {
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "()}")]
     public abstract class AbstractSearch : ISearch
     {
         protected AbstractSearch(string property)
@@ -115,5 +117,7 @@ namespace Grinderofl.GenericSearch.Searches
 
             return Expression.AndAlso(first, second);
         }
+
+        protected abstract string DebuggerDisplay();
     }
 }

@@ -1,70 +1,93 @@
-﻿#pragma warning disable 1591
-using Grinderofl.GenericSearch.Caching;
-using Grinderofl.GenericSearch.Configuration;
-using Grinderofl.GenericSearch.Helpers;
+﻿using Grinderofl.GenericSearch.Helpers;
 using System.Linq;
+using Grinderofl.GenericSearch.Configuration.Internal.Caching;
+using Grinderofl.GenericSearch.Internal;
+using Grinderofl.GenericSearch.Providers;
 using Grinderofl.GenericSearch.Searches;
 
 namespace Grinderofl.GenericSearch
 {
+    /// <summary>
+    /// Provides a generic way of searching, sorting, and paginating queryable types
+    /// </summary>
     public class GenericSearch : IGenericSearch
     {
-        private readonly ISearchConfigurationProvider configurationProvider;
-        private readonly IRequestModelCacheProvider cacheProvider;
-
-        public GenericSearch(ISearchConfigurationProvider configurationProvider, IRequestModelCacheProvider cacheProvider)
+        private readonly IFilterConfigurationProvider configurationProvider;
+        private readonly IModelCacheProvider modelCacheProvider;
+        
+        /// <summary>
+        /// Initializes a new instance of <see cref="GenericSearch"/>
+        /// </summary>
+        /// <param name="configurationProvider">Filter Configuration Provider</param>
+        /// <param name="modelCacheProvider">Model Cache Provider</param>
+        public GenericSearch(IFilterConfigurationProvider configurationProvider, IModelCacheProvider modelCacheProvider)
         {
             this.configurationProvider = configurationProvider;
-            this.cacheProvider = cacheProvider;
+            this.modelCacheProvider = modelCacheProvider;
         }
 
-        private IRequestModelCache cache;
-        private IRequestModelCache Cache => cache ??= cacheProvider.Provide();
-
+        /// <summary>
+        /// Filters the <paramref name="query"/> results using the provided request object to obtain the search parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public IQueryable<T> Search<T>(IQueryable<T> query, object request)
         {
-            var entityType = typeof(T);
             var requestType = request.GetType();
-            var configuration = configurationProvider.ForEntityAndRequestType(entityType, requestType);
+            var configuration = configurationProvider.Provide(requestType);
 
             if (configuration == null)
             {
                 return query;
             }
             
-            foreach (var searchExpression in configuration.SearchExpressions.Where(s => configuration.IgnoredSearchExpressions.All(i => i.RequestProperty != s.RequestProperty)))
+            foreach (var searchConfiguration in configuration.SearchConfigurations.Where(x => !x.IsIgnored))
             {
-                var search = (ISearch) searchExpression.RequestProperty.GetValue(request);
+                var search = (ISearch) searchConfiguration.RequestProperty.GetValue(request);
                 query = search.ApplyToQuery(query);
             }
 
             return query;
         }
 
+        /// <summary>
+        /// Filters the <paramref name="query"/> results using a cached request object to obtain the search parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public IQueryable<T> Search<T>(IQueryable<T> query)
         {
-            var request = Cache.Get();
-            return Search(query, request);
+            var modelCache = modelCacheProvider.Provide();
+            return Search(query, modelCache.Model);
         }
 
+        /// <summary>
+        /// Sorts the <paramref name="query"/> results using the provided request object to obtain the sort parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public IQueryable<T> Sort<T>(IQueryable<T> query, object request)
         {
-            var entityType = typeof(T);
             var requestType = request.GetType();
-            var configuration = configurationProvider.ForEntityAndRequestType(entityType, requestType);
+            var configuration = configurationProvider.Provide(requestType);
 
             if (configuration == null)
             {
                 return query;
             }
 
-            var sortPropertyName = (string)configuration.SortExpression.RequestSortByProperty.GetValue(request);
+            var sortPropertyName = (string)configuration.SortConfiguration.RequestSortProperty.GetValue(request);
             if (string.IsNullOrWhiteSpace(sortPropertyName))
             {
                 return query;
             }
 
-            var sortDirection = (Direction)configuration.SortExpression.RequestSortDirectionProperty.GetValue(request);
+            var sortDirection = (Direction)configuration.SortConfiguration.RequestSortDirection.GetValue(request);
 
             var propertyExpression = ExpressionFactory.Create<T>(sortPropertyName);
 
@@ -73,34 +96,50 @@ namespace Grinderofl.GenericSearch
                        : query.OrderByDescending(propertyExpression);
         }
 
+        /// <summary>
+        /// Sorts the <paramref name="query"/> results using a cached request object to obtain the sort parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public IQueryable<T> Sort<T>(IQueryable<T> query)
         {
-            var request = Cache.Get();
-            return Sort(query, request);
+            return Sort(query, modelCacheProvider.Provide().Model);
         }
 
+        /// <summary>
+        /// Pages the <paramref name="query"/> results using the provided request object to obtain the paging parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
         {
-            var entityType = typeof(T);
             var requestType = request.GetType();
-            var configuration = configurationProvider.ForEntityAndRequestType(entityType, requestType);
+            var configuration = configurationProvider.Provide(requestType);
 
             if (configuration == null)
             {
                 return query;
             }
 
-            var page = (int)configuration.PageExpression.RequestPageProperty.GetValue(request);
-            var rows = (int)configuration.PageExpression.RequestRowsProperty.GetValue(request);
+            var page = (int)configuration.PageConfiguration.RequestPageNumberProperty.GetValue(request);
+            var rows = (int)configuration.PageConfiguration.RequestRowsProperty.GetValue(request);
 
             var skip = (page - 1) * rows;
             return query.Skip(skip).Take(rows);
         }
 
+        /// <summary>
+        /// Pages the <paramref name="query"/> results using a cached request object to obtain the paging parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public IQueryable<T> Paginate<T>(IQueryable<T> query)
         {
-            var request = Cache.Get();
-            return Paginate(query, request);
+            return Paginate(query, modelCacheProvider.Provide().Model);
         }
     }
 }

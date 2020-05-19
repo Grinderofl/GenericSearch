@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Grinderofl.GenericSearch;
 using Grinderofl.GenericSearch.Attributes;
-using Grinderofl.GenericSearch.Extensions;
-using Grinderofl.GenericSearch.Processors;
+using Grinderofl.GenericSearch.Internal.Extensions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 // ReSharper disable once CheckNamespace
@@ -73,20 +74,18 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         }
 
         /// <summary>
-        /// Helper method to retrieve a Select List of the properties in the provided type, using the
-        /// Display Name as the Text and the Name in lowercase as the value.
+        /// Helper method to retrieve a Select List of the properties in the provided type which have
+        /// the <see cref="DisplayAttribute"/>, using the Display Name as the Text and the Name in lowercase as the value.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="html"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Entity which properties to make into select list</typeparam>
+        /// <param name="html">Html helper</param>
+        /// <returns>ReadOnlyList of select list items</returns>
         public static IReadOnlyList<SelectListItem> GetPropertiesSelectList<T>(this IHtmlHelper html)
         {
             var entityType = typeof(T);
-            var processorProvider = html.GetRequestService<IPropertyProcessorProvider>();
-            var processor = processorProvider.ProvideForEntityType(entityType);
-
+            
             return entityType.GetProperties()
-                             .Where(x => !processor.ShouldIgnoreEntityProperty(x))
+                             .Where(x => x.HasAttribute<DisplayAttribute>())
                              .Select(x => new SelectListItem(x.GetDisplayName(), x.Name.ToLowerInvariant()))
                              .ToArray();
         }

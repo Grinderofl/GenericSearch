@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Extensions;
 using Grinderofl.GenericSearch.Sample.Data;
 using Grinderofl.GenericSearch.Sample.Data.Entities;
@@ -19,17 +19,20 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
     {
         public class Query : IRequest<Model>
         {
-            public TextSearch Name { get; set; }
+            public TextSearch FirstName { get; set; }
+            public TextSearch LastName { get; set; }
             public DateSearch BirthDate { get; set; }
             public DateSearch HireDate { get; set; }
             public SingleTextOptionSearch Country { get; set; }
             public TextSearch HomePhone { get; set; }
-            public TextSearch ReportsTo { get; set; }
+            public TextSearch ReportsToFirstName { get; set; }
+            public TextSearch ReportsToLastName { get; set; }
 
             public string Ordx { get; set; }
             public Direction Ordd { get; set; }
-            
+
             public int Page { get; set; }
+
             public int Rows { get; set; }
         }
 
@@ -40,7 +43,11 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
                 Items = items;
             }
 
-            public TextSearch Name { get; set; }
+            [Display(Name = "First Name")]
+            public TextSearch FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public TextSearch LastName { get; set; }
 
             [Display(Name = "Birth Date")]
             public DateSearch BirthDate { get; set; }
@@ -53,8 +60,11 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
             [Display(Name = "Phone")]
             public TextSearch HomePhone { get; set; }
 
-            [Display(Name = "Reports To")]
-            public TextSearch ReportsTo { get; set; }
+            [Display(Name = "Reports To First Name")]
+            public TextSearch ReportsToFirstName { get; set; }
+
+            [Display(Name = "Reports To Last Name")]
+            public TextSearch ReportsToLastName { get; set; }
 
             public string Ordx { get; set; }
             public Direction Ordd { get; set; }
@@ -66,7 +76,8 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
         {
             public string Id { get; set; }
 
-            public string Name { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
 
             [Display(Name = "Birth Date")]
             public DateTime? BirthDate { get; set; }
@@ -80,21 +91,24 @@ namespace Grinderofl.GenericSearch.Sample.Features.Employees
             public string HomePhone { get; set; }
             
             [Display(Name = "Reports To")]
-            public string ReportsTo { get; set; }
+            public string ReportsToFirstName { get; set; }
+            public string ReportsToLastName { get; set; }
         }
 
         public class MappingProfile : Profile
         {
             public MappingProfile()
             {
-                CreateMap<Employee, Projection>()
-                    .ForMember(x => x.Name, x => x.MapFrom(c => $"{c.FirstName} {c.LastName}"))
-                    .ForMember(x => x.ReportsTo, x => x.MapFrom(c => $"{c.ReportsTo.FirstName} {c.ReportsTo.LastName}"));
+                CreateMap<Employee, Projection>();
             }
         }
 
-        public class SearchProfile : SearchProfile<Projection, Query, Model>
+        public class SearchProfile : GenericSearchProfile
         {
+            public SearchProfile()
+            {
+                CreateFilter<Projection, Query, Model>();
+            }
         }
 
         public class Handler : IRequestHandler<Query, Model>

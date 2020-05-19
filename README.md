@@ -5,7 +5,9 @@ The purpose of this library is to reduce the amount of boilerplate code required
 
 Normally, adding sorting and filtering features to a project involves a nest of conditional statements. While this may be acceptable in small projects with a very limited number of list views and columns in those views, once the projects grow bigger through more list views or an exhaustive administration interface, adding and maintaining features becomes increasingly more burdensome and dull. In addition, server-side pagination adds another layer of pain when the developer has to build out the query string by hand while making sure the length of the query string doesn't exceed 2000 characters.
 
-While historically there have been many attempts at trying to solve this problem, ranging from abstract base classes to heavyweight frontend libraries, so far none of them come close to ease of configuration, simplicity of use, or being able to fit into whatever workflow the developer might have.
+While historically there have been many attempts at trying to solve this problem, ranging from abstract base classes, boxing magic, and crazy service definitions all the way to heavyweight frontend libraries, yet so far none of them come close to ease of configuration, simplicity of use, or being able to fit into whatever workflow the developer might have.
+
+GenericSearch aims to change this and minimize the amount of boilerplate code developers need to write by taking advantage of convention over configuration design and once-only data collection if certain changes are required application-wide.
 
 ## Installation
 
@@ -18,7 +20,9 @@ Install-Package Grinderofl.GenericSearch
 2. Add the following line to your `ConfigureServices` method in `Startup`:
 
 ```c#
-services.AddGenericSearch(GetType().Assembly).UseConventions();
+services.AddGenericSearch(GetType().Assembly)
+    .UseConventions()
+    .DefaultRowsPerPage(20);
 ```
 
 And you're done!
@@ -74,7 +78,7 @@ public class CustomerProjection
 }
 ```
 
-AutoMapper can be used to greatly simplify creating the projection:
+AutoMapper can be used to simplify projection mapping:
 
 ```c#
 public class CustomerMappingProfile : Profile
@@ -108,7 +112,7 @@ public class Query : IRequest<Model>
 }
 ```
 
-When creating the search properties on the query object, it's best to match the target projection property you want to search on with the name of the search property in query object. It's not strictly required since the property names can be configured easily enough, but helps avoid unnecessary code and keep the different models in sync.
+When creating the search properties on the query object, it's easiest to match the target projection property you want to search on with the name of the search property in query object. It's not strictly required since the property names can be configured easily enough, but helps avoid unnecessary code and keep the different models in sync.
 
 The properties for Sort By and Sort Direction default to `Ordx` and `Ordd` by convention, while current page and row count properties default to `Page` and `Rows` respectively. The default value for `Ordd` is `Ascending`, and the default value for `Rows` is 25.
 
@@ -178,36 +182,43 @@ Main difference between ViewModel object and Query object is the `DisplayAttribu
 
 ### Search Profiles
 
-To let GenericSearch know which query objects, view models, and item models are related, we extend `SearchProfile<TEntity, TRequest, TResult>`:
+To let GenericSearch know which query objects, view models, and item models are related, we inherit from `SearchProfile` and declare the relation with `CreateFilter<TItem, TRequest, TResult>()`: 
 
 ```c#
-public class SearchProfile : SearchProfile<CustomerProjection, Query, Model>
+public class SearchProfile : GenericSearchProfile
 {
+    public SearchProfile()
+    {
+        CreateFilter<CustomerProjection, Query, Model>();
+    }
 }
 ```
 
 When using conventions, all properties in query object which implement `ISearch` are automatically added to the profile. The projection column for the search target is determined by the name of the property in the query object.
 
-When not using conventions, all search properties will need to be defined in the constructor of the profile:
+When not using conventions, all search properties will need to be defined in `CreateFilter` builder method.
 
 ```c#
-public class SearchProfile : SearchProfile<Projection, Query, Model>
+public class SearchProfile : SearchProfile
 {
     public SearchProfile()
     {
-        AddCustom(x => x.FreeText);
-        AddText(x => x.CompanyName);
-        AddText(x => x.ContactName);
-        AddText(x => x.City);
-        AddText(x => x.PostalCode);
-        AddTextOption(x => x.Country);
-        AddSort();
-        AddPaging().WithDefaultRows(25);
+        CreateFilter<Projection, Query, Model>()
+            .Custom(x => x.FreeText)
+            .Text(x => x.CompanyName)
+            .Text(x => x.ContactName)
+            .Text(x => x.City)
+            .Text(x => x.PostalCode)
+            .TextOption(x => x.Country)
+            .Sort()
+            .Page(x => x.DefaultRows(25));
     }
 }
 ```
 
 If there are properties unrelated to search that you would like to be automatically populated from the query object to the view model, you can add them with `AddTransfer(x => x.RequestProperty)` method in `SearchProfile`.
+
+Similar to AutoMapper, it's possible to define multiple filters in a single profile if needed.
 
 ### Custom searches
 
@@ -235,7 +246,31 @@ public class CustomerFreeTextSearch : Search<Index.Projection>
 }
 ```
 
+In addition, it's possible to specify a predicate method for initializing custom searches in case they have a custom constructor:
 
+```
+public class SearchProfile : GenericSearchProfile
+{
+	public SearchProfile()
+	{
+		CreateFilter<Projection, Request, Result>()
+			.Custom(x => x.MySearch, () => new MySearch("WithCustomConstructor"));
+	}
+}
+```
+
+Since all `GenericSearchProfile` types are resolved from service provider when configurations are first created, dependency injection is an option:
+
+```
+public class SearchProfile : GenericSearchProfile
+{
+	public SearchProfile(IMyHttpContextServicesISearchResolver resolver)
+	{
+		CreateFilter<Projection, Request, Result>()
+			.Custom(x => x.MySearch, () => resolver.Resolve<MyISearchImplementation>()));
+	}
+}
+```
 
 ### Performing search
 
@@ -272,6 +307,13 @@ public class Handler : IRequestHandler<Query, Model>
 ```
 
 Since we're using conventions, the search related properties on the view model are automatically populated from the query object. We also don't need to pass the query object into the handler methods since the modelbinder causes the query object to be made available for GenericSearch services throughout the request lifetime. Both of these behaviours can be changed in the ServiceCollection configuration stage.
+
+When GenericSearch services are registered, an `IModelBinderProvider` implementation is added to the top of model binder providers collection. The resulting model binder has two functions for any `ModelType` registered in a search profile:
+
+1. Initialize all `ISearch` type properties on the model
+2. Store the final model in a cache scoped for the rest of the request
+
+The second function allows us to pass only `IGenericSearch` dependency to the `Search`, `Sort`, and `Paginate` extension methods, as `IGenericSearch` has access to the request scope and can obtain the cached model.
 
 ### Controllers
 
@@ -325,3 +367,82 @@ public class AddIndexFiltersAttribute : TypeFilterAttribute
 }
 ```
 
+`@Html.GetSelectListForModel()` can then be used in Editor or Display Templates, or `@Html.GetSelectListFor(x => x.Country)`  to get the select list by the name of the search property.
+
+### POST to GET redirects
+
+When submitting search forms, browsers typically send values of all inputs, which means that in general forms are submitted with POST method. While on one hand the URL's are nice and tidy, trying to page, refresh, or use back and forward is a proper pain for both users and developers. This is why GenericSearch also provides an action filter which redirects a POST request to GET for same action, assuming the request model type has been defined in a Search Profile, and the action name matches `DefaultListActionName`  specified in either the filter definition or in global options. The default values are `Index` and `IndexAsync`. The resulting URL's respect routing endpoint definitions, and only expose parameters which differ from their default values. This means that given a request such as:
+
+```c#
+public class TestRequest
+{
+
+    public TextSearch One { get; set; } = new TextSearch("One");
+
+    public TextSearch Two { get; set; } = new TextSearch("Two");
+
+    public TextSearch Three { get; set; } = new TextSearch("Three");
+
+    [DefaultValue(3)]
+    public SingleIntegerOptionSearch Four { get; set; } = new SingleIntegerOptionSearch("Four")
+    {
+    	Is = 3
+    };
+
+    public SingleIntegerOptionSearch Five { get; set; } = new SingleIntegerOptionSearch("Four")
+    {
+    	Is = 3
+    };
+
+    [DefaultValue(1)]
+    public int Page { get; set; } = 3;
+
+    [DefaultValue(20)]
+    public int Rows { get; set; } = 20;
+
+    [DefaultValue("Four")]
+    public string Ordx { get; set; } = "Four";
+}
+```
+
+Then the final GET query would only be `?five.is=3,page=3`.
+
+### Filter property transfer
+
+When you have a bunch of filters, there are two ways to deal with carrying them over from the request model to view model: 
+
+1. Place the request model inside the view model as a property 
+2. Manually assign properties from request model to view model after enumerating the list
+
+Both of them have downsides - first one suffers from added complexity in views, and second one just feels too verbose.
+
+GenericSearch offers a solution to this as well - an action filter which copies search, paging, and sort properties from request model to view model once action has finished executing and we have access to the view model. By convention, it matches properties by name, but it's easy to override:
+
+```c#
+public class SearchProfile : SearchProfile
+{
+    public SearchProfile()
+    {
+        CreateFilter<Projection, Query, Model>()
+            .Text(x => x.RequestProperty, x => x.ResultProperty)
+            .Sort(x => x.Property(s => s.RequestSortProperty, s => s.ResultSortProperty))
+            .Page(x => x.DefaultRows(25).Number(p => p.RequestPageNumber, p => .ResultPageNumber));
+    }
+}
+```
+
+This behaviour can be disabled either for individual configurations or, if desired, globally.
+
+### Extension methods
+
+GenericSearch provides the following `IHtmlHelper` extension methods:
+
+* `GetPlaceHolderForModel()` - Gets the value of `Prompt` parameter in `DisplayAttribute` of the property if used in Display or Editor Template
+* `GetPropertyNameForModel()` - Gets the name of the model property if used in Display or Editor Template
+* `GetDisplayNameForModel()` - Gets the value of `Name` parameter in `DisplayAttribute` if used in Display or Editor Template
+* `GetPropertyInfoForModel()` - Gets the `PropertyInfo` for the model property if used in Display or Editor Template
+* `GetUrlForPage(int page)` - Takes the current request URL and either adds, updates, or removes the page number query parameter as defined for the request type.
+* `GetSelectList(string key)` - Gets a `SelectListItem`  collection from `ViewData` by its key
+* `GetSelectListForModel()` - Gets a `SelectListItem` collection from `ViewData` by the name of the property if used in Display or Editor Template
+* `GetSelectListFor(Expression property)` - Gets a `SelectListItem` collection from `ViewData` for the provided property expression
+* `GetPropertiesSelectList()` - Gets a `SelectListItem` collection for the current model properties which have a `DisplayAttribute`, using the `Name` of the `DisplayAttribute` as the Text and lower case name of the property as the Value.

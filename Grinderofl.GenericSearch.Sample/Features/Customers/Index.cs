@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Grinderofl.GenericSearch.Configuration;
 using Grinderofl.GenericSearch.Extensions;
 using Grinderofl.GenericSearch.Sample.Data;
 using Grinderofl.GenericSearch.Sample.Data.Entities;
@@ -109,10 +107,11 @@ namespace Grinderofl.GenericSearch.Sample.Features.Customers
             }
         }
 
-        public class SearchProfile : SearchProfile<Projection, Query, Model>
+        public class SearchProfile : GenericSearchProfile
         {
             public SearchProfile()
             {
+                CreateFilter<Projection, Query, Model>();
             }
         }
 

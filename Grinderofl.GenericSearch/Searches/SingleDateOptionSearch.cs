@@ -27,5 +27,11 @@ namespace Grinderofl.GenericSearch.Searches
             => Is.HasValue
                    ? Expression.Equal(property, Expression.Constant(Is.Value.Date))
                    : null;
+
+        protected override string DebuggerDisplay()
+        {
+            if (!IsActive()) return $"(SingleDateOption) {Property}";
+            return $"(SingleDateOption) {Property}.Is = {Is}";
+        }
     }
 }

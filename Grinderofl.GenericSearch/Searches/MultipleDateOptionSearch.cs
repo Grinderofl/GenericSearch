@@ -44,5 +44,12 @@ namespace Grinderofl.GenericSearch.Searches
 
             return searchExpression;
         }
+
+        protected override string DebuggerDisplay()
+        {
+            if (!IsActive()) return $"(MultipleDate) {Property}";
+
+            return $"(MultipleDate) {Property}.Is = {string.Join(",", Is.Select(x => x.ToShortDateString()))}";
+        }
     }
 }

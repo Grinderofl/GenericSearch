@@ -43,5 +43,12 @@ namespace Grinderofl.GenericSearch.Searches
 
             return searchExpression;
         }
+
+        protected override string DebuggerDisplay()
+        {
+            if (!IsActive()) return $"(MultipleInteger) {Property}";
+
+            return $"(MultipleInteger) {Property}.Is = {string.Join(", ", Is.Select(x => x.ToString()))}";
+        }
     }
 }

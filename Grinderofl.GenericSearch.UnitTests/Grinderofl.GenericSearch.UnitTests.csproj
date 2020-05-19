@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Grinderofl.GenericSearch\Grinderofl.GenericSearch.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
 </Project>

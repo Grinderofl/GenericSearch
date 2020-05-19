@@ -1,5 +1,4 @@
-﻿using Grinderofl.GenericSearch.Transformers;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
