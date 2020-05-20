@@ -57,7 +57,7 @@ public class BuildVersion {
     private const string AssemblyInformationalVersion = "AssemblyInformationalVersion(\"{0}\")";
         
     private void UseBranchVersion(ICakeContext context) {
-        var branchName = context.EnvironmentVariable("Build.SourceBranch") ?? "";
+        var branchName = context.EnvironmentVariable("SourceBranch") ?? "";
         context.Information($"Current branch: {branchName}");
 
         var branchMatch = branchRegex.Match(branchName);

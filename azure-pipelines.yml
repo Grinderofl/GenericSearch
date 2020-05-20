@@ -13,19 +13,29 @@ jobs:
     build.configuration: 'Release'
     cake.verbosity: 'Verbose'
     build: $[counter(variables['major'], 1)]
+    branch: $(variables['Build.SourceBranch'])
 
   steps:
   - checkout: self
     clean: true
   
-  - powershell: $Env:Build = "$(build)"
-    displayName: 'Set build number'
+  # - powershell: $Env:SourceBranch = $(variables['Build.SourceBranch'])
+  #   displayName: 'Set branch name'
 
-  - powershell: $Env:Commits = (git rev-list HEAD --count)
+  # - powershell: $Env:Build = "$(build)"
+  #   displayName: 'Set build number'
+
+  - powershell: |
+      $commit=(git rev-list HEAD --count)
+      Write-Host '##vso[task.setvariable variable=commit]$commit'
     displayName: 'Set commit number'
 
   - powershell: ./build.ps1 -Target "$(cake.buildTarget)" -Configuration "$(build.configuration)" -Verbosity "$(cake.verbosity)"
     displayName: 'Cake Build'
+    env:
+      SourceBranch: $(Build.SourceBranch)
+      Build: $(build)
+      commit: $(commit)
 
   - powershell: Write-Host '##vso[build.addbuildtag]PR'
     displayName: 'Mark as PR Build'
