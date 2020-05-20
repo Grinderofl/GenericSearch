@@ -6,7 +6,9 @@ Task("CI")
     .IsDependentOn("CI:UploadArtifacts");
 
 Task("CI:UpdateBuildNumber")
-    .IsDependeeOf("CI").Does<Configuration>(config => Information("Build Number: {0}", config.Version.SemVersion));
+    .IsDependeeOf("CI")
+    .Does<Configuration>(config => 
+        Information("Build Number: {0}", config.Version.SemVersion));
 
 Task("CI:UploadArtifacts")
     .IsDependeeOf("CI")

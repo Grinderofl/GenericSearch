@@ -1,4 +1,7 @@
+#addin "Cake.FileHelpers"
 #tool "nuget:?package=GitVersion.CommandLine&version=4.0.0&prerelease"
+
+using System.Text.RegularExpressions;
 
 public class BuildVersion {
     public FilePath VersionAssemblyInfo { get; private set; }
@@ -7,24 +10,25 @@ public class BuildVersion {
     public string CakeVersion { get; private set; } = typeof(ICakeContext).Assembly.GetName().Version.ToString();
     public string InformationalVersion { get; private set; }
     public string FullSemVersion { get; private set; }
+    public string Major { get; private set; }
+    public string Minor { get; private set; }
+    public string Patch { get; private set; }
+    public bool Preview { get; private set; }
+    public string Commits { get; private set; }
+    public string Number { get; private set; }
+    public string Build { get; private set; }
+    public string Tag { get; private set; }
 
     public static BuildVersion DetermineBuildVersion(ICakeContext context) {
         return new BuildVersion(context);
     }
 
     private BuildVersion(ICakeContext context) {
-        VersionAssemblyInfo = context.Argument("versionAssemblyInfo", "VersionAssemblyInfo.cs");
+        // VersionAssemblyInfo = context.Argument("versionAssemblyInfo", "VersionAssemblyInfo.cs");
+        VersionAssemblyInfo = context.Argument("versionAssemblyInfo", "AssemblyInfo.cs");
 
-        if(context.DirectoryExists(".git")) {
-            UseGitVersion(context);
-        }
-        else 
-        {
-            UseVersionAssemblyInfo(context);
-        }
-
+        UseBranchVersion(context);
         LogVersionInformation(context);
-
         EnsureVersionInformation();
     }
 
@@ -42,6 +46,68 @@ public class BuildVersion {
         context.Information($"{nameof(CakeVersion)} = {CakeVersion}");
         context.Information($"{nameof(InformationalVersion)} = {InformationalVersion}");
         context.Information($"{nameof(FullSemVersion)} = {FullSemVersion}");        
+    }
+
+    private static readonly Regex branchRegex = 
+        new Regex(@"^refs/heads/release/(?<major>\d)+\.(?<minor>\d)+\.?(?<patch>\d)*(?<preview>-preview)?(?<number>\d)*$");
+
+    private const string EmptyVersion = "0.0.0.0";
+    private const string AssemblyFileVersion = "AssemblyFileVersion(\"{0}\")";
+    private const string AssemblyVersion = "AssemblyVersion(\"{0}\")";
+    private const string AssemblyInformationalVersion = "AssemblyInformationalVersion(\"{0}\")";
+        
+    private void UseBranchVersion(ICakeContext context) {
+        var branchName = context.EnvironmentVariable("Build.SourceBranch") ?? "";
+        context.Information($"Current branch: {branchName}");
+
+        var branchMatch = branchRegex.Match(branchName);
+        if(branchMatch.Success) {
+            context.Information($"Outputting semantic version from branch");
+            Major = branchMatch.Groups["major"].Value;
+            Minor = branchMatch.Groups["minor"].Value;
+            Patch = branchMatch.Groups["patch"].Success ? branchMatch.Groups["patch"].Value : "0";
+            Preview = branchMatch.Groups["preview"].Success;
+            Number = branchMatch.Groups["number"].Value;
+            Build = context.EnvironmentVariable("Build");
+
+            if(Preview)
+            {
+                Version = $"{Major}.{Minor}.{Patch}-preview{Number}";
+                SemVersion = $"{Major}.{Minor}.{Patch}-preview{Number}.{Commits}";
+                InformationalVersion = $"{Major}.{Minor}.{Patch}-preview{Number}.{Commits}.{Build}";
+                FullSemVersion = $"{Major}.{Minor}.{Patch}-preview{Number}.{Commits}";
+                Tag = $"v{Major}.{Minor}.{Patch}-preview{Number}";
+            }
+            else
+            {
+                Version = $"{Major}.{Minor}.{Patch}";
+                SemVersion = $"{Major}.{Minor}.{Patch}.{Commits}";
+                InformationalVersion = $"{Major}.{Minor}.{Patch}.{Commits}.{Build}";
+                FullSemVersion = $"{Major}.{Minor}.{Patch}.{Commits}";
+                Tag = $"v{Major}.{Minor}.{Patch}";
+            }
+
+            var versions = new Dictionary<string, string>()
+            {
+                [AssemblyFileVersion] = SemVersion,
+                [AssemblyVersion] = SemVersion,
+                [AssemblyInformationalVersion] = InformationalVersion
+            };
+
+            var assemblyInfo = "AssemblyInfo.cs";
+            foreach(var version in versions)
+            {
+                var source = string.Format(version.Key, EmptyVersion);
+                var dest = string.Format(version.Key, version.Value);
+                context.ReplaceTextInFiles(assemblyInfo, source, dest);
+            }
+        }
+        else if(context.DirectoryExists(".git")) {
+                UseGitVersion(context);
+        }
+        else {
+            UseVersionAssemblyInfo(context);
+        }
     }
 
     private void UseVersionAssemblyInfo(ICakeContext context) {
@@ -75,7 +141,7 @@ public class BuildVersion {
             settings.OutputType = GitVersionOutput.Json;
             var gitVersion = context.GitVersion(settings);
             Version = gitVersion.MajorMinorPatch;
-            SemVersion = gitVersion.MajorMinorPatch + gitVersion.PreReleaseTagWithDash;
+            SemVersion = gitVersion.LegacySemVerPadded;
             InformationalVersion = gitVersion.InformationalVersion;
             FullSemVersion = gitVersion.FullSemVer;
         }
@@ -86,7 +152,7 @@ public class BuildVersion {
             settings.OutputType = GitVersionOutput.BuildServer;
             context.GitVersion(settings);
             Version = context.EnvironmentVariable("GITVERSION_MAJORMINORPATCH");
-            SemVersion = context.EnvironmentVariable("GITVERSION_MAJORMINORPATCH") + context.EnvironmentVariable("GITVERSION_PRERELEASETAGWITHDASH");
+            SemVersion = context.EnvironmentVariable("GITVERSION_LEGACYSEMVERPADDED");
             InformationalVersion = context.EnvironmentVariable("GITVERSION_INFORMATIONALVERSION");
             FullSemVersion = context.EnvironmentVariable("GITVERSION_FULLSEMVER");
         }        

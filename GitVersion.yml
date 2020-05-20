@@ -1,32 +1,22 @@
+next-version: 1.0
 assembly-versioning-scheme: MajorMinorPatchTag
 assembly-file-versioning-scheme: MajorMinorPatchTag
 assembly-informational-format: '{MajorMinorPatch}+{BranchName}+{CommitDate}'
-mode: Mainline
-continuous-delivery-fallback-tag: 
+mode: ContinuousDeployment
+continuous-delivery-fallback-tag: ''
+tag-prefix: '[v]'
 branches:
-  alpha:
-    regex: ^alpha?[/-]
-    mode: ContinuousDeployment
-    tag: alpha
-    source-branches: ['master']
-  beta:
-    regex: ^beta?[/-]
-    mode: ContinuousDeployment
-    tag: beta
-    source-branches: ['master']
-  release:
-    mode: ContinuousDelivery
-    tag: ''
   master:
-    tag: ci
+    tag: ''
   pull-request:
-    mode: ContinuousDeployment
     tag: pr
   hotfix:
-    mode: ContinuousDeployment
     tag: fix
   feature:
-    mode: ContinuousDeployment
-    tag: wip
+    tag: ''
+  preview:
+    regex: ^preview?[/-]
+    source-branches: ['master']
+    tag: preview
 ignore:
   sha: []

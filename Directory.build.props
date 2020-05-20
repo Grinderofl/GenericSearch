@@ -7,6 +7,6 @@
     </PropertyGroup>
 	
 	<ItemGroup>
-		<Compile Include="..\VersionAssemblyInfo.cs" Link="Properties\VersionAssemblyInfo.cs" />
+		<Compile Include="..\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
 	</ItemGroup>
 </Project>
