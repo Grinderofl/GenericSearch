@@ -16,7 +16,7 @@ public class BuildVersion {
     public bool Preview { get; private set; }
     public string Commits { get; private set; }
     public string Number { get; private set; }
-    public string Build { get; private set; }
+    public string BuildId { get; private set; }
     public string Tag { get; private set; }
 
     public static BuildVersion DetermineBuildVersion(ICakeContext context) {
@@ -68,29 +68,36 @@ public class BuildVersion {
             Patch = branchMatch.Groups["patch"].Success ? branchMatch.Groups["patch"].Value : "0";
             Preview = branchMatch.Groups["preview"].Success;
             Number = branchMatch.Groups["number"].Value;
-            Build = context.EnvironmentVariable("Build");
+
+            BuildId = context.EnvironmentVariable("BuildId");
+            context.Information($"Current build id: {BuildId}");
+
+            var hash = context.EnvironmentVariable("Hash");
+            context.Information($"Current hash: {hash}");
+
+            var revision = BuildId.Split('.')[1];
 
             if(Preview)
             {
-                Version = $"{Major}.{Minor}.{Patch}-preview{Number}";
-                SemVersion = $"{Major}.{Minor}.{Patch}-preview{Number}.{Commits}";
-                InformationalVersion = $"{Major}.{Minor}.{Patch}-preview{Number}.{Commits}.{Build}";
-                FullSemVersion = $"{Major}.{Minor}.{Patch}-preview{Number}.{Commits}";
-                Tag = $"v{Major}.{Minor}.{Patch}-preview{Number}";
+                Version = $"{Major}.{Minor}.{Patch}.{revision}";
+                SemVersion = $"{Major}.{Minor}.{Patch}-preview.{Number}";
+                InformationalVersion = $"{Major}.{Minor}.{Patch}-preview.{Number}+{hash}";
+                FullSemVersion = $"{Major}.{Minor}.{Patch}-preview.{Number}.{revision}";
+                Tag = $"v{Major}.{Minor}.{Patch}-preview.{Number}";
             }
             else
             {
-                Version = $"{Major}.{Minor}.{Patch}";
-                SemVersion = $"{Major}.{Minor}.{Patch}.{Commits}";
-                InformationalVersion = $"{Major}.{Minor}.{Patch}.{Commits}.{Build}";
-                FullSemVersion = $"{Major}.{Minor}.{Patch}.{Commits}";
+                Version = $"{Major}.{Minor}.{Patch}.{revision}";
+                SemVersion = $"{Major}.{Minor}.{Patch}";
+                InformationalVersion = $"{Major}.{Minor}.{Patch}+{hash}";
+                FullSemVersion = $"{Major}.{Minor}.{Patch}.{revision}";
                 Tag = $"v{Major}.{Minor}.{Patch}";
             }
 
             var versions = new Dictionary<string, string>()
             {
                 [AssemblyFileVersion] = SemVersion,
-                [AssemblyVersion] = SemVersion,
+                [AssemblyVersion] = Version,
                 [AssemblyInformationalVersion] = InformationalVersion
             };
 

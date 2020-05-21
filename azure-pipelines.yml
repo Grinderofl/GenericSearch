@@ -14,6 +14,8 @@ jobs:
     cake.verbosity: 'Verbose'
     build: $[counter(variables['major'], 1)]
     branch: $(variables['Build.SourceBranch'])
+    buildId: $(variables['Build.BuildId'])
+    hash: $(variables['Build.SourceVersion'])
 
   steps:
   - checkout: self
@@ -27,15 +29,25 @@ jobs:
 
   - powershell: |
       $commit=(git rev-list HEAD --count)
+      
+      Write-Host 'Setting variable commit=$commit'
       Write-Host '##vso[task.setvariable variable=commit]$commit'
-    displayName: 'Set commit number'
+      
+      Write-Host 'Setting variable buildId=$buildId'
+      Write-Host '##vso[task.setvariable variable=buildId]$(buildId)'
+
+      Write-Host 'Setting variable hash=$(hash)'
+      Write-Host '##vso[task.setvariable variable=hash]$(hash)'
+    displayName: 'Set build variables'
 
   - powershell: ./build.ps1 -Target "$(cake.buildTarget)" -Configuration "$(build.configuration)" -Verbosity "$(cake.verbosity)"
     displayName: 'Cake Build'
     env:
       SourceBranch: $(Build.SourceBranch)
       Build: $(build)
-      commit: $(commit)
+      Commit: $(commit)
+      BuildId: $(buildId)
+      Hash: $(hash)
 
   - powershell: Write-Host '##vso[build.addbuildtag]PR'
     displayName: 'Mark as PR Build'
