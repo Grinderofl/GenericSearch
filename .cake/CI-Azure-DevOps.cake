@@ -32,5 +32,4 @@ Task("CI:VSTS:UpdateBuildNumber")
     TFBuild.Commands.SetVariable("GitVersion.InformationalVersion", config.Version.InformationalVersion);
     TFBuild.Commands.SetVariable("GitVersion.FullSemVer", config.Version.FullSemVersion);
     TFBuild.Commands.SetVariable("Cake.Version", config.Version.CakeVersion);
-    TFBuild.Commands.SetVariable("ReleaseBranch.Tag", config.Version.Tag);
 });

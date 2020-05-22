@@ -1,3 +1,4 @@
+name:
 trigger:
   batch: true
   branches:
@@ -12,42 +13,39 @@ jobs:
     cake.buildTarget: 'CI'
     build.configuration: 'Release'
     cake.verbosity: 'Verbose'
-    build: $[counter(variables['major'], 1)]
-    branch: $(variables['Build.SourceBranch'])
-    buildId: $(variables['Build.BuildId'])
-    hash: $(variables['Build.SourceVersion'])
+    #build: $[counter(variables['major'], 1)]
+    #branch: $(variables['Build.SourceBranch'])
+    #buildId: $(variables['Build.BuildId'])
+    #hash: $(variables['Build.SourceVersion'])
 
   steps:
   - checkout: self
+    persistCredentials: true
     clean: true
-  
-  # - powershell: $Env:SourceBranch = $(variables['Build.SourceBranch'])
-  #   displayName: 'Set branch name'
-
-  # - powershell: $Env:Build = "$(build)"
-  #   displayName: 'Set build number'
 
   - powershell: |
-      $commit=(git rev-list HEAD --count)
-      
-      Write-Host 'Setting variable commit=$commit'
-      Write-Host '##vso[task.setvariable variable=commit]$commit'
-      
-      Write-Host 'Setting variable buildId=$buildId'
-      Write-Host '##vso[task.setvariable variable=buildId]$(buildId)'
+      Write-Host 'A test right here'
 
-      Write-Host 'Setting variable hash=$(hash)'
-      Write-Host '##vso[task.setvariable variable=hash]$(hash)'
+      $SourceBranch='$(Build.SourceBranch)'
+      $BuildId='$(Build.BuildNumber)'
+      $Hash='$(Build.SourceVersion)'
+
+      Write-Host "SourceBranch = $SourceBranch"
+      Write-Host "BuildId = $BuildId"
+      Write-Host "Hash = $Hash"
+
+      Write-Host "##vso[task.setvariable variable=SourceBranch]$SourceBranch"
+      Write-Host "##vso[task.setvariable variable=BuildId]$BuildId"
+      Write-Host "##vso[task.setvariable variable=Hash]$Hash"
     displayName: 'Set build variables'
 
   - powershell: ./build.ps1 -Target "$(cake.buildTarget)" -Configuration "$(build.configuration)" -Verbosity "$(cake.verbosity)"
     displayName: 'Cake Build'
     env:
-      SourceBranch: $(Build.SourceBranch)
-      Build: $(build)
-      Commit: $(commit)
-      BuildId: $(buildId)
-      Hash: $(hash)
+      SourceBranch: $(SourceBranch)
+      #Build: $(build)
+      BuildId: $(BuildId)
+      Hash: $(Hash)
 
   - powershell: Write-Host '##vso[build.addbuildtag]PR'
     displayName: 'Mark as PR Build'
@@ -63,9 +61,19 @@ jobs:
         contains(variables['Build.SourceBranch'], '-preview')
       )
 
-  - powershell: git tag $(variables['ReleaseBranch.Tag'])
+  - powershell: |
+      $env:GIT_REDIRECT_STDERR = '2>&1'
+      $envTag = "$(Build.BuildNumber)"
+      Write-Host "Env Tag = $envTag"
+      $tag = "v" + $envTag.Substring(0, $envTag.lastIndexOf('.'))
+      Write-Host "Release Tag = $tag"
+      git tag $tag
+      git tag
+      git push --tags
     displayName: 'Tag release branch'
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
+    #ignoreLASTEXITCODE: false
+    #failOnStderr: false
 
   - powershell: Write-Host '##vso[build.addbuildtag]Release'
     displayName: 'Mark as Release Build'

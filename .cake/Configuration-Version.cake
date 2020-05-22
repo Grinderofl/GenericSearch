@@ -10,14 +10,64 @@ public class BuildVersion {
     public string CakeVersion { get; private set; } = typeof(ICakeContext).Assembly.GetName().Version.ToString();
     public string InformationalVersion { get; private set; }
     public string FullSemVersion { get; private set; }
-    public string Major { get; private set; }
-    public string Minor { get; private set; }
-    public string Patch { get; private set; }
-    public bool Preview { get; private set; }
-    public string Commits { get; private set; }
-    public string Number { get; private set; }
-    public string BuildId { get; private set; }
-    public string Tag { get; private set; }
+
+    private static readonly Regex regex = 
+        new Regex(@"^refs/heads/release/(?<major>\d)+\.(?<minor>\d)+\.?(?<patch>\d)*(?<preview>-preview)?(?<number>\d)*$");
+
+    private const string EmptyVersion = "0.0.0.0";
+    private const string AssemblyFileVersion = "AssemblyFileVersion(\"{0}\")";
+    private const string AssemblyVersion = "AssemblyVersion(\"{0}\")";
+    private const string AssemblyInformationalVersion = "AssemblyInformationalVersion(\"{0}\")";
+        
+    private void UseBranchVersion(ICakeContext context) {
+        var branchName = context.EnvironmentVariable("SourceBranch") ?? "";
+        context.Information($"Source branch: {branchName}");
+
+        var match = regex.Match(branchName);
+        if(match.Success) {
+            context.Information($"Calculating semantic version...");
+
+            var buildId = context.EnvironmentVariable("BuildId");
+            context.Information($"Build id: {buildId}");
+            
+            var major = match.Groups["major"].Value;
+            var minor = match.Groups["minor"].Value;
+            var patch = match.Groups["patch"].Success ? match.Groups["patch"].Value : "0";
+            var preview = match.Groups["preview"].Success;
+            var number = match.Groups["number"].Value;
+            var revision = buildId.Split('.')[1];
+            var hash = context.EnvironmentVariable("Hash");
+
+            var preReleaseTag = preview ? $"-preview.{number}" : "";
+
+            var fileVersion = $"{major}.{minor}.{patch}.{revision}";
+            var assemblyVersion = $"{major}.{minor}.{patch}";
+            var informationalVersion = $"{major}.{minor}.{patch}{preReleaseTag}.{revision}+{hash}";
+
+            var assemblyInfos = new Dictionary<string, string>()
+            {
+                [AssemblyFileVersion] = fileVersion,
+                [AssemblyVersion] = assemblyVersion,
+                [AssemblyInformationalVersion] = informationalVersion
+            };
+
+            var assemblyInfo = "AssemblyInfo.cs";
+            foreach(var info in assemblyInfos)
+            {
+                var source = string.Format(info.Key, EmptyVersion);
+                var dest = string.Format(info.Key, info.Value);
+                context.ReplaceTextInFiles(assemblyInfo, source, dest);
+            }
+
+            FullSemVersion = $"{major}.{minor}.{patch}{preReleaseTag}.{revision}";
+        }
+        else if(context.DirectoryExists(".git")) {
+                UseGitVersion(context);
+        }
+        else {
+            UseVersionAssemblyInfo(context);
+        }
+    }
 
     public static BuildVersion DetermineBuildVersion(ICakeContext context) {
         return new BuildVersion(context);
@@ -29,7 +79,6 @@ public class BuildVersion {
 
         UseBranchVersion(context);
         LogVersionInformation(context);
-        EnsureVersionInformation();
     }
 
     private void LogVersionInformation(ICakeContext context) {
@@ -46,75 +95,6 @@ public class BuildVersion {
         context.Information($"{nameof(CakeVersion)} = {CakeVersion}");
         context.Information($"{nameof(InformationalVersion)} = {InformationalVersion}");
         context.Information($"{nameof(FullSemVersion)} = {FullSemVersion}");        
-    }
-
-    private static readonly Regex branchRegex = 
-        new Regex(@"^refs/heads/release/(?<major>\d)+\.(?<minor>\d)+\.?(?<patch>\d)*(?<preview>-preview)?(?<number>\d)*$");
-
-    private const string EmptyVersion = "0.0.0.0";
-    private const string AssemblyFileVersion = "AssemblyFileVersion(\"{0}\")";
-    private const string AssemblyVersion = "AssemblyVersion(\"{0}\")";
-    private const string AssemblyInformationalVersion = "AssemblyInformationalVersion(\"{0}\")";
-        
-    private void UseBranchVersion(ICakeContext context) {
-        var branchName = context.EnvironmentVariable("SourceBranch") ?? "";
-        context.Information($"Current branch: {branchName}");
-
-        var branchMatch = branchRegex.Match(branchName);
-        if(branchMatch.Success) {
-            context.Information($"Outputting semantic version from branch");
-            Major = branchMatch.Groups["major"].Value;
-            Minor = branchMatch.Groups["minor"].Value;
-            Patch = branchMatch.Groups["patch"].Success ? branchMatch.Groups["patch"].Value : "0";
-            Preview = branchMatch.Groups["preview"].Success;
-            Number = branchMatch.Groups["number"].Value;
-
-            BuildId = context.EnvironmentVariable("BuildId");
-            context.Information($"Current build id: {BuildId}");
-
-            var hash = context.EnvironmentVariable("Hash");
-            context.Information($"Current hash: {hash}");
-
-            var revision = BuildId.Split('.')[1];
-
-            if(Preview)
-            {
-                Version = $"{Major}.{Minor}.{Patch}.{revision}";
-                SemVersion = $"{Major}.{Minor}.{Patch}-preview.{Number}";
-                InformationalVersion = $"{Major}.{Minor}.{Patch}-preview.{Number}+{hash}";
-                FullSemVersion = $"{Major}.{Minor}.{Patch}-preview.{Number}.{revision}";
-                Tag = $"v{Major}.{Minor}.{Patch}-preview.{Number}";
-            }
-            else
-            {
-                Version = $"{Major}.{Minor}.{Patch}.{revision}";
-                SemVersion = $"{Major}.{Minor}.{Patch}";
-                InformationalVersion = $"{Major}.{Minor}.{Patch}+{hash}";
-                FullSemVersion = $"{Major}.{Minor}.{Patch}.{revision}";
-                Tag = $"v{Major}.{Minor}.{Patch}";
-            }
-
-            var versions = new Dictionary<string, string>()
-            {
-                [AssemblyFileVersion] = SemVersion,
-                [AssemblyVersion] = Version,
-                [AssemblyInformationalVersion] = InformationalVersion
-            };
-
-            var assemblyInfo = "AssemblyInfo.cs";
-            foreach(var version in versions)
-            {
-                var source = string.Format(version.Key, EmptyVersion);
-                var dest = string.Format(version.Key, version.Value);
-                context.ReplaceTextInFiles(assemblyInfo, source, dest);
-            }
-        }
-        else if(context.DirectoryExists(".git")) {
-                UseGitVersion(context);
-        }
-        else {
-            UseVersionAssemblyInfo(context);
-        }
     }
 
     private void UseVersionAssemblyInfo(ICakeContext context) {
@@ -163,11 +143,5 @@ public class BuildVersion {
             InformationalVersion = context.EnvironmentVariable("GITVERSION_INFORMATIONALVERSION");
             FullSemVersion = context.EnvironmentVariable("GITVERSION_FULLSEMVER");
         }        
-    }
-
-    private void EnsureVersionInformation() {
-        if(new [] { Version, SemVersion, FullSemVersion, InformationalVersion }.Any(string.IsNullOrWhiteSpace)) {
-            throw new Exception("Version information has not been determined, build failed!");
-        }
     }
 }
