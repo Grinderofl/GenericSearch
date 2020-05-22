@@ -14,11 +14,21 @@ Task("Publish:Pack:DotNetCore")
         Configuration = config.Solution.BuildConfiguration,
         OutputDirectory = projectArtifactDirectory
     };
+
+    if(!string.IsNullOrWhiteSpace(config.Version.FileVersion))
+    {
+        settings.MSBuildSettings.SetFileVersion(config.Version.FileVersion);
+    }
+
+    if(!string.IsNullOrWhiteSpace(config.Version.PackageVersion))
+    {
+        settings.MSBuildSettings.WithProperty("PackageVersion", config.Version.PackageVersion);
+    }
+
     settings.MSBuildSettings = new DotNetCoreMSBuildSettings();
     settings.MSBuildSettings
-        .SetVersion(config.Version.FullSemVersion)
-        .SetConfiguration(config.Solution.BuildConfiguration)
-        .WithProperty("PackageVersion", config.Version.SemVersion);
+        .SetVersion(config.Version.Version)
+        .SetConfiguration(config.Solution.BuildConfiguration);
     settings.MSBuildSettings.NoLogo = true;
 
     foreach(var nugetProject in config.Solution.NuGetProjects) {

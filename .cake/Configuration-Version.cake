@@ -11,6 +11,9 @@ public class BuildVersion {
     public string InformationalVersion { get; private set; }
     public string FullSemVersion { get; private set; }
 
+    public string FileVersion { get; private set; }
+    public string PackageVersion { get; private set; }
+
     private static readonly Regex regex = 
         new Regex(@"^refs/heads/release/(?<major>\d)+\.(?<minor>\d)+\.?(?<patch>\d)*(?<preview>-preview)?(?<number>\d)*$");
 
@@ -43,6 +46,7 @@ public class BuildVersion {
             var fileVersion = $"{major}.{minor}.{patch}.{revision}";
             var assemblyVersion = $"{major}.{minor}.{patch}";
             var informationalVersion = $"{major}.{minor}.{patch}{preReleaseTag}.{revision}+{hash}";
+            var packageVersion = $"{major}.{minor}.{patch}{preReleaseTag}";
 
             var assemblyInfos = new Dictionary<string, string>()
             {
@@ -58,6 +62,9 @@ public class BuildVersion {
                 var dest = string.Format(info.Key, info.Value);
                 context.ReplaceTextInFiles(assemblyInfo, source, dest);
             }
+            Version = assemblyVersion;
+            FileVersion = fileVersion;
+            PackageVersion = packageVersion;
 
             FullSemVersion = $"{major}.{minor}.{patch}{preReleaseTag}.{revision}";
         }
