@@ -17,13 +17,17 @@ Task("Publish:Pack:DotNetCore")
 
     if(!string.IsNullOrWhiteSpace(config.Version.FileVersion))
     {
+        Information($"Using File Version '{config.Version.FileVersion}'");
         settings.MSBuildSettings.SetFileVersion(config.Version.FileVersion);
     }
 
     if(!string.IsNullOrWhiteSpace(config.Version.PackageVersion))
     {
+        Information($"Using Package Version '{config.Version.PackageVersion}'");
         settings.MSBuildSettings.WithProperty("PackageVersion", config.Version.PackageVersion);
     }
+
+    Information($"Using Assembly Version '{config.Version.Version}'");
 
     settings.MSBuildSettings = new DotNetCoreMSBuildSettings();
     settings.MSBuildSettings
