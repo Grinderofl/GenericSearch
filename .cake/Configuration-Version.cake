@@ -60,6 +60,7 @@ public class BuildVersion {
             {
                 var source = string.Format(info.Key, EmptyVersion);
                 var dest = string.Format(info.Key, info.Value);
+                context.Information($"Replacing [{source}] with [{dest}]");
                 context.ReplaceTextInFiles(assemblyInfo, source, dest);
             }
             Version = assemblyVersion;
@@ -98,10 +99,12 @@ public class BuildVersion {
         }
 
         context.Information($"{nameof(Version)} = {Version}");
-        context.Information($"{nameof(SemVersion)} = {SemVersion}");
-        context.Information($"{nameof(CakeVersion)} = {CakeVersion}");
+        //context.Information($"{nameof(SemVersion)} = {SemVersion}");
+        //context.Information($"{nameof(CakeVersion)} = {CakeVersion}");
         context.Information($"{nameof(InformationalVersion)} = {InformationalVersion}");
         context.Information($"{nameof(FullSemVersion)} = {FullSemVersion}");        
+        context.Information($"{nameof(FileVersion)} = {FileVersion}");        
+        context.Information($"{nameof(PackageVersion)} = {PackageVersion}");        
     }
 
     private void UseVersionAssemblyInfo(ICakeContext context) {

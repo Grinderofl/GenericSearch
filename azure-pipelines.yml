@@ -12,7 +12,7 @@ jobs:
   variables:
     cake.buildTarget: 'CI'
     build.configuration: 'Release'
-    cake.verbosity: 'Verbose'
+    cake.verbosity: 'Diagnostic'
     #build: $[counter(variables['major'], 1)]
     #branch: $(variables['Build.SourceBranch'])
     #buildId: $(variables['Build.BuildId'])
