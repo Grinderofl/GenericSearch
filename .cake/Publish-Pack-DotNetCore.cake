@@ -12,9 +12,10 @@ Task("Publish:Pack:DotNetCore")
         NoRestore = true,
         IncludeSymbols = true,
         Configuration = config.Solution.BuildConfiguration,
-        OutputDirectory = projectArtifactDirectory
+        OutputDirectory = projectArtifactDirectory,
+        MSBuildSettings = new DotNetCoreMSBuildSettings()
     };
-
+    
     if(!string.IsNullOrWhiteSpace(config.Version.FileVersion))
     {
         Information($"Using File Version '{config.Version.FileVersion}'");
@@ -29,7 +30,6 @@ Task("Publish:Pack:DotNetCore")
 
     Information($"Using Assembly Version '{config.Version.Version}'");
 
-    settings.MSBuildSettings = new DotNetCoreMSBuildSettings();
     settings.MSBuildSettings
         .SetVersion(config.Version.Version)
         .SetConfiguration(config.Solution.BuildConfiguration);
