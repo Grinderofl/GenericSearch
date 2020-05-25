@@ -98,9 +98,17 @@ partial class Build : NukeBuild
         .TriggeredBy(Pack)
         .DependsOn(VersionInfo, Pack)
         .OnlyWhenDynamic(() => IsServerBuild)
-        .OnlyWhenDynamic(() => GitRepository.Branch.Contains("release"))
+        //.OnlyWhenDynamic(() => GitRepository.Branch.Contains("release"))
         .Executes(() =>
         {
+            var branch = GitRepository.Branch;
+            Logger.Info($"Branch: {branch}");
+
+            if (branch != null && !branch.Contains("release"))
+            {
+                return;
+            }
+
             var tag = $"v{AssemblyVersion}{PrereleaseTag}";
             GitTasks.Git($"tag {tag}");
             GitTasks.Git("push");
