@@ -47,15 +47,8 @@ stages:
         steps:
           - task: CmdLine@2
             inputs:
-              script: './build.cmd VersionInfo Pack --skip'
+              script: './build.cmd VersionInfo Pack UpdateBuildNumber --skip'
           - task: PublishBuildArtifacts@1
             inputs:
               artifactName: artifacts
               pathtoPublish: 'artifacts'
-      - job: TagRelease
-        displayName: 'TagRelease'
-        dependsOn: [ Pack ]
-        steps:
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd VersionInfo TagRelease --skip'

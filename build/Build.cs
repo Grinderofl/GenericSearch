@@ -22,7 +22,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [AzurePipelines(AzurePipelinesImage.WindowsLatest,
                 TriggerBranchesInclude = new []{"master", "release/*"},
                 InvokedTargets = new[] {nameof(Test), nameof(Pack)},
-                NonEntryTargets = new []{nameof(Restore), nameof(VersionInfo)},
+                NonEntryTargets = new []{nameof(Restore), nameof(VersionInfo), nameof(UpdateBuildNumber)},
                 PullRequestsAutoCancel = true)]
 partial class Build : NukeBuild
 {
@@ -93,26 +93,26 @@ partial class Build : NukeBuild
                        );
         });
 
-    Target TagRelease => _ => _
-        .Description("Tag release branch")
-        .TriggeredBy(Pack)
-        .DependsOn(VersionInfo, Pack)
-        .OnlyWhenDynamic(() => IsServerBuild)
-        //.OnlyWhenDynamic(() => GitRepository.Branch.Contains("release"))
-        .Executes(() =>
-        {
-            var branch = GitRepository.Branch;
-            Logger.Info($"Branch: {branch}");
+    //Target TagRelease => _ => _
+    //    .Description("Tag release branch")
+    //    .TriggeredBy(Pack)
+    //    .DependsOn(VersionInfo, Pack)
+    //    .OnlyWhenDynamic(() => IsServerBuild)
+    //    //.OnlyWhenDynamic(() => GitRepository.Branch.Contains("release"))
+    //    .Executes(() =>
+    //    {
+    //        var branch = GitRepository.Branch;
+    //        Logger.Info($"Branch: {branch}");
 
-            if (branch != null && !branch.Contains("release"))
-            {
-                return;
-            }
+    //        if (branch != null && !branch.Contains("release"))
+    //        {
+    //            return;
+    //        }
 
-            var tag = $"v{AssemblyVersion}{PrereleaseTag}";
-            GitTasks.Git($"tag {tag}");
-            GitTasks.Git("push");
-        });
+    //        var tag = $"v{AssemblyVersion}{PrereleaseTag}";
+    //        GitTasks.Git($"tag {tag}");
+    //        GitTasks.Git("push");
+    //    });
 
     Target VersionInfo => _ => _
         .Executes(() =>
@@ -120,5 +120,13 @@ partial class Build : NukeBuild
             Version = CreateVersion();
             Metadata = CreateMetadata();
             Suffix = CreateSuffix();
+        });
+
+    Target UpdateBuildNumber => _ => _
+        .TriggeredBy(Pack)
+        .OnlyWhenStatic(() => IsServerBuild)
+        .Executes(() =>
+        {
+            Pipelines.UpdateBuildNumber($"v{AssemblyVersion}{PrereleaseTag}.{Version.Revision}");
         });
 }
