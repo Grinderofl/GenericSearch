@@ -14,12 +14,12 @@ namespace Grinderofl.GenericSearch.Exceptions
         }
 
         /// <inheritdoc />
-        public SearchPropertyActivationException(string? message) : base(message)
+        public SearchPropertyActivationException(string message) : base(message)
         {
         }
 
         /// <inheritdoc />
-        public SearchPropertyActivationException(string? message, Exception? innerException) : base(message, innerException)
+        public SearchPropertyActivationException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

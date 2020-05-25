@@ -13,12 +13,12 @@ namespace Grinderofl.GenericSearch.Exceptions
         }
 
         /// <inheritdoc />
-        public PropertyNotFoundException(string? message) : base(message)
+        public PropertyNotFoundException(string message) : base(message)
         {
         }
 
         /// <inheritdoc />
-        public PropertyNotFoundException(string? message, Exception? innerException) : base(message, innerException)
+        public PropertyNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

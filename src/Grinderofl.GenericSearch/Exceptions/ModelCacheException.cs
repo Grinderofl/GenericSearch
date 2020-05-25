@@ -14,12 +14,12 @@ namespace Grinderofl.GenericSearch.Exceptions
         }
 
         /// <inheritdoc />
-        public ModelCacheException(string? message) : base(message)
+        public ModelCacheException(string message) : base(message)
         {
         }
 
         /// <inheritdoc />
-        public ModelCacheException(string? message, Exception? innerException) : base(message, innerException)
+        public ModelCacheException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

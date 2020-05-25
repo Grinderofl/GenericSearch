@@ -14,7 +14,7 @@ GenericSearch aims to change this and minimize the amount of boilerplate code de
 1. Install the NuGet package:
 
 ```
-Install-Package Grinderofl.GenericSearch
+Install-Package Grinderofl.GenericSearch.1.0.0-preview.1
 ```
 
 2. Add the following line to your `ConfigureServices` method in `Startup`:

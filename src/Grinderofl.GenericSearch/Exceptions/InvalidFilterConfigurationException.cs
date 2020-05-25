@@ -13,12 +13,12 @@ namespace Grinderofl.GenericSearch.Exceptions
         }
 
         /// <inheritdoc />
-        public InvalidFilterConfigurationException(string? message) : base(message)
+        public InvalidFilterConfigurationException(string message) : base(message)
         {
         }
 
         /// <inheritdoc />
-        public InvalidFilterConfigurationException(string? message, Exception? innerException) : base(message, innerException)
+        public InvalidFilterConfigurationException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }
