@@ -20,7 +20,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [DotNetVerbosityMapping]
 [ShutdownDotNetBuildServerOnFinish]
 [AzurePipelines(AzurePipelinesImage.WindowsLatest,
-                TriggerBranchesInclude = new []{"master", "release"},
+                TriggerBranchesInclude = new []{"master", "release/*"},
                 InvokedTargets = new[] {nameof(Test), nameof(Pack)},
                 NonEntryTargets = new []{nameof(Restore), nameof(VersionInfo)},
                 PullRequestsAutoCancel = true)]
