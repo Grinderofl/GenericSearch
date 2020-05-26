@@ -60,7 +60,8 @@ partial class Build
 
         if (GitRepository.IsOnMasterBranch())
         {
-            return "ci";
+            var buildNumber = Pipelines.BuildNumber;
+            return $"ci.{buildNumber}";
         }
 
         Debug.Assert(GitRepository.Branch != null, "GitRepository.Branch != null");

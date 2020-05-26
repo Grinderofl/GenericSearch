@@ -21,6 +21,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [ShutdownDotNetBuildServerOnFinish]
 [AzurePipelines(AzurePipelinesImage.WindowsLatest,
                 TriggerBranchesInclude = new []{"master", "release/*"},
+                AutoGenerate = false,
                 InvokedTargets = new[] {nameof(Test), nameof(Pack)},
                 NonEntryTargets = new []{nameof(Restore), nameof(VersionInfo), nameof(UpdateBuildNumber)},
                 PullRequestsAutoCancel = true)]
