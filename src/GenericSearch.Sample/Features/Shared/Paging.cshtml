@@ -1,0 +1,53 @@
+﻿@model GenericSearch.PagedResult
+
+<nav aria-label="Pagination">
+    <ul class="pagination">
+        
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Html.GetUrlForPage(1)" aria-label="First Page">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@Html.GetUrlForPage(Model.PreviousPage)">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        }
+        
+        @foreach (var page in Enumerable.Range(Model.StartPage, Model.EndPage))
+        {
+            if (Model.IsActivePage(page))
+            {
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">@(page)
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Html.GetUrlForPage(page)">@(page)</a>
+                </li>
+            }
+        }
+        
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Html.GetUrlForPage(Model.NextPage)" aria-label="Next Page">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@Html.GetUrlForPage(Model.Pages)" aria-label="Last Page">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+
+    </ul>
+</nav>

@@ -83,7 +83,7 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             DotNetPack(s => s
-                           .SetProject(Solution.GetProject("Grinderofl.GenericSearch"))
+                           .SetProject(Solution.GetProject("GenericSearch"))
                            .SetOutputDirectory(ArtifactsDirectory)
                            .SetConfiguration(Configuration)
                            .SetAssemblyVersion(AssemblyVersion)
@@ -92,27 +92,6 @@ partial class Build : NukeBuild
                            .SetInformationalVersion(InformationalVersion)
                        );
         });
-
-    //Target TagRelease => _ => _
-    //    .Description("Tag release branch")
-    //    .TriggeredBy(Pack)
-    //    .DependsOn(VersionInfo, Pack)
-    //    .OnlyWhenDynamic(() => IsServerBuild)
-    //    //.OnlyWhenDynamic(() => GitRepository.Branch.Contains("release"))
-    //    .Executes(() =>
-    //    {
-    //        var branch = GitRepository.Branch;
-    //        Logger.Info($"Branch: {branch}");
-
-    //        if (branch != null && !branch.Contains("release"))
-    //        {
-    //            return;
-    //        }
-
-    //        var tag = $"v{AssemblyVersion}{PrereleaseTag}";
-    //        GitTasks.Git($"tag {tag}");
-    //        GitTasks.Git("push");
-    //    });
 
     Target VersionInfo => _ => _
         .Executes(() =>
