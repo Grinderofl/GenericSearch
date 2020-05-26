@@ -43,7 +43,7 @@ GenericSearch aims to change this and take advantage of convention-over-configur
 
 1. Install the NuGet package:
 
-   `Install-Package Grinderofl.GenericSearch.1.0.0-preview.1`
+   `Install-Package GenericSearch.1.0.0-preview.1` 
    
 2. Register GenericSearch with your application services:
 
