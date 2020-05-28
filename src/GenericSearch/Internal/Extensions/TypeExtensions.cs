@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -29,5 +30,17 @@ namespace GenericSearch.Internal.Extensions
                       .MakeGenericType(propertyType.GetGenericArguments())
                       .IsAssignableFrom(propertyType);
         }
+
+        /// <summary>
+        /// Attempts to get <see cref="PropertyInfo"/> with the provided <paramref name="propertyName"/>
+        /// if the <paramref name="propertyName"/> is not null or empty.
+        /// </summary>
+        /// <param name="type">Type to get <see cref="PropertyInfo"/> from</param>
+        /// <param name="propertyName">Name of the property or null</param>
+        /// <returns><see cref="PropertyInfo"/> or null</returns>
+        public static PropertyInfo? GetPropertyInfo(this Type type, string? propertyName)
+            => !string.IsNullOrWhiteSpace(propertyName)
+                ? type.GetProperty(propertyName)
+                : null;
     }
 }

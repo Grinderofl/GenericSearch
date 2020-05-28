@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace GenericSearch.Sample.Features.Customers
             public TextSearch PostalCode { get; set; }
             public MultipleTextOptionSearch Country { get; set; }
 
+            [DefaultValue(nameof(Projection.ContactName))]
             public string Ordx { get; set; }
             public Direction Ordd { get; set; }
 
@@ -112,6 +114,7 @@ namespace GenericSearch.Sample.Features.Customers
             public SearchProfile()
             {
                 CreateFilter<Projection, Query, Model>();
+
             }
         }
 

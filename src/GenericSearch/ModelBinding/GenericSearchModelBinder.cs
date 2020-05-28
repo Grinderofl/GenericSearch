@@ -51,28 +51,17 @@ namespace GenericSearch.ModelBinding
                                .RequestRowsProperty?
                                .SetValue(bindingContext.Model, filterConfiguration.PageConfiguration?.DefaultRowsPerPage);
 
-            //if (filterConfiguration.PageConfiguration.RequestRowsProperty != null)
-            //{
-                
-            //}
-
             filterConfiguration.PageConfiguration
                                .RequestPageNumberProperty?
                                .SetValue(bindingContext.Model, filterConfiguration.PageConfiguration?.DefaultPageNumber);
-
-            //if (filterConfiguration.PageConfiguration.RequestPageNumberProperty != null)
-            //{
-                
-            //}
 
             filterConfiguration.SortConfiguration
                                .RequestSortDirection?
                                .SetValue(bindingContext.Model, filterConfiguration.SortConfiguration?.DefaultSortDirection);
 
-            //if (filterConfiguration.SortConfiguration.RequestSortDirection != null)
-            //{
-                
-            //}
+            filterConfiguration.SortConfiguration
+                               .RequestSortProperty?
+                               .SetValue(bindingContext.Model, filterConfiguration.SortConfiguration?.DefaultSortProperty?.Name);
 
             var modelCache = modelCacheProvider.Provide();
             modelCache.CacheModel(bindingContext.Model);

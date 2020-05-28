@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GenericSearch.Configuration.Internal.Caching;
+using GenericSearch.Exceptions;
 using GenericSearch.Helpers;
 using GenericSearch.Providers;
 using GenericSearch.Searches;
@@ -113,6 +115,11 @@ namespace GenericSearch
         /// <param name="query"></param>
         /// <param name="request"></param>
         /// <returns></returns>
+        /// <exception cref="MissingConfigurationException">Configuration for <paramref name="request"/> type was not found.</exception>
+        /// <exception cref="NullReferenceException">Page number is null on <paramref name="request"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">Page number is 0 on <paramref name="request"/></exception>
+        /// <exception cref="NullReferenceException">Row count is null on <paramref name="request"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">Row count is 0 on <paramref name="request"/></exception>
         public IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
         {
             var requestType = request.GetType();
@@ -120,14 +127,42 @@ namespace GenericSearch
 
             if (configuration == null)
             {
-                return query;
+                throw new MissingConfigurationException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': filter configuration was not found for '{requestType.FullName}'.");
             }
 
-            var page = (int)configuration.PageConfiguration.RequestPageNumberProperty.GetValue(request);
-            var rows = (int)configuration.PageConfiguration.RequestRowsProperty.GetValue(request);
+            if (configuration.PageConfiguration == null)
+            {
+                throw new MissingConfigurationException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Pagination is not configured for '{requestType.FullName}'.");
+            }
 
-            var skip = (page - 1) * rows;
-            return query.Skip(skip).Take(rows);
+            var page = (int?)configuration.PageConfiguration.RequestPageNumberProperty?.GetValue(request);
+
+            // [Issue] https://dev.azure.com/sulenero/GenericSearch/_workitems/edit/9/
+            var rows = (int?)configuration.PageConfiguration.RequestRowsProperty?.GetValue(request);
+            
+            
+            if (page == null)
+            {
+                throw new NullReferenceException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Page number is null on '{requestType.FullName}'.");
+            }
+
+            if (page == 0)
+            {
+                throw new ArgumentOutOfRangeException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Page number is 0 on '{requestType.FullName}'.");
+            }
+
+            if (rows == null)
+            {
+                throw new NullReferenceException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Row count is null on '{requestType.FullName}'.");
+            }
+
+            if (rows == 0)
+            {
+                throw new ArgumentOutOfRangeException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Row count is 0 on '{requestType.FullName}'.");
+            }
+
+            var skip = (page.Value - 1) * rows.Value;
+            return query.Skip(skip).Take(rows.Value);
         }
 
         /// <summary>

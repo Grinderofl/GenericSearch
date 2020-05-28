@@ -6,6 +6,7 @@ using GenericSearch.Configuration.Internal;
 using GenericSearch.Exceptions;
 using GenericSearch.Internal.Extensions;
 using GenericSearch.Providers;
+using GenericSearch.Searches;
 using Microsoft.Extensions.Options;
 
 namespace GenericSearch.Configuration
@@ -44,7 +45,7 @@ namespace GenericSearch.Configuration
             return new FilterConfiguration(source)
             {
                 SearchConfigurations = CreateSearchConfigurations(source.SearchConfigurations, source.RequestType, source.ResultType),
-                SortConfiguration = CreateSortConfiguration(source.SortConfiguration, source.RequestType, source.ResultType),
+                SortConfiguration = CreateSortConfiguration(source.SortConfiguration, source.RequestType, source.ResultType, source.ItemType),
                 PageConfiguration = CreatePageConfiguration(source.PageConfiguration, source.RequestType, source.ResultType),
                 CopyRequestFilterValuesConfiguration = CreateCopyRequestFilterValuesConfiguration(source.CopyRequestFilterValuesConfiguration),
                 RedirectPostToGetConfiguration = CreateRedirectPostToGetConfiguration(source.RedirectPostToGetConfiguration),
@@ -85,29 +86,47 @@ namespace GenericSearch.Configuration
             return resultProperty;
         }
 
-        private ISortConfiguration CreateSortConfiguration(ISortConfiguration source, Type requestType, Type resultType)
+        private ISortConfiguration CreateSortConfiguration(ISortConfiguration source, Type requestType, Type resultType, Type itemType)
         {
-            return new SortConfiguration()
+            var configuration = new SortConfiguration
             {
-                RequestSortProperty = source?.RequestSortProperty ?? requestType.GetProperty(conventionOptions.DefaultSortOrderPropertyName),
-                RequestSortDirection = source?.RequestSortDirection ?? requestType.GetProperty(conventionOptions.DefaultSortDirectionPropertyName),
-                ResultSortProperty = source?.ResultSortProperty ?? resultType.GetProperty(source?.RequestSortProperty?.Name ?? conventionOptions.DefaultSortOrderPropertyName),
-                ResultSortDirection = source?.ResultSortDirection ?? resultType.GetProperty(source?.RequestSortDirection?.Name ?? conventionOptions.DefaultSortDirectionPropertyName),
-                DefaultSortDirection = source?.GetDefaultSortDirection() ?? options.DefaultSortDirection
+                RequestSortProperty = source?.RequestSortProperty ?? requestType.GetPropertyInfo(conventionOptions.DefaultSortOrderPropertyName),
+                RequestSortDirection = source?.RequestSortDirection ?? requestType.GetPropertyInfo(conventionOptions.DefaultSortDirectionPropertyName)
             };
+            
+            configuration.ResultSortProperty = source?.ResultSortProperty ?? resultType.GetPropertyInfo(configuration.RequestSortProperty?.Name);
+            configuration.ResultSortDirection = source?.ResultSortDirection ?? resultType.GetPropertyInfo(configuration.RequestSortDirection?.Name);
+
+            configuration.DefaultSortProperty = source?.DefaultSortProperty ?? itemType.GetPropertyInfo(configuration.RequestSortProperty?.GetDefaultValue<string>());
+            configuration.DefaultSortDirection = source?.DefaultSortDirection ?? configuration.RequestSortDirection?.GetDefaultValue<Direction?>() ?? options.DefaultSortDirection;
+            return configuration;
         }
 
         private IPageConfiguration CreatePageConfiguration(IPageConfiguration source, Type requestType, Type resultType)
         {
-            return new PageConfiguration()
+            var configuration = new PageConfiguration
             {
                 RequestPageNumberProperty = source?.RequestPageNumberProperty ?? requestType.GetProperty(conventionOptions.DefaultPageNumberPropertyName),
                 RequestRowsProperty = source?.RequestRowsProperty ?? requestType.GetProperty(conventionOptions.DefaultRowsPropertyName),
                 ResultPageNumberProperty = source?.ResultPageNumberProperty ?? resultType.GetProperty(source?.ResultPageNumberProperty?.Name ?? conventionOptions.DefaultPageNumberPropertyName),
-                ResultRowsProperty = source?.ResultRowsProperty ?? resultType.GetProperty(source?.ResultRowsProperty?.Name ?? conventionOptions.DefaultRowsPropertyName),
-                DefaultRowsPerPage = source?.GetDefaultRowsPerPage() ?? options.DefaultRowsPerPage,
-                DefaultPageNumber = source?.GetDefaultPageNumber() ?? options.DefaultPageNumber
+                ResultRowsProperty = source?.ResultRowsProperty ?? resultType.GetProperty(source?.ResultRowsProperty?.Name ?? conventionOptions.DefaultRowsPropertyName)
             };
+
+            if (configuration.RequestRowsProperty != null)
+            {
+                configuration.DefaultRowsPerPage = source?.DefaultRowsPerPage
+                                                   ?? configuration.RequestRowsProperty?.GetDefaultValue<int?>()
+                                                   ?? options.DefaultRowsPerPage;
+            }
+
+            if (configuration.RequestPageNumberProperty != null)
+            {
+                configuration.DefaultPageNumber = source?.DefaultPageNumber
+                                                  ?? configuration.RequestPageNumberProperty.GetDefaultValue<int?>()
+                                                  ?? options.DefaultPageNumber;
+            }
+
+            return configuration;
         }
 
         private ICopyRequestFilterValuesConfiguration CreateCopyRequestFilterValuesConfiguration(ICopyRequestFilterValuesConfiguration source)

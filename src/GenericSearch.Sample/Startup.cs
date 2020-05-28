@@ -61,6 +61,7 @@ namespace GenericSearch.Sample
             services.AddAutoMapper(GetType().Assembly);
             services.AddGenericSearch(GetType().Assembly)
                     .UseConventions()
+                    //.UseConventions(c => c.DefaultSortOrderPropertyName("Ordx").DefaultSortDirectionPropertyName("Ordd"))
                     .DefaultRowsPerPage(20);
 
             ConfigureOptions(services);

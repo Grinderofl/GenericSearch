@@ -31,11 +31,11 @@ namespace GenericSearch.Configuration
         /// <summary>
         /// Specifies the default rows per page
         /// </summary>
-        int DefaultRowsPerPage { get; }
+        int? DefaultRowsPerPage { get; }
 
         /// <summary>
         /// Specifies the default page number
         /// </summary>
-        int DefaultPageNumber { get; }
+        int? DefaultPageNumber { get; }
     }
 }

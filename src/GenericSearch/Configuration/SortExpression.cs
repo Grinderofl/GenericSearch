@@ -39,7 +39,12 @@ namespace GenericSearch.Configuration
         /// Specifies the default sort direction
         /// </summary>
         public Direction? DefaultSortDirection { get; private set; }
-        
+
+        /// <summary>
+        /// Specifies the default sort property
+        /// </summary>
+        public PropertyInfo DefaultSortProperty { get; private set; }
+
         /// <summary>
         /// Specifies the property to use for sort property
         /// </summary>
@@ -74,6 +79,17 @@ namespace GenericSearch.Configuration
         public ISortExpression<TItem, TRequest, TResult> DefaultDirection(Direction defaultDirection)
         {
             DefaultSortDirection = defaultDirection;
+            return this;
+        }
+
+        /// <summary>
+        /// Specifies the default property to sort on
+        /// </summary>
+        /// <param name="defaultProperty">Default sort property</param>
+        /// <returns>Sort expression</returns>
+        public ISortExpression<TItem, TRequest, TResult> DefaultProperty(Expression<Func<TItem, object>> defaultProperty)
+        {
+            DefaultSortProperty = defaultProperty?.GetPropertyInfo();
             return this;
         }
     }

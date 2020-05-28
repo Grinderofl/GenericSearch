@@ -36,12 +36,12 @@ namespace GenericSearch.Configuration
         /// <summary>
         /// Specifies the default rows per page
         /// </summary>
-        public int DefaultRowsPerPage { get; private set; }
+        public int? DefaultRowsPerPage { get; private set; }
 
         /// <summary>
         /// Specifies the default page number
         /// </summary>
-        public int DefaultPageNumber { get; private set; }
+        public int? DefaultPageNumber { get; private set; }
 
         /// <summary>
         /// Specifies the property to use for page number

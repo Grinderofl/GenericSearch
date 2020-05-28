@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using GenericSearch.Configuration;
 using GenericSearch.Searches;
 using Microsoft.AspNetCore.Routing;
@@ -82,6 +83,13 @@ namespace GenericSearch.ActionFilters.Visitors
             if (propertyInfo == configuration.SortConfiguration.RequestSortDirection)
             {
                 return configuration.SortConfiguration.DefaultSortDirection.Equals(value);
+            }
+
+            if (propertyInfo == configuration.SortConfiguration.RequestSortProperty &&
+                configuration.SortConfiguration.DefaultSortProperty != null)
+            {
+                var stringValue = $"{value}";
+                return configuration.SortConfiguration.DefaultSortProperty.Name.Equals(stringValue, StringComparison.OrdinalIgnoreCase);
             }
 
             return false;

@@ -33,5 +33,10 @@ namespace GenericSearch.Configuration.Internal
         /// Specifies the default sort direction
         /// </summary>
         public Direction? DefaultSortDirection { get; set; }
+
+        /// <summary>
+        /// Specifies the default sort property
+        /// </summary>
+        public PropertyInfo DefaultSortProperty { get; set; }
     }
 }
