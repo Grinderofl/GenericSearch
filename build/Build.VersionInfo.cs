@@ -26,19 +26,26 @@ partial class Build
 
     Version CreateVersion()
     {
-        var currentTag = GitTasks
-            .Git("tag")
-            .Where(x => x.Type == OutputType.Std)
-            .FirstOrDefault(x => x.Text.StartsWith("v")).Text ?? "v1.0.0";
+        //var nugetVersion = GitVersion.FullSemVer;
+        var maj = GitVersion.Major;
+        var min = GitVersion.Minor;
+        var pat = GitVersion.Patch;
+        
+        return new Version(maj, min, pat);
 
-        var versionTag = VersionTagRegex.Match(currentTag);
+        //var currentTag = GitTasks
+        //    .Git("tag")
+        //    .Where(x => x.Type == OutputType.Std)
+        //    .FirstOrDefault(x => x.Text.StartsWith("v")).Text ?? "v1.0.0";
 
-        var versionMajor = int.TryParse(versionTag.Groups["major"].Value, out var major) ? major : 1;
-        var versionMinor = int.TryParse(versionTag.Groups["minor"].Value, out var minor) ? minor : 0;
-        var versionPatch = int.TryParse(versionTag.Groups["patch"].Value, out var patch) ? patch : 0;
-        var versionRevision = Convert.ToInt32(Pipelines?.BuildId ?? 1);
+        //var versionTag = VersionTagRegex.Match(currentTag);
 
-        return new Version(versionMajor, versionMinor, versionPatch, versionRevision);
+        //var versionMajor = int.TryParse(versionTag.Groups["major"].Value, out var major) ? major : 1;
+        //var versionMinor = int.TryParse(versionTag.Groups["minor"].Value, out var minor) ? minor : 0;
+        //var versionPatch = int.TryParse(versionTag.Groups["patch"].Value, out var patch) ? patch : 0;
+        //var versionRevision = Convert.ToInt32(Pipelines?.BuildId ?? 1);
+
+        //return new Version(versionMajor, versionMinor, versionPatch, versionRevision);
     }
 
     string CreateMetadata()

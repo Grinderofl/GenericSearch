@@ -10,7 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageDownload Include="GitVersion.Tool" Version="[5.1.2]" />
     <PackageReference Include="Nuke.Common" Version="0.24.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
+    <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
+    <None Include="..\GitVersion.yml" Condition="Exists('..\GitVersion.yml')" />
   </ItemGroup>
 
 </Project>

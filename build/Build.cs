@@ -10,6 +10,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
+using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -36,6 +37,7 @@ partial class Build : NukeBuild
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
     [CI] readonly AzurePipelines Pipelines;
+    [GitVersion] readonly GitVersion GitVersion;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
