@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 // ReSharper disable once CheckNamespace
@@ -7,6 +8,7 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
     /// <summary>
     /// IHtmlHelper Model Extension methods for GenericSearch
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class HtmlHelperModelExtensions
     {
         /// <summary>

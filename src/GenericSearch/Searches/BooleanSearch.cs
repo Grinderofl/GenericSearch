@@ -1,4 +1,5 @@
 ﻿#pragma warning disable 1591
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace GenericSearch.Searches
@@ -9,6 +10,7 @@ namespace GenericSearch.Searches
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public BooleanSearch()
         {
         }
@@ -20,10 +22,5 @@ namespace GenericSearch.Searches
 
         protected override Expression BuildFilterExpression(Expression property) 
             => Expression.Equal(property, Expression.Constant(Is));
-
-        protected override string DebuggerDisplay()
-        {
-            return $"(Boolean) {Property}.Is = {Is}";
-        }
     }
 }

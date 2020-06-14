@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GenericSearch
 {
     /// <summary>
     /// Offers a reusable base class for a paged viewmodel result
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public abstract class PagedResult
     {
         /// <summary>

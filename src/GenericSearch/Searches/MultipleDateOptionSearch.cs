@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 1591
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -12,6 +13,7 @@ namespace GenericSearch.Searches
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public MultipleDateOptionSearch()
         {
         }
@@ -43,13 +45,6 @@ namespace GenericSearch.Searches
             }
 
             return searchExpression;
-        }
-
-        protected override string DebuggerDisplay()
-        {
-            if (!IsActive()) return $"(MultipleDate) {Property}";
-
-            return $"(MultipleDate) {Property}.Is = {string.Join(",", Is.Select(x => x.ToShortDateString()))}";
         }
     }
 }

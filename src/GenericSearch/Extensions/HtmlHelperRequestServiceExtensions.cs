@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
@@ -7,6 +8,7 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
     /// <summary>
     /// IHtmlHelper Request Services Extension methods for GenericSearch
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class HtmlHelperRequestServiceExtensions
     {
         /// <summary>

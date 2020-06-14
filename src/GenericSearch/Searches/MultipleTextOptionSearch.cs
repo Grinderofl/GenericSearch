@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 1591
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -11,6 +12,7 @@ namespace GenericSearch.Searches
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public MultipleTextOptionSearch()
         {
         }
@@ -42,12 +44,6 @@ namespace GenericSearch.Searches
             }
 
             return searchExpression;
-        }
-
-        protected override string DebuggerDisplay()
-        {
-            if (!IsActive()) return $"(MultipleText) {Property}";
-            return $"(MultipleText) {Property} = {string.Join(", ", Is)}";
         }
     }
 }

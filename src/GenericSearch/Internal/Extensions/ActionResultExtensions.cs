@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GenericSearch.Internal.Extensions
 {
+    [ExcludeFromCodeCoverage]
     internal static class ActionResultExtensions
     {
         public static object GetModel(this IActionResult actionResult)

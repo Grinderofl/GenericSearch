@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
@@ -9,7 +10,7 @@ using GenericSearch.Internal.Extensions;
 
 namespace GenericSearch.Searches
 {
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "()}")]
+    [ExcludeFromCodeCoverage]
     public abstract class AbstractSearch : ISearch
     {
         protected AbstractSearch(string property)
@@ -117,7 +118,5 @@ namespace GenericSearch.Searches
 
             return Expression.AndAlso(first, second);
         }
-
-        protected abstract string DebuggerDisplay();
     }
 }

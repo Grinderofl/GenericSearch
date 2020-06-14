@@ -2,7 +2,9 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace GenericSearch.Searches
 {
@@ -17,6 +19,7 @@ namespace GenericSearch.Searches
             Equals
         }
 
+        [ExcludeFromCodeCoverage]
         public TextSearch()
         {
         }
@@ -36,21 +39,19 @@ namespace GenericSearch.Searches
             return !string.IsNullOrWhiteSpace(Term);
         }
 
+        private static readonly MethodInfo Contains =
+            typeof(string).GetMethod(nameof(string.Contains), new[] {typeof(string)});
+
         protected override Expression BuildFilterExpression(Expression property)
         {
-            if (Term == null) return null;
+            var constant = Expression.Constant(Term);
 
-            var searchExpression = Expression.Call(property,
-                                                   typeof(string).GetMethod(Is.ToString(), new[] { typeof(string) }) ?? throw new InvalidOperationException(),
-                                                   Expression.Constant(Term));
-
-            return searchExpression;
-        }
-
-        protected override string DebuggerDisplay()
-        {
-            if (!IsActive()) return $"(Text) {Property}";
-            return $"(Text) {Property} {Is} {Term}";
+            if (Is == Comparer.Contains)
+            {
+                return Expression.Call(property, Contains, constant);
+            }
+                
+            return Expression.Equal(property, constant);
         }
     }
 }

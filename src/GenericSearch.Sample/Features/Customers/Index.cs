@@ -105,16 +105,16 @@ namespace GenericSearch.Sample.Features.Customers
         {
             public MappingProfile()
             {
-                CreateMap<Customer, Projection>();
+                CreateMap<Customer, Projection>()
+                    .ForMember(x => x.Id, x => x.MapFrom(c => c.Id));
             }
         }
 
-        public class SearchProfile : GenericSearchProfile
+        public class SearchProfile : ListProfile
         {
             public SearchProfile()
             {
-                CreateFilter<Projection, Query, Model>();
-
+                CreateFilter<Query, Projection, Model>();
             }
         }
 

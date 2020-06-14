@@ -11,7 +11,7 @@ namespace GenericSearch.ActionFilters.Visitors
     /// </summary>
     public class ModelPropertyVisitor : RouteValuePropertyVisitor
     {
-        private readonly IFilterConfiguration configuration;
+        private readonly ListConfiguration configuration;
         private readonly object model;
         private readonly RouteValueDictionary routeValueDictionary;
 
@@ -21,7 +21,7 @@ namespace GenericSearch.ActionFilters.Visitors
         /// <param name="configuration">Filter Configuration</param>
         /// <param name="model">Value of the model property</param>
         /// <param name="routeValueDictionary">RouteValueDictionary to populate</param>
-        public ModelPropertyVisitor(IFilterConfiguration configuration, 
+        public ModelPropertyVisitor(ListConfiguration configuration, 
                                     object model,
                                     RouteValueDictionary routeValueDictionary) : base(routeValueDictionary)
         {
@@ -70,26 +70,19 @@ namespace GenericSearch.ActionFilters.Visitors
                 return true;
             }
 
-            if (propertyInfo == configuration.PageConfiguration.RequestRowsProperty)
+            if (propertyInfo == configuration.PageConfiguration.RequestProperty)
             {
-                return configuration.PageConfiguration.DefaultRowsPerPage.Equals(value);
+                return configuration.PageConfiguration.DefaultValue.Equals(value);
             }
 
-            if (propertyInfo == configuration.PageConfiguration.RequestPageNumberProperty)
+            if (propertyInfo == configuration.RowsConfiguration.RequestProperty)
             {
-                return configuration.PageConfiguration.DefaultPageNumber.Equals(value);
+                return configuration.RowsConfiguration.DefaultValue.Equals(value);
             }
 
-            if (propertyInfo == configuration.SortConfiguration.RequestSortDirection)
+            if (propertyInfo == configuration.SortDirectionConfiguration.RequestProperty)
             {
-                return configuration.SortConfiguration.DefaultSortDirection.Equals(value);
-            }
-
-            if (propertyInfo == configuration.SortConfiguration.RequestSortProperty &&
-                configuration.SortConfiguration.DefaultSortProperty != null)
-            {
-                var stringValue = $"{value}";
-                return configuration.SortConfiguration.DefaultSortProperty.Name.Equals(stringValue, StringComparison.OrdinalIgnoreCase);
+                return configuration.SortDirectionConfiguration.DefaultValue.Equals(value);
             }
 
             return false;

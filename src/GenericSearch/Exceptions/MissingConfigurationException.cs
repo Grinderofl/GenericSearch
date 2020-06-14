@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GenericSearch.Exceptions
 {
     /// <summary>
     /// Represents error when a configuration is missing
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class MissingConfigurationException : Exception
     {
         /// <inheritdoc />

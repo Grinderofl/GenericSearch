@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace GenericSearch.Searches
@@ -29,6 +30,7 @@ namespace GenericSearch.Searches
             InRange
         }
 
+        [ExcludeFromCodeCoverage]
         public DateSearch()
         {
         }
@@ -54,6 +56,7 @@ namespace GenericSearch.Searches
             return Term1.HasValue || Term2.HasValue;
         }
 
+        [ExcludeFromCodeCoverage]
         protected override Expression BuildFilterExpression(Expression property)
         {
             Expression searchExpression1 = null;
@@ -74,16 +77,7 @@ namespace GenericSearch.Searches
             return searchExpression1 ?? searchExpression2;
         }
 
-        protected override string DebuggerDisplay()
-        {
-            if (!Term1.HasValue) return $"(Date)";
-
-            if (Is == Comparer.InRange && Term2.HasValue) return $"(Date) {Property} > {Term1} && {Property} < {Term2}";
-
-            return $"{Property} {Is} {Term1}";
-
-        }
-
+        [ExcludeFromCodeCoverage]
         private Expression GetFilterExpression(Expression property)
         {
             switch (Is)
@@ -91,7 +85,7 @@ namespace GenericSearch.Searches
                 case Comparer.Less:
                     return Expression.LessThan(property, Expression.Constant(Term1));
                 case Comparer.LessOrEqual:
-                    return Expression.GreaterThan(property, Expression.Constant(Term1));
+                    return Expression.LessThanOrEqual(property, Expression.Constant(Term1));
                 case Comparer.Equal:
                     return Expression.Equal(property, Expression.Constant(Term1));
                 case Comparer.GreaterOrEqual:

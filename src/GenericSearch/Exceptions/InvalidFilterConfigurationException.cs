@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GenericSearch.Exceptions
 {
     /// <summary>
     /// Represents errors in filter configurations
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class InvalidFilterConfigurationException : Exception
     {
         /// <inheritdoc />

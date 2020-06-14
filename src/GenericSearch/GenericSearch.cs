@@ -1,179 +1,128 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using GenericSearch.Configuration.Internal.Caching;
+using GenericSearch.Configuration;
 using GenericSearch.Exceptions;
-using GenericSearch.Helpers;
-using GenericSearch.Providers;
+using GenericSearch.Internal;
 using GenericSearch.Searches;
 
 namespace GenericSearch
 {
-    /// <summary>
-    /// Provides a generic way of searching, sorting, and paginating queryable types
-    /// </summary>
     public class GenericSearch : IGenericSearch
     {
-        private readonly IFilterConfigurationProvider configurationProvider;
-        private readonly IModelCacheProvider modelCacheProvider;
-        
-        /// <summary>
-        /// Initializes a new instance of <see cref="GenericSearch"/>
-        /// </summary>
-        /// <param name="configurationProvider">Filter Configuration Provider</param>
-        /// <param name="modelCacheProvider">Model Cache Provider</param>
-        public GenericSearch(IFilterConfigurationProvider configurationProvider, IModelCacheProvider modelCacheProvider)
+        private readonly IListConfigurationProvider configurationProvider;
+        private readonly IModelProvider provider;
+
+        public GenericSearch(IListConfigurationProvider configurationProvider, IModelProvider provider)
         {
             this.configurationProvider = configurationProvider;
-            this.modelCacheProvider = modelCacheProvider;
+            this.provider = provider;
         }
 
-        /// <summary>
-        /// Filters the <paramref name="query"/> results using the provided request object to obtain the search parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public IQueryable<T> Search<T>(IQueryable<T> query, object request)
+        private ListConfiguration GetConfiguration(object request)
         {
             var requestType = request.GetType();
-            var configuration = configurationProvider.Provide(requestType);
+            var configuration = configurationProvider.GetConfiguration(requestType);
 
             if (configuration == null)
             {
-                return query;
+                throw new MissingConfigurationException($"No configuration was defined for '{requestType.FullName}'");
             }
-            
-            foreach (var searchConfiguration in configuration.SearchConfigurations.Where(x => !x.IsIgnored))
+
+            return configuration;
+        }
+
+        public IQueryable<T> Search<T>(IQueryable<T> query, object request)
+        {
+            var configuration = GetConfiguration(request);
+
+            foreach (var searchConfiguration in configuration.SearchConfigurations.Where(x => !x.Ignored))
             {
-                var search = (ISearch) searchConfiguration.RequestProperty.GetValue(request);
-                query = search.ApplyToQuery(query);
+                var search = searchConfiguration.RequestProperty.GetValue(request) as ISearch;
+
+                if (search == null)
+                {
+                    throw new NullReferenceException($"The '{searchConfiguration.RequestProperty.Name}' Search Property on '{request.GetType().FullName}' is null.");
+                }
+
+                if (search.IsActive())
+                {
+                    query = search.ApplyToQuery(query);
+                }
             }
 
             return query;
         }
-
-        /// <summary>
-        /// Filters the <paramref name="query"/> results using a cached request object to obtain the search parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <returns></returns>
+        
         public IQueryable<T> Search<T>(IQueryable<T> query)
         {
-            var modelCache = modelCacheProvider.Provide();
-            return Search(query, modelCache.Model);
+            var request = provider.Provide();
+            return Search(query, request);
         }
 
-        /// <summary>
-        /// Sorts the <paramref name="query"/> results using the provided request object to obtain the sort parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public IQueryable<T> Sort<T>(IQueryable<T> query, object request)
         {
-            var requestType = request.GetType();
-            var configuration = configurationProvider.Provide(requestType);
+            var configuration = GetConfiguration(request);
 
-            if (configuration == null)
+            var sortColumn = (string) configuration.SortColumnConfiguration?.RequestProperty?.GetValue(request);
+            
+            var sortDirection = (Direction?) configuration.SortDirectionConfiguration?.RequestProperty?.GetValue(request);
+
+            if (string.IsNullOrWhiteSpace(sortColumn) || sortDirection == null)
             {
                 return query;
             }
 
-            var sortPropertyName = (string)configuration.SortConfiguration.RequestSortProperty.GetValue(request);
-            if (string.IsNullOrWhiteSpace(sortPropertyName))
-            {
-                return query;
-            }
-
-            var sortDirection = (Direction)configuration.SortConfiguration.RequestSortDirection.GetValue(request);
-
-            var propertyExpression = ExpressionFactory.Create<T>(sortPropertyName);
-
+            var expression = ExpressionFactory.Create<T>(sortColumn);
             return sortDirection == Direction.Ascending
-                       ? query.OrderBy(propertyExpression)
-                       : query.OrderByDescending(propertyExpression);
+                ? query.OrderBy(expression)
+                : query.OrderByDescending(expression);
+
         }
 
-        /// <summary>
-        /// Sorts the <paramref name="query"/> results using a cached request object to obtain the sort parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <returns></returns>
         public IQueryable<T> Sort<T>(IQueryable<T> query)
         {
-            return Sort(query, modelCacheProvider.Provide().Model);
+            var request = provider.Provide();
+            return Sort(query, request);
         }
 
-        /// <summary>
-        /// Pages the <paramref name="query"/> results using the provided request object to obtain the paging parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="MissingConfigurationException">Configuration for <paramref name="request"/> type was not found.</exception>
-        /// <exception cref="NullReferenceException">Page number is null on <paramref name="request"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">Page number is 0 on <paramref name="request"/></exception>
-        /// <exception cref="NullReferenceException">Row count is null on <paramref name="request"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">Row count is 0 on <paramref name="request"/></exception>
         public IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
         {
-            var requestType = request.GetType();
-            var configuration = configurationProvider.Provide(requestType);
+            var configuration = GetConfiguration(request);
 
-            if (configuration == null)
-            {
-                throw new MissingConfigurationException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': filter configuration was not found for '{requestType.FullName}'.");
-            }
+            // TODO: Get Name property value from a querystringvalueprovider or something similar?
 
-            if (configuration.PageConfiguration == null)
-            {
-                throw new MissingConfigurationException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Pagination is not configured for '{requestType.FullName}'.");
-            }
+            var page = (int?) configuration.PageConfiguration?.RequestProperty?.GetValue(request);
+            var rows = (int?) configuration.RowsConfiguration?.RequestProperty?.GetValue(request);
 
-            var page = (int?)configuration.PageConfiguration.RequestPageNumberProperty?.GetValue(request);
-
-            // [Issue] https://dev.azure.com/sulenero/GenericSearch/_workitems/edit/9/
-            var rows = (int?)configuration.PageConfiguration.RequestRowsProperty?.GetValue(request);
-            
-            
             if (page == null)
             {
-                throw new NullReferenceException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Page number is null on '{requestType.FullName}'.");
+                throw new NullReferenceException($"Unable to paginate: page is missing");
             }
 
             if (page == 0)
             {
-                throw new ArgumentOutOfRangeException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Page number is 0 on '{requestType.FullName}'.");
+                throw new ArgumentOutOfRangeException($"Unable to paginate: page is 0");
             }
 
             if (rows == null)
             {
-                throw new NullReferenceException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Row count is null on '{requestType.FullName}'.");
+                throw new NullReferenceException($"Unable to paginate: rows is missing");
             }
 
             if (rows == 0)
             {
-                throw new ArgumentOutOfRangeException($"Unable to paginate 'IQueryable<{typeof(T).FullName}>': Row count is 0 on '{requestType.FullName}'.");
+                throw new ArgumentOutOfRangeException($"Unable to paginate: rows is 0");
             }
 
             var skip = (page.Value - 1) * rows.Value;
             return query.Skip(skip).Take(rows.Value);
         }
 
-        /// <summary>
-        /// Pages the <paramref name="query"/> results using a cached request object to obtain the paging parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <returns></returns>
         public IQueryable<T> Paginate<T>(IQueryable<T> query)
         {
-            return Paginate(query, modelCacheProvider.Provide().Model);
+            var request = provider.Provide();
+            return Paginate(query, request);
         }
     }
 }

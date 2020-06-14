@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace GenericSearch.Searches
@@ -29,6 +30,7 @@ namespace GenericSearch.Searches
             InRange
         }
 
+        [ExcludeFromCodeCoverage]
         public DecimalSearch()
         {
         }
@@ -71,16 +73,6 @@ namespace GenericSearch.Searches
             return searchExpression1 ?? searchExpression2;
         }
 
-        protected override string DebuggerDisplay()
-        {
-            if (!Term1.HasValue) return $"(Decimal) {Property}";
-
-            if (Is == Comparer.InRange && Term2.HasValue) return $"(Decimal) {Property} > {Term1} && {Property} < {Term2}";
-
-            return $"(Decimal) {Property} {Is} {Term1}";
-
-        }
-
         private Expression GetFilterExpression(Expression property)
         {
             switch (Is)
@@ -88,7 +80,7 @@ namespace GenericSearch.Searches
                 case Comparer.Less:
                     return Expression.LessThan(property, Expression.Constant(Term1));
                 case Comparer.LessOrEqual:
-                    return Expression.GreaterThan(property, Expression.Constant(Term1));
+                    return Expression.LessThanOrEqual(property, Expression.Constant(Term1));
                 case Comparer.Equal:
                     return Expression.Equal(property, Expression.Constant(Term1));
                 case Comparer.GreaterOrEqual:

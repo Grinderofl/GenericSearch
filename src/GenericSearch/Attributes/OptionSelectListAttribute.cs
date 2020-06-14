@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
@@ -11,6 +12,7 @@ namespace GenericSearch.Attributes
     ///     when using 
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
+    [ExcludeFromCodeCoverage]
     public class OptionSelectListAttribute : Attribute
     {
         /// <summary>

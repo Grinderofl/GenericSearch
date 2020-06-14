@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace GenericSearch.Extensions
 {
     /// <summary>
     /// Extension methods for GenericSearch
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class SearchExtensions
     {
         /// <summary>

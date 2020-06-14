@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 1591
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace GenericSearch.Searches
@@ -11,6 +12,7 @@ namespace GenericSearch.Searches
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public SingleDateOptionSearch()
         {
         }
@@ -27,11 +29,5 @@ namespace GenericSearch.Searches
             => Is.HasValue
                    ? Expression.Equal(property, Expression.Constant(Is.Value.Date))
                    : null;
-
-        protected override string DebuggerDisplay()
-        {
-            if (!IsActive()) return $"(SingleDateOption) {Property}";
-            return $"(SingleDateOption) {Property}.Is = {Is}";
-        }
     }
 }

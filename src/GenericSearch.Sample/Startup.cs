@@ -1,6 +1,8 @@
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using GenericSearch.Extensions;
 using GenericSearch.Sample.Data;
+using GenericSearch.Sample.Features.Employees;
 using GenericSearch.Sample.Features.Startup;
 using Grinderofl.FeatureFolders;
 using JetBrains.Annotations;
@@ -11,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\{0}.cshtml")]
@@ -32,6 +35,14 @@ using Microsoft.Extensions.Hosting;
 
 namespace GenericSearch.Sample
 {
+    public class ConfigureGenericSearchOptions : IConfigureOptions<GenericSearchOptions>
+    {
+        public void Configure(GenericSearchOptions options)
+        {
+            options.CreateFilter<Index.Query, Index.Projection, Index.Model>();
+        }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -59,10 +70,8 @@ namespace GenericSearch.Sample
 
             services.AddMediatR(GetType().Assembly);
             services.AddAutoMapper(GetType().Assembly);
-            services.AddGenericSearch(GetType().Assembly)
-                    .UseConventions()
-                    //.UseConventions(c => c.DefaultSortOrderPropertyName("Ordx").DefaultSortDirectionPropertyName("Ordd"))
-                    .DefaultRowsPerPage(20);
+            services.AddDefaultGenericSearch(GetType().Assembly);
+            services.ConfigureOptions<ConfigureGenericSearchOptions>();
 
             ConfigureOptions(services);
         }

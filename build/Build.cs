@@ -7,6 +7,7 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
 using Nuke.Common.Utilities.Collections;
@@ -74,7 +75,8 @@ partial class Build : NukeBuild
         {
             DotNetTest(s => s
                            .SetProjectFile(Solution)
-                           .SetConfiguration(Configuration));
+                           .SetConfiguration(Configuration)
+                           .EnableCollectCoverage());
         });
 
     Target Pack => _ => _

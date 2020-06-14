@@ -1,9 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using GenericSearch.Configuration.Internal.Caching;
+﻿using System.Diagnostics.CodeAnalysis;
+using GenericSearch.Configuration;
 using GenericSearch.Exceptions;
-using GenericSearch.Providers;
+using GenericSearch.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -13,6 +11,7 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
     /// <summary>
     /// IHtmlHelper Paging Extension methods for GenericSearch
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class HtmlHelperPagingExtensions
     {
         /// <summary>
@@ -23,22 +22,27 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <returns></returns>
         public static string GetUrlForPage(this IHtmlHelper html, int page)
         {
-            var modelCacheProvider = html.GetRequestService<IModelCacheProvider>();
-            var filterConfigurationProvider = html.GetRequestService<IFilterConfigurationProvider>();
-            var modelCache = modelCacheProvider.Provide();
-            if (modelCache.Model == null)
+            var modelProvider = html.GetRequestService<IModelProvider>();
+            var model = modelProvider.Provide();
+            if (model == null)
             {
-                throw new ModelCacheException($"No model has been cached. Does the current action match the configured list action?");
+                throw new ModelProviderException($"No request model was provided. Does the current action match the configured list action?");
             }
 
-            var filterConfiguration = filterConfigurationProvider.Provide(modelCache.ModelType);
-            
+            var configurationProvider = html.GetRequestService<IListConfigurationProvider>();
+            var configuration = configurationProvider.GetConfiguration(model.GetType());
+            if (configuration == null)
+            {
+                throw new MissingConfigurationException($"Unable to find configuration for request model type '{model.GetType().FullName}'");
+            }
+
+            var pageConfiguration = configuration.PageConfiguration;
+
             var httpContext = html.ViewContext.HttpContext;
             var query = QueryHelpers.ParseQuery(httpContext.Request.QueryString.Value);
             
-            var configuration = filterConfiguration.PageConfiguration;
-            var pageNumber = configuration.RequestPageNumberProperty.Name.ToLowerInvariant();
-            var defaultPage = configuration.DefaultPageNumber;
+            var pageNumber = (pageConfiguration.RequestProperty?.Name ?? pageConfiguration.Name).ToLowerInvariant();
+            var defaultPage = pageConfiguration.DefaultValue;
 
             var pageValue = page;
             if (pageValue == defaultPage)

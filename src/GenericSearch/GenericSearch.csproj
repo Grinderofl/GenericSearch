@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Description>Generic Search, Sorting, and Pagination functionality for ASP.NET Core 3.1</Description>
 
     <Copyright>Nero Sule</Copyright>
@@ -22,6 +22,15 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Old\**" />
+    <Compile Remove="Old\Extensions\**" />
+    <EmbeddedResource Remove="Old\**" />
+    <EmbeddedResource Remove="Old\Extensions\**" />
+    <None Remove="Old\**" />
+    <None Remove="Old\Extensions\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

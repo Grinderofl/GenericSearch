@@ -1,20 +1,13 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using GenericSearch.Searches;
 
 namespace GenericSearch.Internal.Extensions
 {
+    [ExcludeFromCodeCoverage]
     internal static class TypeExtensions
     {
-        public static IEnumerable<PropertyInfo> GetSearchProperties(this Type type)
-        {
-            return type.GetProperties()
-                               .Where(x => x.PropertyType.GetInterfaces().Contains(typeof(ISearch)));
-        }
-
         public static bool IsNullableType(this Type propertyType)
         {
             return propertyType.IsGenericType
@@ -38,7 +31,7 @@ namespace GenericSearch.Internal.Extensions
         /// <param name="type">Type to get <see cref="PropertyInfo"/> from</param>
         /// <param name="propertyName">Name of the property or null</param>
         /// <returns><see cref="PropertyInfo"/> or null</returns>
-        public static PropertyInfo? GetPropertyInfo(this Type type, string? propertyName)
+        public static PropertyInfo GetPropertyInfo(this Type type, string propertyName)
             => !string.IsNullOrWhiteSpace(propertyName)
                 ? type.GetProperty(propertyName)
                 : null;

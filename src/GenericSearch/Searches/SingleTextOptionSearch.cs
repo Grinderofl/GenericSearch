@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 1591
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace GenericSearch.Searches
@@ -10,6 +11,7 @@ namespace GenericSearch.Searches
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public SingleTextOptionSearch()
         {
         }
@@ -30,12 +32,6 @@ namespace GenericSearch.Searches
             }
 
             return Expression.Equal(property, Expression.Constant(Is));
-        }
-
-        protected override string DebuggerDisplay()
-        {
-            if (!IsActive()) return $"(SingleTextOption) {Property}";
-            return $"(SingleTextOption) {Property}.Is = {Is}";
         }
     }
 }

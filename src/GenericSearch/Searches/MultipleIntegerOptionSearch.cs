@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 1591
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -11,6 +12,7 @@ namespace GenericSearch.Searches
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public MultipleIntegerOptionSearch()
         {
         }
@@ -42,13 +44,6 @@ namespace GenericSearch.Searches
             }
 
             return searchExpression;
-        }
-
-        protected override string DebuggerDisplay()
-        {
-            if (!IsActive()) return $"(MultipleInteger) {Property}";
-
-            return $"(MultipleInteger) {Property}.Is = {string.Join(", ", Is.Select(x => x.ToString()))}";
         }
     }
 }

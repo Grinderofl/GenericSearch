@@ -51,16 +51,14 @@ GenericSearch aims to change this and take advantage of convention-over-configur
    public void ConfigureServices(IServiceCollection services)
    {
        var assemblyContainingProfiles = GetType().Assembly;
-       services.AddGenericSearch(assemblyContainingProfiles)
-           .UseConventions()
-           .DefaultRowsPerPage(20);
+       services.AddGenericSearch(assemblyContainingProfiles);
    }
    ```
-
+   
 3. Define your filter models using [profiles]( https://dev.azure.com/sulenero/GenericSearch/_wiki/wikis/GenericSearch.wiki/27/Profiles ) by creating classes which inherit from `GenericSearchProfile` and placing the configuration in the constructor:
 
    ```c#
-   public class SearchProfile : GenericSearchProfile
+   public class SearchProfile : ListProfile
    {
        public SearchProfile()
        {
@@ -155,6 +153,16 @@ The repository contains a [sample project]( https://dev.azure.com/sulenero/_git/
 
 
 ## Release Notes
+
+### GenericSearch 1.0 Preview 2
+
+> Note: This is a preview release. While it's unlikely for any features to be significantly altered, please be
+>
+> sure to check the release notes of newer versions for any breaking changes.
+
+* Changed the configuration of convention defaults
+* Added more construction and initialization options to filters and properties
+* Simplified adding GenericSearch defaults
 
 ### GenericSearch 1.0 Preview 1
 

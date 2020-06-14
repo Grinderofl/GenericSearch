@@ -102,14 +102,6 @@ namespace GenericSearch.Sample.Features.Employees
             }
         }
 
-        public class SearchProfile : GenericSearchProfile
-        {
-            public SearchProfile()
-            {
-                CreateFilter<Projection, Query, Model>();
-            }
-        }
-
         public class Handler : IRequestHandler<Query, Model>
         {
             private readonly NorthwindDbContext context;
