@@ -24,7 +24,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: './build.cmd VersionInfo Pack UpdateBuildNumber --skip'
+    script: './build.cmd Pack UpdateBuildNumber --skip'
   displayName: 'Pack'
   condition: succeeded()
 
