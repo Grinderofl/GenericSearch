@@ -1,29 +1,21 @@
 ﻿@using GenericSearch.Searches
 @model GenericSearch.Searches.DateSearch
 
-<div class="col-sm-12 col-md-6 col-lg-4">
-    <div class="form-group">
-        <p class="h6">@Html.GetDisplayNameForModel()</p>
-
-        <label asp-for="Is"
-               class="col-form-label col-form-label-sm">Comparer</label>
-
-        <select asp-for="Is"
-                asp-items="@Html.GetEnumSelectList<DateSearch.Comparer>()"
-                class="form-control form-control-sm"></select>
-
-        <label asp-for="Term1"
-               class="col-form-label col-form-label-sm"></label>
-
-        <input type="text"
-               asp-for="Term1"
-               class="form-control form-control-sm" />
-
-        <label asp-for="Term2"
-               class="col-form-label col-form-label-sm"></label>
-
-        <input type="text"
-               asp-for="Term2"
-               class="form-control form-control-sm" />
+<div class="card-body py-2">
+    <h6 class="card-subtitle mb-2 text-muted">@Html.GetDisplayNameForModel()</h6>
+    <div class="input-group input-group-sm mb-1">
+        <select class="form-control" asp-for="Is" asp-items="@Html.GetEnumSelectList<DateSearch.Comparer>()"></select>
+    </div>
+    <div class="input-group input-group-sm">
+        <div class="input-group-prepend">
+            <label asp-for="Term1" class="input-group-text"></label>
+        </div>
+        <input type="date" asp-for="Term1" class="form-control"/>
+    </div>
+    <div class="input-group input-group-sm">
+        <div class="input-group-prepend">
+            <label asp-for="Term2" class="input-group-text"></label>
+        </div>
+        <input type="date" asp-for="Term2" class="form-control"/>
     </div>
 </div>

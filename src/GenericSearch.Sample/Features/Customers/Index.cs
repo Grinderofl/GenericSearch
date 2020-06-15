@@ -7,6 +7,7 @@ using AutoMapper;
 using GenericSearch.Extensions;
 using GenericSearch.Sample.Data;
 using GenericSearch.Sample.Data.Entities;
+using GenericSearch.Sample.Features.Shared;
 using GenericSearch.Sample.Infrastructure.Extensions;
 using GenericSearch.Searches;
 using MediatR;
@@ -16,7 +17,7 @@ namespace GenericSearch.Sample.Features.Customers
 {
     public static class Index
     {
-        public class Query : IRequest<Model>
+        public class Query : IRequest<Model>, ISortOrder
         {
             public CustomerFreeTextSearch FreeText { get; set; }
             public TextSearch CompanyName { get; set; }
@@ -33,7 +34,7 @@ namespace GenericSearch.Sample.Features.Customers
             public int Rows { get; set; }
         }
 
-        public class Model : PagedResult
+        public class Model : PagedResult, ISortOrder
         {
             public Model(IEnumerable<Projection> items, int total) : base(total)
             {

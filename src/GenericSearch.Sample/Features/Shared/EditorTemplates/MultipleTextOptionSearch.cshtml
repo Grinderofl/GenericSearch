@@ -1,11 +1,11 @@
 ﻿@model GenericSearch.Searches.MultipleTextOptionSearch
 
-<div class="col-sm-12 col-md-6 col-lg-4">
-    <div class="form-group">
-        <p class="h6">@Html.GetDisplayNameForModel()</p>
-        <label class="col-form-label col-form-label-sm"></label>
-        <select multiple="multiple" asp-for="Is" asp-items="@Html.GetSelectListForModel()" class="form-control form-control-sm">
-            <option value=""></option>
-        </select>
-    </div>
+<div class="card-body py-2">
+    <h6 class="card-subtitle mb-2 text-muted">@Html.GetDisplayNameForModel()</h6>
+    <select multiple="multiple"
+            asp-for="Is"
+            class="form-control form-control-sm"
+            asp-items="@Html.GetSelectListForModel()">
+        <option value=""></option>
+    </select>
 </div>

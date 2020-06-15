@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,10 +58,23 @@ namespace GenericSearch.Sample
         {
             services.AddDbContext<NorthwindDbContext>(ConfigureDbContextOptionsBuilder);
 
-            services.AddControllersWithViews()
-                    .AddFluentValidation()
-                    .AddFeatureFolders()
-                    .AddAreaFeatureFolders();
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddTagHelpersAsServices()
+                .AddControllersAsServices()
+                .AddRazorRuntimeCompilation()
+                .AddFluentValidation()
+                .AddFeatureFolders(x =>
+                {
+                    x.ClearDefaultViewLocationFormats = false;
+                    x.ClearDefaultPageViewLocationFormats = false;
+                })
+                .AddAreaFeatureFolders(x =>
+                {
+                    x.ClearDefaultAreaViewLocationFormats = false;
+                    x.ClearDefaultAreaPageViewLocationFormats = false;
+                });
 
             services.AddRouting(x =>
                                 {

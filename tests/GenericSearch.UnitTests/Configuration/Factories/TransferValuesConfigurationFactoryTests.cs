@@ -2,7 +2,7 @@
 using FluentAssertions;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition.Expressions;
-using GenericSearch.UnitTests.Scoping;
+using GenericSearch.Searches;
 using Xunit;
 
 namespace GenericSearch.UnitTests.Configuration.Factories
@@ -62,6 +62,23 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.Enabled.Should().BeFalse();
         }
 
+        private class Request
+        {
+            public TextSearch Foo { get; set; }
+            public IntegerSearch Bar { get; set; }
+        }
+
+        private class Item
+        {
+            public string Foo { get; set; }
+            public int Bar { get; set; }
+        }
+
+        private class Result
+        {
+            public TextSearch Foo { get; set; }
+            public IntegerSearch Bar { get; set; }
+        }
         
     }
 }

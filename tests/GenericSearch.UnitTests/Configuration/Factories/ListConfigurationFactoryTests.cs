@@ -5,7 +5,6 @@ using FluentAssertions;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition.Expressions;
 using GenericSearch.Searches;
-using GenericSearch.UnitTests.Scoping;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;

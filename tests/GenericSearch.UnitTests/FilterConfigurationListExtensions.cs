@@ -3,9 +3,9 @@ using System.Linq;
 using System.Reflection;
 using GenericSearch.Configuration;
 
-namespace GenericSearch.UnitTests.Scoping
+namespace GenericSearch.UnitTests
 {
-    internal static class FilterConfigurationListExtensions
+    internal static class ListConfigurationExtensions
     {
         public static PropertyInfo ResultPropertyFor(this ListConfiguration configuration, string requestPropertyName)
         {

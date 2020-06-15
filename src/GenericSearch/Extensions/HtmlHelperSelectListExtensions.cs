@@ -6,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using GenericSearch.Attributes;
+using GenericSearch.Configuration;
+using GenericSearch.Internal;
 using GenericSearch.Internal.Extensions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
@@ -62,6 +64,32 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
             return html.GetSelectList(modelProperty.Name);
         }
 
+        public static IReadOnlyList<SelectListItem> GetPropertiesSelectListForModel(this IHtmlHelper html)
+        {
+            var modelProvider = html.GetRequestService<IModelProvider>();
+            var model = modelProvider.Provide();
+
+            if (model == null)
+            {
+                throw new NullReferenceException($"Unable to provide request model.");
+            }
+
+            var configurationProvider = html.GetRequestService<IListConfigurationProvider>();
+            var configuration = configurationProvider.GetConfiguration(model.GetType());
+
+            if (configuration == null)
+            {
+                throw new NullReferenceException($"Unable to find list configuration for '{model.GetType().FullName}'.");
+            }
+
+            return html.GetPropertiesSelectList(configuration.ItemType);
+        }
+
+        public static IReadOnlyList<SelectListItem> GetPropertiesSelectList<TModel, T>(this IHtmlHelper<TModel> html, Expression<Func<TModel, IEnumerable<T>>> expression)
+        {
+            return html.GetPropertiesSelectList(typeof(T));
+        }
+
         /// <summary>
         /// Helper method to retrieve a Select List from ViewData using the specified model property name as the index key.
         /// </summary>
@@ -90,5 +118,22 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
                              .Select(x => new SelectListItem(x.GetDisplayName(), x.Name.ToLowerInvariant()))
                              .ToArray();
         }
+
+        /// <summary>
+        /// Helper method to retrieve a Select List of the properties in the provided type which have
+        /// the <see cref="DisplayAttribute"/>, using the Display Name as the Text and the Name in lowercase as the value.
+        /// </summary>
+        /// <param name="html">Html helper</param>
+        /// <param name="type">Type which properties to make into select list</param>
+        /// <returns>ReadOnlyList of select list items</returns>
+        public static IReadOnlyList<SelectListItem> GetPropertiesSelectList(this IHtmlHelper html, Type type)
+        {
+            return type.GetProperties()
+                .Where(x => x.HasAttribute<DisplayAttribute>())
+                .Select(x => new SelectListItem(x.GetDisplayName(), x.Name.ToLowerInvariant()))
+                .ToArray();
+        }
+
+
     }
 }

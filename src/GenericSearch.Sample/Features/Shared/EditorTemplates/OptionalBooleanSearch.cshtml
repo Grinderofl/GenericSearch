@@ -1,0 +1,10 @@
+﻿@model GenericSearch.Searches.OptionalBooleanSearch
+
+<div class="card-body py-2">
+    <h6 class="card-subtitle mb-2 text-muted">@Html.GetDisplayNameForModel()</h6>
+    <select asp-for="Is" class="form-control form-control-sm">
+        <option value=""></option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+    </select>
+</div>

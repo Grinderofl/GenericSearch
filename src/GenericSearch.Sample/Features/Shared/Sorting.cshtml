@@ -1,0 +1,14 @@
+﻿@using GenericSearch.Searches
+@model GenericSearch.Sample.Features.Shared.ISortOrder
+
+<div class="card-body py-2">
+    <h6 class="card-subtitle mb-2 text-muted">Sort</h6>
+    <div class="input-group input-group-sm">
+        <div class="input-group-prepend">
+            <select class="form-control form-control-sm" asp-for="Ordd" asp-items="@Html.GetEnumSelectList<Direction>()"></select>
+        </div>
+        <select class="form-control" asp-for="Ordx" asp-items="@Html.GetPropertiesSelectListForModel()">
+            <option value=""></option>
+        </select>
+    </div>
+</div>

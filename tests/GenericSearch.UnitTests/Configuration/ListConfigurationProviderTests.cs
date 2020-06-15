@@ -8,8 +8,6 @@ using GenericSearch.Configuration;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition;
 using GenericSearch.Exceptions;
-using GenericSearch.UnitTests.Configuration.Factories;
-using GenericSearch.UnitTests.Scoping;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;

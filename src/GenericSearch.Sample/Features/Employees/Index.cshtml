@@ -3,99 +3,99 @@
 @using Index = GenericSearch.Sample.Features.Employees.Index;
 @model Index.Model
 
+@{
+    Layout = "_Layout.Admin";
+}
+
 <div class="row mb-2">
     <div class="col-12">
-        <a asp-action="Create" class="btn btn-primary">Create New</a>
+        <button class="btn btn-primary"
+                type="button"
+                data-toggle="collapse"
+                data-target="#filters"
+                aria-expanded="false"
+                aria-controls="filters">
+            Toggle Filters
+        </button>
     </div>
 </div>
 
-<form class="border-top" method="post">
-    <h5>Filters</h5>
-    <div class="form-row">
-        @Html.EditorFor(x => x.FirstName)
-        @Html.EditorFor(x => x.LastName)
-        @Html.EditorFor(x => x.BirthDate)
-    </div>
-    <div class="form-row">
-        @Html.EditorFor(x => x.HireDate)
-        @Html.EditorFor(x => x.HomePhone)
-        @Html.EditorFor(x => x.Country)
-    </div>
-    <div class="form-row">
-        @Html.EditorFor(x => x.ReportsToFirstName)
-        @Html.EditorFor(x => x.ReportsToLastName)
-    </div>
-    <div class="form-row">
-        <div class="col-6">
-            <div class="form-group">
-                <p class="h6 col-12">Order</p>
-                <label asp-for="Ordd" class="col-4 col-form-label col-form-label-sm">Direction</label>
-                <select asp-for="Ordd" asp-items="@Html.GetEnumSelectList<Direction>()" class="form-control form-control-sm col-8"></select>
-                <label asp-for="Ordx" class="col-4 col-form-label col-form-label-sm">Column</label>
-                <select asp-for="Ordx" asp-items="@Html.GetPropertiesSelectList<Index.Projection>()" class="col-8 form-control form-control-sm">
-                    <option value=""></option>
-                </select>
+<div class="row">
+    <div class="col collapse col-md-3" id="filters">
+        <form role="form" method="post">
+            <div class="card">
+                <div class="card-header">
+                    <h6>Filters</h6>
+                </div>
+                @Html.EditorFor(x => x.FirstName)
+                @Html.EditorFor(x => x.LastName)
+                @Html.EditorFor(x => x.BirthDate)
+                @Html.EditorFor(x => x.HireDate)
+                @Html.EditorFor(x => x.HomePhone)
+                @Html.EditorFor(x => x.Country)
+                <partial name="Sorting"/>
+                <div class="card-body py-2">
+                    <div class="input-group input-group-sm">
+                        <button class="btn btn-primary" type="submit">Apply</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
-    <button type="submit" class="btn btn-primary">Apply</button>
-</form>
+    <div class="col">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Birth Date
+                    </th>
+                    <th>
+                        Hire Date
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Home Phone
+                    </th>
+                    <th>
+                        Reports To
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BirthDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HireDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Country)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HomePhone)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReportsToFirstName)
+                            @Html.DisplayFor(modelItem => item.ReportsToLastName)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-<table class="table mt-2">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Birth Date
-            </th>
-            <th>
-                Hire Date
-            </th>
-            <th>
-                Country
-            </th>
-            <th>
-                Home Phone
-            </th>
-            <th>
-                Reports To
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BirthDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HireDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Country)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HomePhone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReportsToFirstName)
-                    @Html.DisplayFor(modelItem => item.ReportsToLastName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <partial name="Paging" />
+    </div>
+</div>
 
-<partial name="Paging" />
