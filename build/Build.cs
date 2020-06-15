@@ -1,6 +1,7 @@
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.CI.AzurePipelines;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -23,6 +24,12 @@ using static Nuke.GitHub.ChangeLogExtensions;
                 InvokedTargets = new[] {nameof(Test), nameof(Pack)},
                 NonEntryTargets = new []{nameof(Restore), nameof(UpdateBuildNumber)},
                 PullRequestsAutoCancel = true)]
+[GitHubActions("Build", 
+               GitHubActionsImage.WindowsLatest, 
+               InvokedTargets = new []{nameof(Test), nameof(Pack)}, 
+               On = new [] {GitHubActionsTrigger.PullRequest, GitHubActionsTrigger.Push},
+               AutoGenerate = false
+               )]
 partial class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Pack);
@@ -104,6 +111,6 @@ partial class Build : NukeBuild
         .OnlyWhenStatic(() => IsServerBuild)
         .Executes(() =>
         {
-            Pipelines.UpdateBuildNumber($"v{GitVersion.FullSemVer}");
+            Pipelines?.UpdateBuildNumber($"v{GitVersion.FullSemVer}");
         });
 }
