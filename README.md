@@ -1,7 +1,7 @@
 # GenericSearch for ASP.NET Core
 
 [![Build Status](https://dev.azure.com/sulenero/GenericSearch/_apis/build/status/GenericSearch?branchName=master)](https://dev.azure.com/sulenero/GenericSearch/_build/latest?definitionId=11&branchName=master)
-
+![Build](https://github.com/Grinderofl/GenericSearch/workflows/Build/badge.svg)
 
 
 ## Table of Contents
