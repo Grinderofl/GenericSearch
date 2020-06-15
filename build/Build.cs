@@ -8,8 +8,10 @@ using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
+using Nuke.GitHub;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.GitHub.ChangeLogExtensions;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -35,6 +37,7 @@ partial class Build : NukeBuild
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    string ChangeLogFile => RootDirectory / "CHANGELOG.md";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -72,20 +75,27 @@ partial class Build : NukeBuild
                            .EnableCollectCoverage());
         });
 
+    string PreReleaseTag => IsLocalBuild
+        ? "dev"
+        : GitVersion.PreReleaseTag;
+
     Target Pack => _ => _
         .DependsOn(Compile, Test)
         .Consumes(Compile)
         .Produces(ArtifactsDirectory / "*.nupkg")
         .Executes(() =>
         {
+            var changeLog = GetCompleteChangeLog(ChangeLogFile).EscapeStringPropertyForMsBuild();
+
             DotNetPack(s => s
                            .SetProject(Solution.GetProject("GenericSearch"))
                            .SetOutputDirectory(ArtifactsDirectory)
                            .SetConfiguration(Configuration)
                            .SetAssemblyVersion(GitVersion.AssemblySemVer)
                            .SetFileVersion(GitVersion.AssemblySemFileVer)
-                           .SetVersionSuffix(GitVersion.PreReleaseTag)
+                           .SetVersionSuffix(PreReleaseTag)
                            .SetInformationalVersion(GitVersion.InformationalVersion)
+                           .SetPackageReleaseNotes(changeLog)
                        );
         });
 
