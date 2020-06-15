@@ -24,7 +24,8 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Publish NuGet
-        uses: brandedoutcast/publish-nuget@v2.5.2
+        uses: rohith/publish-nuget@v2
         with:
+          PROJECT_FILE_PATH: src/GenericSearch/GenericSearch.csproj
           NUGET_KEY: ${{ secrets.NUGET_TOKEN }}
           INCLUDE_SYMBOLS: enabled
