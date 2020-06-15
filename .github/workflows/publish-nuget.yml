@@ -24,8 +24,10 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Publish NuGet
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/GenericSearch/GenericSearch.csproj
-          NUGET_KEY: ${{ secrets.NUGET_TOKEN }}
-          INCLUDE_SYMBOLS: enabled
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with: 
+          nupkg-path:  './artifacts/*.*upkg'
+          repo-owner: 'Grinderofl'
+          gh-user: 'Grinderofl'
+          token: ${{ secrets.NUGET_TOKEN }}
