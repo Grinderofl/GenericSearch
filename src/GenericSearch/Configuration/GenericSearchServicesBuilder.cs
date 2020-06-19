@@ -27,7 +27,7 @@ namespace GenericSearch.Configuration
 
         private bool defaultActivatorsAdded;
 
-        public IGenericSearchServicesBuilder AddDefinitionsFromAssembly(Assembly assembly)
+        public IGenericSearchServicesBuilder AddProfilesFromAssembly(Assembly assembly)
         {
             var types = assembly.GetExportedTypes()
                 .Where(x => x.GetInterfaces().Contains(typeof(IListDefinitionSource)));
@@ -40,8 +40,20 @@ namespace GenericSearch.Configuration
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddDefinitionsFromAssemblyOf<T>() => 
-            AddDefinitionsFromAssembly(typeof(T).Assembly);
+        public IGenericSearchServicesBuilder AddProfile<T>() where T : class, IListDefinitionSource
+        {
+            services.AddSingleton<IListDefinitionSource, T>();
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddProfile<T>(T profile) where T : IListDefinitionSource
+        {
+            services.AddSingleton<IListDefinitionSource>(profile);
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddProfilesFromAssemblyOf<T>() => 
+            AddProfilesFromAssembly(typeof(T).Assembly);
 
         public IGenericSearchServicesBuilder AddDefaultServices()
         {

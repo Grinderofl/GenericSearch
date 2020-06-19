@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Reflection;
+using GenericSearch.Definition;
 using GenericSearch.Searches.Activation;
 
 namespace GenericSearch
 {
     public interface IGenericSearchServicesBuilder
     {
-        IGenericSearchServicesBuilder AddDefinitionsFromAssembly(Assembly assembly);
-        IGenericSearchServicesBuilder AddDefinitionsFromAssemblyOf<T>();
+        IGenericSearchServicesBuilder AddProfile<T>() where T : class, IListDefinitionSource;
+        IGenericSearchServicesBuilder AddProfile<T>(T profile) where T : IListDefinitionSource;
+        IGenericSearchServicesBuilder AddProfilesFromAssembly(Assembly assembly);
+        IGenericSearchServicesBuilder AddProfilesFromAssemblyOf<T>();
         IGenericSearchServicesBuilder AddDefaultServices();
         IGenericSearchServicesBuilder AddDefaultActivators();
         IGenericSearchServicesBuilder AddModelBinder();

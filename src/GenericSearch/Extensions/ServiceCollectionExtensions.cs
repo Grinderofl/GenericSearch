@@ -16,7 +16,7 @@ namespace GenericSearch.Extensions
             var builder = new GenericSearchServicesBuilder(services);
             foreach (var assembly in assemblies)
             {
-                builder.AddDefinitionsFromAssembly(assembly);
+                builder.AddProfilesFromAssembly(assembly);
             }
 
             return builder;
@@ -34,7 +34,7 @@ namespace GenericSearch.Extensions
 
             foreach (var assembly in assemblies)
             {
-                builder.AddDefinitionsFromAssembly(assembly);
+                builder.AddProfilesFromAssembly(assembly);
             }
 
             return builder;
