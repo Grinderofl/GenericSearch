@@ -10,6 +10,7 @@ using GenericSearch.Definition.Expressions;
 using GenericSearch.Exceptions;
 using GenericSearch.Internal;
 using GenericSearch.Searches;
+using GenericSearch.Searches.Activation;
 using GenericSearch.UnitTests.ModelBinders;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -27,7 +28,7 @@ namespace GenericSearch.UnitTests
             optionsMock.Setup(x => x.Value).Returns(new GenericSearchOptions());
 
             var options = optionsMock.Object;
-            var factory = new ListConfigurationFactory(new SearchConfigurationFactory(),
+            var factory = new ListConfigurationFactory(new SearchConfigurationFactory(new PascalCasePropertyPathFinder()),
                                                        new PageConfigurationFactory(options),
                                                        new RowsConfigurationFactory(options),
                                                        new SortColumnConfigurationFactory(options),

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using GenericSearch.Configuration;
+using GenericSearch.Definition;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,74 @@ using Xunit;
 namespace GenericSearch.UnitTests.Configuration
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
-    public class GenericSearchBuilderTests
+    public class GenericSearchServicesBuilderTests
     {
+        [Fact]
+        public void AddProfile_Type_Succeeds()
+        {
+            var services = new ServiceCollection();
+
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddProfile(typeof(ProfileBaz));
+
+            var service = services.Single(x => x.ServiceType == typeof(IListDefinitionSource));
+
+            service.ImplementationType.Should().Be<ProfileBaz>();
+        }
+
+        [Fact]
+        public void AddProfile_Generic_Succeeds()
+        {
+            var services = new ServiceCollection();
+
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddProfile<ProfileBaz>();
+
+            var service = services.Single(x => x.ServiceType == typeof(IListDefinitionSource));
+
+            service.ImplementationType.Should().Be<ProfileBaz>();
+        }
+
+        [Fact]
+        public void AddProfile_Profile_Succeeds()
+        {
+            var services = new ServiceCollection();
+
+            var builder = new GenericSearchServicesBuilder(services);
+            var profile = new ProfileBaz();
+            builder.AddProfile(profile);
+
+            var service = services.Single(x => x.ServiceType == typeof(IListDefinitionSource));
+
+            service.ImplementationInstance.Should().Be(profile);
+        }
+
+        [Fact]
+        public void AddProfilesFromAssembly_Assembly_Succeeds()
+        {
+            var services = new ServiceCollection();
+
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddProfilesFromAssembly(GetType().Assembly);
+
+            var service = services.Single(x => x.ServiceType == typeof(IListDefinitionSource));
+
+            service.ImplementationType.Should().Be<ProfileBaz>();
+        }
+
+        [Fact]
+        public void AddProfilesFromAssemblyOf_T_Succeeds()
+        {
+            var services = new ServiceCollection();
+
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddProfilesFromAssemblyOf<ProfileBaz>();
+
+            var service = services.Single(x => x.ServiceType == typeof(IListDefinitionSource));
+
+            service.ImplementationType.Should().Be<ProfileBaz>();
+        }
+
         [Fact]
         public void AddSearchActivator_Succeeds()
         {
@@ -26,10 +93,8 @@ namespace GenericSearch.UnitTests.Configuration
             var builder = new GenericSearchServicesBuilder(services);
             builder.AddSearchActivator<ActivatorFoo>();
 
-            var service = services.FirstOrDefault(x => x.ServiceType == typeof(ISearchActivator<TextSearch>));
-
-            Debug.Assert(service != null, nameof(service) + " != null");
-
+            var service = services.Single(x => x.ServiceType == typeof(ISearchActivator<TextSearch>));
+            
             service.ServiceType.Should().Be(typeof(ISearchActivator<TextSearch>));
             service.ImplementationType.Should().Be(typeof(ActivatorFoo));
         }
@@ -198,7 +263,7 @@ namespace GenericSearch.UnitTests.Configuration
 
         private class ActivatorFoo : ISearchActivator<TextSearch>
         {
-            public ISearch Create(PropertyInfo itemProperty)
+            public ISearch Activate(string entityPath)
             {
                 throw new NotImplementedException();
             }
@@ -206,10 +271,14 @@ namespace GenericSearch.UnitTests.Configuration
 
         private class ActivatorBar : ISearchActivator
         {
-            public ISearch Create(PropertyInfo itemProperty)
+            public ISearch Activate(string entityPath)
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public class ProfileBaz : ListProfile
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using GenericSearch.Configuration;
@@ -12,9 +13,9 @@ namespace GenericSearch.UnitTests
             return configuration.SearchConfigurations.ResultPropertyFor(requestPropertyName);
         }
 
-        public static PropertyInfo ItemPropertyFor(this ListConfiguration configuration, string requestPropertyName)
+        public static string ItemPropertyPathFor(this ListConfiguration configuration, string requestPropertyName)
         {
-            return configuration.SearchConfigurations.ItemPropertyFor(requestPropertyName);
+            return configuration.SearchConfigurations.ItemPropertyPathFor(requestPropertyName);
         }
 
         
@@ -28,9 +29,9 @@ namespace GenericSearch.UnitTests
             return list.Find(requestPropertyName).ResultProperty;
         }
 
-        public static PropertyInfo ItemPropertyFor(this IEnumerable<SearchConfiguration> list, string requestPropertyName)
+        public static string ItemPropertyPathFor(this IEnumerable<SearchConfiguration> list, string requestPropertyName)
         {
-            return list.Find(requestPropertyName).ItemProperty;
+            return list.Find(requestPropertyName).ItemPropertyPath;
         }
     }
 }

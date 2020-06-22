@@ -11,7 +11,7 @@ namespace GenericSearch.Searches.Activation
 
         public FallbackSearchActivator(Type searchType) => this.searchType = searchType;
 
-        public ISearch Create(PropertyInfo itemProperty)
+        public ISearch Activate(string entityPath)
         {
             var constructors = searchType.GetConstructors();
             if (!constructors.Any())
@@ -29,16 +29,9 @@ namespace GenericSearch.Searches.Activation
                     // new Search("PropertyName")
                     if (parameters.Single().ParameterType == typeof(string))
                     {
-                        return Activator.CreateInstance(searchType, itemProperty.Name) as ISearch;
+                        return Activator.CreateInstance(searchType, entityPath) as ISearch;
                     }
 
-                    // TODO: new Search(propertyInfo)
-                    if (parameters.Single().ParameterType == typeof(PropertyInfo))
-                    {
-                        return Activator.CreateInstance(searchType, itemProperty) as ISearch;
-                    }
-
-                    // TODO: new Search(property: x => x.Property) -> base(property)
                 }
 
                 // new Search()

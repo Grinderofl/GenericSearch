@@ -16,28 +16,22 @@ namespace GenericSearch.IntegrationTests.Searches
     [Collection("Sequential")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
-    public class TextSearchTests : IntegrationTestBase
+    public class TextSearchSqlTests : IntegrationTestBase
     {
-        //private readonly IGenericSearch search;
         private readonly ITestOutputHelper testOutputHelper;
 
-        public TextSearchTests(ITestOutputHelper testOutputHelper)
+        public TextSearchSqlTests(ITestOutputHelper testOutputHelper)
         {
             this.testOutputHelper = testOutputHelper;
         }
 
         [Fact]
-        public void Equals_Generates_Correct_Query()
+        public void Projection_Equals_Suceeds()
         {
-            var search = CreateSearch(new TextItemProfile());
-            var request = new TextRequest()
-            {
-                Blog =
-                {
-                    Is = TextSearch.Comparer.Equals,
-                    Term = "Blog of Foo"
-                }
-            };
+            var (search, request) = Create<TextRequest, TextItemProfile>();
+
+            request.Blog.Is = TextSearch.Comparer.Equals;
+            request.Blog.Term = "Blog of Foo";
 
             var query = Context.Posts
                 .Select(TextItem.Projection)
@@ -51,13 +45,28 @@ INNER JOIN [Authors] AS [a] ON [p].[AuthorId] = [a].[Id]
 WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
         }
 
+        [Fact]
+        public void Entity_Equals_Succeeds()
+        {
+            var (search, request) = Create<PostRequest, PostProfile>();
+
+            request.BlogName.Is = TextSearch.Comparer.Equals;
+            request.BlogName.Term = "Blog of Foo";
+
+            var query = Context.Posts.Search(search, request);
+
+            var result = query.ToSql();
+
+            result.Should().Be(@"SELECT [p].[Id], [p].[AuthorId], [p].[BlogId], [p].[Content], [p].[Created], [p].[Published], [p].[Title]
+FROM [Posts] AS [p]
+INNER JOIN [Blogs] AS [b] ON [p].[BlogId] = [b].[Id]
+WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
+        }
+
 
         private class TextRequest
         {
             public TextSearch Blog { get; set; } = new TextSearch(nameof(Blog));
-            public TextSearch Author { get; set; } = new TextSearch(nameof(Author));
-            public TextSearch Title { get; set; } = new TextSearch(nameof(Title));
-            public TextSearch Content { get; set; } = new TextSearch(nameof(Content));
         }
 
         private class TextItem
@@ -80,9 +89,6 @@ WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
         private class TextResult
         {
             public TextSearch Blog { get; set; }
-            public TextSearch Author { get; set; }
-            public TextSearch Title { get; set; }
-            public TextSearch Content { get; set; }
         }
 
         private class TextItemProfile : ListProfile
@@ -95,19 +101,19 @@ WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
 
         private class PostRequest
         {
-            
+            public TextSearch BlogName { get; set; }
         }
 
         private class PostResult
         {
-            
+            public TextSearch BlogName { get; set; }
         }
 
-        private class TextPostProfile : ListProfile
+        private class PostProfile : ListProfile
         {
-            public TextPostProfile()
+            public PostProfile()
             {
-                CreateFilter<TR>()
+                CreateFilter<PostRequest, Post, PostResult>();
             }
         }
     }

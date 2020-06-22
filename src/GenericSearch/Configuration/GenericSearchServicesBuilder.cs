@@ -34,7 +34,7 @@ namespace GenericSearch.Configuration
 
             foreach (var type in types)
             {
-                services.AddSingleton(typeof(IListDefinitionSource), type);
+                AddProfile(type);
             }
 
             return this;
@@ -49,6 +49,12 @@ namespace GenericSearch.Configuration
         public IGenericSearchServicesBuilder AddProfile<T>(T profile) where T : IListDefinitionSource
         {
             services.AddSingleton<IListDefinitionSource>(profile);
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddProfile(Type profileType)
+        {
+            services.AddSingleton(typeof(IListDefinitionSource), profileType);
             return this;
         }
 
@@ -72,11 +78,12 @@ namespace GenericSearch.Configuration
             services.TryAddSingleton<IPostRedirectGetConfigurationFactory, PostRedirectGetConfigurationFactory>();
             services.TryAddSingleton<ITransferValuesConfigurationFactory, TransferValuesConfigurationFactory>();
             services.TryAddSingleton<IRequestFactoryConfigurationFactory, RequestFactoryConfigurationFactory>();
-            
+            services.TryAddSingleton<IPropertyPathFinder, PascalCasePropertyPathFinder>();
+
             services.TryAddScoped<IModelProvider, ModelProvider>();
             services.TryAddScoped<IGenericSearch, GenericSearch>();
             services.TryAddSingleton<IRequestActivator, RequestActivator>();
-            services.TryAddScoped<IRequestPropertyActivator, RequestPropertyActivator>();
+            services.TryAddScoped<ISearchPropertyActivator, SearchPropertyActivator>();
             services.TryAddScoped<ISearchActivatorFactory, SearchActivatorFactory>();
             
 

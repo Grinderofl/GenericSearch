@@ -13,13 +13,13 @@ namespace GenericSearch.ModelBinders
     {
         private readonly ListConfiguration configuration;
         private readonly IRequestActivator requestActivator;
-        private readonly IRequestPropertyActivator requestPropertyActivator;
+        private readonly ISearchPropertyActivator requestPropertyActivator;
         private readonly IModelCache modelCache;
         private readonly IModelBinder fallbackModelBinder;
 
         public GenericSearchModelBinder(ListConfiguration configuration, 
                                         IRequestActivator requestActivator,
-                                        IRequestPropertyActivator requestPropertyActivator,
+                                        ISearchPropertyActivator requestPropertyActivator,
                                         IModelCache modelCache,
                                         IModelBinder fallbackModelBinder)
         {

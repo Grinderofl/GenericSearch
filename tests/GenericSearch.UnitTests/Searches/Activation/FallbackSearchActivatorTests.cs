@@ -11,14 +11,14 @@ namespace GenericSearch.UnitTests.Searches.Activation
 {
     public class FallbackSearchActivatorTests
     {
-        private static readonly PropertyInfo ItemProperty = typeof(Item).GetProperty(nameof(Item.Property));
+        private static readonly string ItemPropertyPath = typeof(Item).GetProperty(nameof(Item.Property)).Name;
 
         [Fact]
         public void Private_Constructor_Throws()
         {
             var activator = new FallbackSearchActivator(typeof(PrivateConstructorSearch));
 
-            activator.Invoking(x => x.Create(ItemProperty))
+            activator.Invoking(x => x.Activate(ItemPropertyPath))
                 .Should()
                 .ThrowExactly<SearchPropertyActivationException>();
         }
@@ -28,22 +28,10 @@ namespace GenericSearch.UnitTests.Searches.Activation
         {
             var activator = new FallbackSearchActivator(typeof(StringConstructorSearch));
 
-            var result = activator.Create(ItemProperty);
+            var result = activator.Activate(ItemPropertyPath);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<StringConstructorSearch>();
-        }
-
-        
-        [Fact]
-        public void PropertyInfo_Constructor_Succeeds()
-        {
-            var activator = new FallbackSearchActivator(typeof(PropertyInfoConstructorSearch));
-
-            var result = activator.Create(ItemProperty);
-
-            result.Should().NotBeNull();
-            result.Should().BeOfType<PropertyInfoConstructorSearch>();
         }
 
         [Fact]
@@ -51,7 +39,7 @@ namespace GenericSearch.UnitTests.Searches.Activation
         {
             var activator = new FallbackSearchActivator(typeof(MultipleConstructorsSearch));
 
-            var result = activator.Create(ItemProperty);
+            var result = activator.Activate(ItemPropertyPath);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<MultipleConstructorsSearch>();
@@ -62,7 +50,7 @@ namespace GenericSearch.UnitTests.Searches.Activation
         {
             var activator = new FallbackSearchActivator(typeof(MultipleParameterConstructorSearch));
 
-            activator.Invoking(x => x.Create(ItemProperty))
+            activator.Invoking(x => x.Activate(ItemPropertyPath))
                 .Should()
                 .ThrowExactly<SearchPropertyActivationException>();
         }
@@ -72,7 +60,7 @@ namespace GenericSearch.UnitTests.Searches.Activation
         {
             var activator = new FallbackSearchActivator(typeof(NoConstructorSearch));
 
-            var result = activator.Create(ItemProperty);
+            var result = activator.Activate(ItemPropertyPath);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<NoConstructorSearch>();
@@ -109,16 +97,6 @@ namespace GenericSearch.UnitTests.Searches.Activation
             }
 
             public MultipleConstructorsSearch(PropertyInfo propertyInfo) : base(propertyInfo.Name)
-            {
-            }
-
-            public override bool IsActive() => throw new NotImplementedException();
-            protected override Expression BuildFilterExpression(Expression property) => throw new NotImplementedException();
-        }
-
-        private class PropertyInfoConstructorSearch : AbstractSearch
-        {
-            public PropertyInfoConstructorSearch(PropertyInfo property) : base(property.Name)
             {
             }
 

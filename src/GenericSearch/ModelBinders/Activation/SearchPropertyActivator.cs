@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GenericSearch.Configuration;
+using GenericSearch.Searches;
 using GenericSearch.Searches.Activation.Factories;
 
 namespace GenericSearch.ModelBinders.Activation
 {
-    public class RequestPropertyActivator : IRequestPropertyActivator
+    public class SearchPropertyActivator : ISearchPropertyActivator
     {
         private readonly ISearchActivatorFactory searchActivatorFactory;
+        private readonly IServiceProvider serviceProvider;
 
-        public RequestPropertyActivator(ISearchActivatorFactory searchActivatorFactory)
+        public SearchPropertyActivator(ISearchActivatorFactory searchActivatorFactory, IServiceProvider serviceProvider)
         {
             this.searchActivatorFactory = searchActivatorFactory;
+            this.serviceProvider = serviceProvider;
         }
 
         public void Activate(ListConfiguration configuration, object model)
         {
-            ActivateSearchProperties(configuration.SearchConfigurations, model);
+            ActivateSearchProperties(configuration, model);
             ActivateSortDirection(configuration.SortDirectionConfiguration, model);
             ActivateSortColumn(configuration.SortColumnConfiguration, model);
             ActivatePage(configuration.PageConfiguration, model);
@@ -24,20 +28,29 @@ namespace GenericSearch.ModelBinders.Activation
             ActivateProperties(configuration.PropertyConfigurations, model);
         }
 
-        private void ActivateSearchProperties(IEnumerable<SearchConfiguration> configurations, object model)
+        private void ActivateSearchProperties(ListConfiguration configuration, object model)
         {
-            foreach (var configuration in configurations)
+            foreach (var searchConfiguration in configuration.SearchConfigurations)
             {
-                ActivateSearchProperty(configuration, model);
+                var value = ActivateSearchProperty(searchConfiguration);
+                searchConfiguration.RequestProperty.SetValue(model, value);
             }
         }
 
-        private void ActivateSearchProperty(SearchConfiguration configuration, object model)
+        private ISearch ActivateSearchProperty(SearchConfiguration configuration)
         {
-            var activator = searchActivatorFactory.Create(configuration.RequestProperty.PropertyType);
-            var value = activator.Create(configuration.RequestProperty);
+            if (configuration.Constructor != null)
+            {
+                return configuration.Constructor();
+            }
 
-            configuration.RequestProperty.SetValue(model, value);
+            if (configuration.Activator != null)
+            {
+                return configuration.Activator(serviceProvider).Activate(configuration.ItemPropertyPath);
+            }
+
+            var activator = searchActivatorFactory.Create(configuration.RequestProperty.PropertyType);
+            return activator.Activate(configuration.ItemPropertyPath);
         }
 
         private void ActivateSortDirection(SortDirectionConfiguration configuration, object model) =>

@@ -1,10 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace GenericSearch.Searches.Activation
 {
     public interface ISearchActivator
     {
-        ISearch Create(PropertyInfo itemProperty);
+        ISearch Activate(string entityPath);
     }
 
     public interface ISearchActivator<TSearch> : ISearchActivator where TSearch : ISearch

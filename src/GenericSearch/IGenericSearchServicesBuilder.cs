@@ -9,6 +9,7 @@ namespace GenericSearch
     {
         IGenericSearchServicesBuilder AddProfile<T>() where T : class, IListDefinitionSource;
         IGenericSearchServicesBuilder AddProfile<T>(T profile) where T : IListDefinitionSource;
+        IGenericSearchServicesBuilder AddProfile(Type profileType);
         IGenericSearchServicesBuilder AddProfilesFromAssembly(Assembly assembly);
         IGenericSearchServicesBuilder AddProfilesFromAssemblyOf<T>();
         IGenericSearchServicesBuilder AddDefaultServices();

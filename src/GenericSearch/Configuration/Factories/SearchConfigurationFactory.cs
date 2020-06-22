@@ -10,11 +10,17 @@ namespace GenericSearch.Configuration.Factories
 {
     public class SearchConfigurationFactory : ISearchConfigurationFactory
     {
+        private readonly IPropertyPathFinder propertyPathFinder;
+
+        public SearchConfigurationFactory(IPropertyPathFinder propertyPathFinder) => this.propertyPathFinder = propertyPathFinder;
+
         public SearchConfiguration Create(PropertyInfo requestProperty, IListDefinition source)
         {
             var filter = source.SearchDefinitions.GetValueOrDefault(requestProperty);
-            var itemProperty = filter?.ItemProperty ??
-                               source.ItemType.GetProperty(requestProperty.Name);
+            //var itemProperty = filter?.ItemProperty ??
+            //                   source.ItemType.GetProperty(requestProperty.Name);
+            var entityPath = filter?.ItemPropertyPath ?? 
+                             propertyPathFinder.Find(source.ItemType, requestProperty.Name);
             var resultProperty = filter?.ResultProperty ??
                                  source.ResultType.GetProperty(requestProperty.Name);
             var ignored = filter?.Ignored ?? false;
@@ -26,7 +32,8 @@ namespace GenericSearch.Configuration.Factories
             return new SearchConfiguration(requestProperty)
             {
                 ResultProperty = resultProperty,
-                ItemProperty = itemProperty,
+                //ItemProperty = itemProperty,
+                ItemPropertyPath = entityPath,
                 Ignored = ignored,
                 Constructor = factory,
                 Activator = activator

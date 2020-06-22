@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using GenericSearch.Internal.Extensions;
@@ -14,7 +16,9 @@ namespace GenericSearch.Definition.Expressions
 
         public bool Ignored { get; private set; }
 
-        public PropertyInfo ItemProperty { get; private set; }
+        //public string EntityPath { get; private set; }
+        
+        public string ItemPropertyPath { get; private set; }
 
         public PropertyInfo ResultProperty { get; private set; }
 
@@ -41,7 +45,14 @@ namespace GenericSearch.Definition.Expressions
 
         public ISearchExpression<TRequest, TItem, TResult> On(Expression<Func<TItem, object>> property)
         {
-            ItemProperty = property.GetPropertyInfo();
+            var expression = property.ToString();
+            var propertyPath = expression.Split(".").Skip(1);
+            return On(string.Join(".", propertyPath));
+        }
+
+        public ISearchExpression<TRequest, TItem, TResult> On(string propertyPath)
+        {
+            ItemPropertyPath = propertyPath;
             return this;
         }
 

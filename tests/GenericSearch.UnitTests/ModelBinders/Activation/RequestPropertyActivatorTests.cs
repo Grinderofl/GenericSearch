@@ -3,6 +3,7 @@ using FluentAssertions;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.ModelBinders.Activation;
 using GenericSearch.Searches;
+using GenericSearch.Searches.Activation;
 using GenericSearch.Searches.Activation.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -23,7 +24,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
                 .Returns(new GenericSearchOptions());
             var options = mock.Object;
 
-            var factory = new ListConfigurationFactory(new SearchConfigurationFactory(),
+            var factory = new ListConfigurationFactory(new SearchConfigurationFactory(new PascalCasePropertyPathFinder()),
                                                        new PageConfigurationFactory(options),
                                                        new RowsConfigurationFactory(options),
                                                        new SortColumnConfigurationFactory(options),
@@ -40,7 +41,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             model = new Request();
             
             var activatorFactory = new SearchActivatorFactory(serviceProvider);
-            var activator = new RequestPropertyActivator(activatorFactory);
+            var activator = new SearchPropertyActivator(activatorFactory, serviceProvider);
 
             activator.Activate(configuration, model);
         }
