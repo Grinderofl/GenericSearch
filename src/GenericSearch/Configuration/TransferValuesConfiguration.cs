@@ -1,6 +1,6 @@
 ﻿namespace GenericSearch.Configuration
 {
-    public class TransferValuesConfiguration
+    public class TransferValuesConfiguration : ITransferValuesConfiguration
     {
         public TransferValuesConfiguration(string actionName, bool enabled)
         {

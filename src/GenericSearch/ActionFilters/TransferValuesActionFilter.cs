@@ -84,7 +84,7 @@ namespace GenericSearch.ActionFilters
         }
 
         
-        public static bool IsSatisfiedByAction(ListConfiguration listConfiguration, ActionDescriptor actionDescriptor)
+        public static bool IsSatisfiedByAction(IListConfiguration listConfiguration, ActionDescriptor actionDescriptor)
         {
             if (!actionDescriptor.RouteValues["action"]
                     .Equals(listConfiguration.TransferValuesConfiguration.ActionName, StringComparison.OrdinalIgnoreCase) &&

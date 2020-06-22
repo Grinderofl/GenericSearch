@@ -11,7 +11,7 @@ namespace GenericSearch.ActionFilters.Visitors
     /// </summary>
     public class ModelPropertyVisitor : RouteValuePropertyVisitor
     {
-        private readonly ListConfiguration configuration;
+        private readonly IListConfiguration configuration;
         private readonly object model;
         private readonly RouteValueDictionary routeValueDictionary;
 
@@ -21,7 +21,7 @@ namespace GenericSearch.ActionFilters.Visitors
         /// <param name="configuration">Filter Configuration</param>
         /// <param name="model">Value of the model property</param>
         /// <param name="routeValueDictionary">RouteValueDictionary to populate</param>
-        public ModelPropertyVisitor(ListConfiguration configuration, 
+        public ModelPropertyVisitor(IListConfiguration configuration, 
                                     object model,
                                     RouteValueDictionary routeValueDictionary) : base(routeValueDictionary)
         {

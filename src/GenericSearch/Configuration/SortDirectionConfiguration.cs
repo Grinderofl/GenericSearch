@@ -3,7 +3,7 @@ using GenericSearch.Searches;
 
 namespace GenericSearch.Configuration
 {
-    public class SortDirectionConfiguration
+    public class SortDirectionConfiguration : ISortDirectionConfiguration
     {
         public SortDirectionConfiguration(PropertyInfo requestProperty, PropertyInfo resultProperty, Direction defaultValue)
         {

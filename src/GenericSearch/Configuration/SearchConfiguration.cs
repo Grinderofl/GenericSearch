@@ -6,8 +6,8 @@ using GenericSearch.Searches.Activation;
 
 namespace GenericSearch.Configuration
 {
-    [DebuggerDisplay("FilterConfiguration: Request = {RequestProperty.Name} Item = {ItemProperty.Name} Result = {ResultProperty.Name} Ignored = {Ignored}")]
-    public class SearchConfiguration
+    [DebuggerDisplay("FilterConfiguration: Request = {RequestProperty.Name} Item = {ItemPropertyPath} Result = {ResultProperty.Name} Ignored = {Ignored}")]
+    public class SearchConfiguration : ISearchConfiguration
     {
         public SearchConfiguration(PropertyInfo requestProperty)
         {
@@ -18,8 +18,6 @@ namespace GenericSearch.Configuration
         public PropertyInfo RequestProperty { get; }
 
         public string ItemPropertyPath { get; set; }
-
-        //public PropertyInfo ItemProperty { get; set; }
         public PropertyInfo ResultProperty { get; set; }
         public Func<ISearch> Constructor { get; set; }
         public Func<IServiceProvider, ISearchActivator> Activator { get; set; }

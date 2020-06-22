@@ -4,6 +4,6 @@ namespace GenericSearch.ModelBinders.Activation
 {
     public interface ISearchPropertyActivator
     {
-        void Activate(ListConfiguration configuration, object model);
+        void Activate(IListConfiguration configuration, object model);
     }
 }

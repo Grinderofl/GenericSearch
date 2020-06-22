@@ -19,7 +19,7 @@ namespace GenericSearch
             this.provider = provider;
         }
 
-        private ListConfiguration GetConfiguration(object request)
+        private IListConfiguration GetConfiguration(object request)
         {
             var requestType = request.GetType();
             var configuration = configurationProvider.GetConfiguration(requestType);

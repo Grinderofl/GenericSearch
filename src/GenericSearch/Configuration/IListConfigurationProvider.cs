@@ -4,6 +4,6 @@ namespace GenericSearch.Configuration
 {
     public interface IListConfigurationProvider
     {
-        ListConfiguration GetConfiguration(Type requestType);
+        IListConfiguration GetConfiguration(Type requestType);
     }
 }

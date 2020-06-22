@@ -9,13 +9,13 @@ namespace GenericSearch
         public IListExpression<TRequest, TItem, TResult> CreateFilter<TRequest, TItem, TResult>()
         {
             var expression = new ListExpression<TRequest, TItem, TResult>();
-            configurations.Add(expression);
+            definitions.Add(expression);
 
             return expression;
         }
 
-        private readonly List<IListDefinition> configurations = new List<IListDefinition>();
+        private readonly List<IListDefinition> definitions = new List<IListDefinition>();
 
-        List<IListDefinition> IListDefinitionSource.Definitions => configurations;
+        List<IListDefinition> IListDefinitionSource.Definitions => definitions;
     }
 }

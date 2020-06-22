@@ -2,7 +2,7 @@
 
 namespace GenericSearch.Configuration
 {
-    public class RequestFactoryConfiguration
+    public class RequestFactoryConfiguration : IRequestFactoryConfiguration
     {
         public RequestFactoryConfiguration()
         {

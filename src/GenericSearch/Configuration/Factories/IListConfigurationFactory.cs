@@ -4,6 +4,6 @@ namespace GenericSearch.Configuration.Factories
 {
     public interface IListConfigurationFactory
     {
-        ListConfiguration Create(IListDefinition source);
+        IListConfiguration Create(IListDefinition source);
     }
 }

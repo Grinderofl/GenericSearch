@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace GenericSearch.Configuration
 {
     [DebuggerDisplay("ListConfiguration: Request = {RequestType.Name} Item = {ItemType.Name} Result = {ResultType.Name}")]
-    public class ListConfiguration
+    public class ListConfiguration : IListConfiguration
     {
         public ListConfiguration(Type requestType, Type itemType, Type resultType)
         {
@@ -18,14 +18,15 @@ namespace GenericSearch.Configuration
         public Type ItemType { get; }
         public Type ResultType { get; }
 
-        public List<SearchConfiguration> SearchConfigurations { get; } = new List<SearchConfiguration>();
-        public PageConfiguration PageConfiguration { get; set; }
-        public RowsConfiguration RowsConfiguration { get; set; }
-        public SortColumnConfiguration SortColumnConfiguration { get; set; }
-        public SortDirectionConfiguration SortDirectionConfiguration { get; set; }
-        public List<PropertyConfiguration> PropertyConfigurations { get; } = new List<PropertyConfiguration>();
-        public PostRedirectGetConfiguration PostRedirectGetConfiguration { get; set; }
-        public TransferValuesConfiguration TransferValuesConfiguration { get; set; }
+        IEnumerable<ISearchConfiguration> IListConfiguration.SearchConfigurations => SearchConfigurations;
+        public List<ISearchConfiguration> SearchConfigurations { get; } = new List<ISearchConfiguration>();
+        public IPageConfiguration PageConfiguration { get; set; }
+        public IRowsConfiguration RowsConfiguration { get; set; }
+        public ISortColumnConfiguration SortColumnConfiguration { get; set; }
+        public ISortDirectionConfiguration SortDirectionConfiguration { get; set; }
+        public List<IPropertyConfiguration> PropertyConfigurations { get; } = new List<IPropertyConfiguration>();
+        public IPostRedirectGetConfiguration PostRedirectGetConfiguration { get; set; }
+        public ITransferValuesConfiguration TransferValuesConfiguration { get; set; }
         public RequestFactoryConfiguration RequestFactoryConfiguration { get; set; }
     }
 }

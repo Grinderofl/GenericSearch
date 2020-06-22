@@ -2,7 +2,7 @@
 
 namespace GenericSearch.Configuration
 {
-    public class RowsConfiguration
+    public class RowsConfiguration : IRowsConfiguration
     {
         public RowsConfiguration(PropertyInfo requestProperty, PropertyInfo resultProperty, int defaultValue)
         {

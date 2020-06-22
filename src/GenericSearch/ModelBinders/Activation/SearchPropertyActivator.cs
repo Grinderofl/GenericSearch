@@ -18,7 +18,7 @@ namespace GenericSearch.ModelBinders.Activation
             this.serviceProvider = serviceProvider;
         }
 
-        public void Activate(ListConfiguration configuration, object model)
+        public void Activate(IListConfiguration configuration, object model)
         {
             ActivateSearchProperties(configuration, model);
             ActivateSortDirection(configuration.SortDirectionConfiguration, model);
@@ -28,7 +28,7 @@ namespace GenericSearch.ModelBinders.Activation
             ActivateProperties(configuration.PropertyConfigurations, model);
         }
 
-        private void ActivateSearchProperties(ListConfiguration configuration, object model)
+        private void ActivateSearchProperties(IListConfiguration configuration, object model)
         {
             foreach (var searchConfiguration in configuration.SearchConfigurations)
             {
@@ -37,7 +37,7 @@ namespace GenericSearch.ModelBinders.Activation
             }
         }
 
-        private ISearch ActivateSearchProperty(SearchConfiguration configuration)
+        private ISearch ActivateSearchProperty(ISearchConfiguration configuration)
         {
             if (configuration.Constructor != null)
             {
@@ -53,19 +53,19 @@ namespace GenericSearch.ModelBinders.Activation
             return activator.Activate(configuration.ItemPropertyPath);
         }
 
-        private void ActivateSortDirection(SortDirectionConfiguration configuration, object model) =>
+        private void ActivateSortDirection(ISortDirectionConfiguration configuration, object model) =>
             configuration?.RequestProperty?.SetValue(model, configuration.DefaultValue);
 
-        private void ActivateSortColumn(SortColumnConfiguration configuration, object model) =>
+        private void ActivateSortColumn(ISortColumnConfiguration configuration, object model) =>
             configuration?.RequestProperty?.SetValue(model, configuration.DefaultValue);
 
-        private void ActivatePage(PageConfiguration configuration, object model) => 
+        private void ActivatePage(IPageConfiguration configuration, object model) => 
             configuration?.RequestProperty?.SetValue(model, configuration.DefaultValue);
 
-        private void ActivateRows(RowsConfiguration configuration, object model) => 
+        private void ActivateRows(IRowsConfiguration configuration, object model) => 
             configuration?.RequestProperty?.SetValue(model, configuration.DefaultValue);
 
-        private void ActivateProperties(IEnumerable<PropertyConfiguration> configurations, object model)
+        private void ActivateProperties(List<IPropertyConfiguration> configurations, object model)
         {
             foreach (var configuration in configurations.Where(x => !x.Ignored && x.DefaultValue != null))
             {

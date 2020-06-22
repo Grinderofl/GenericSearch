@@ -1,6 +1,6 @@
 ﻿namespace GenericSearch.Configuration
 {
-    public class PostRedirectGetConfiguration
+    public class PostRedirectGetConfiguration : IPostRedirectGetConfiguration
     {
         public PostRedirectGetConfiguration(string actionName, bool enabled)
         {
