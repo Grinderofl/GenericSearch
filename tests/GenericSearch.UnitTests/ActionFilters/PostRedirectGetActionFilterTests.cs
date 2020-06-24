@@ -245,8 +245,12 @@ namespace GenericSearch.UnitTests.ActionFilters
         {
             public TextSearch Text { get; set; } = new TextSearch("Text");
 
+            public IntegerSearch Integer { get; set; } = new IntegerSearch("Integer") {Term1 = 1};
+
             [BindNever]
             public TextSearch Foo { get; set; }
+
+            public TestSearch FooIgnored { get; set; } = new TestSearch();
 
             [DefaultValue(1)]
             public int Bar { get; set; } = 1;
@@ -286,11 +290,25 @@ namespace GenericSearch.UnitTests.ActionFilters
         private class TestResult
         {
             public TextSearch Text { get; set; }
+            public IntegerSearch Integer { get; set; }
+            public TestSearch FooIgnored { get; set; }
             public int Page { get; set; }
             public int Rows { get; set; }
             public string Ordx { get; set; }
             public Direction Ordd { get; set; }
             public TextSearch Foo { get; set; }
+        }
+
+        private class TestSearch : ISearch
+        {
+            [BindNever]
+            public string IgnoreMe { get; set; }
+            public bool IsActive() => false;
+
+            public IQueryable<T> ApplyToQuery<T>(IQueryable<T> query)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
