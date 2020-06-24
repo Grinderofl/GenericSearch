@@ -69,6 +69,11 @@ WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
             public TextSearch Blog { get; set; } = new TextSearch(nameof(Blog));
         }
 
+        private class TextRequestTwo
+        {
+            public TextSearch BlogName { get; set; } = new TextSearch("NameCouldNotBeFound");
+        }
+
         private class TextItem
         {
             public static readonly Expression<Func<Post, TextItem>> Projection =

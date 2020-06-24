@@ -19,9 +19,7 @@ namespace GenericSearch.Searches
 
         public override bool IsActive() => Is;
 
-        protected override Expression BuildFilterExpression(Expression property)
-            => Is
-                   ? Expression.Equal(property, Expression.Constant(true))
-                   : null;
+        protected override Expression BuildFilterExpression(Expression property) 
+            => Expression.Equal(property, Expression.Constant(true));
     }
 }

@@ -6,6 +6,7 @@ using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition.Expressions;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;

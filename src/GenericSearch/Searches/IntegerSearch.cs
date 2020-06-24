@@ -88,9 +88,9 @@ namespace GenericSearch.Searches
                     return Expression.GreaterThanOrEqual(property, Expression.Constant(Term1));
                 case Comparer.Greater:
                     return Expression.GreaterThan(property, Expression.Constant(Term1));
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
+
+            throw new NotImplementedException();
         }
     }
 }

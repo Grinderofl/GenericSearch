@@ -69,22 +69,7 @@ namespace GenericSearch.ActionFilters.Visitors
             {
                 return true;
             }
-
-            if (propertyInfo == configuration.PageConfiguration.RequestProperty)
-            {
-                return configuration.PageConfiguration.DefaultValue.Equals(value);
-            }
-
-            if (propertyInfo == configuration.RowsConfiguration.RequestProperty)
-            {
-                return configuration.RowsConfiguration.DefaultValue.Equals(value);
-            }
-
-            if (propertyInfo == configuration.SortDirectionConfiguration.RequestProperty)
-            {
-                return configuration.SortDirectionConfiguration.DefaultValue.Equals(value);
-            }
-
+            
             return false;
         }
     }

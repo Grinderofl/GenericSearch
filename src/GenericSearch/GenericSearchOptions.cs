@@ -12,6 +12,13 @@ namespace GenericSearch
     /// </summary>
     public class GenericSearchOptions
     {
+        public GenericSearchOptions()
+        {
+            DefaultRequestFactoryMethod = Activator.CreateInstance;
+            DefaultRequestFactoryServiceProvider = null;
+            DefaultRequestFactoryType = null;
+        }
+
         internal List<IListDefinition> Definitions { get; } = new List<IListDefinition>();
 
         public IListExpression<TRequest, TItem, TResult> CreateFilter<TRequest, TItem, TResult>()
@@ -106,9 +113,9 @@ namespace GenericSearch
 
         public Type DefaultRequestFactoryType { get; set; }
 
-        public Func<IServiceProvider, Type, object> DefaultRequestFactoryServiceProvider  { get; set; }
+        public Func<IServiceProvider, Type, object> DefaultRequestFactoryServiceProvider { get; set; }
 
-        public Func<Type, object> DefaultRequestFactoryMethod { get; set; } = Activator.CreateInstance;
+        public Func<Type, object> DefaultRequestFactoryMethod { get; set; }
 
     }
 }

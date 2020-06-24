@@ -9,6 +9,7 @@ using GenericSearch.Internal;
 using GenericSearch.ModelBinders.Activation;
 using GenericSearch.Searches.Activation;
 using GenericSearch.Searches.Activation.Factories;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

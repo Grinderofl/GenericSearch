@@ -225,6 +225,27 @@ namespace GenericSearch.UnitTests.Configuration
             services.Count.Should().Be(count);
         }
 
+        [Fact]
+        public void CreateFilter_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddDefaultActivators()
+                .AddDefaultServices();
+            builder.ConfigureOptions(x => x.CreateFilter<Request, Item, Result>());
+
+            var provider = services.BuildServiceProvider();
+
+            var configurationProvider =
+                provider.CreateScope().ServiceProvider.GetRequiredService<IListConfigurationProvider>();
+
+            var configuration = configurationProvider.GetConfiguration(typeof(Request));
+
+            configuration.Should().NotBeNull();
+            configuration.ItemType.Should().Be<Item>();
+            configuration.ResultType.Should().Be<Result>();
+        }
+
         public class AddDefaultActivators
         {
             private static readonly Type[] AllTypes = typeof(GenericSearchOptions).Assembly.GetExportedTypes();
@@ -278,6 +299,18 @@ namespace GenericSearch.UnitTests.Configuration
         }
 
         public class ProfileBaz : ListProfile
+        {
+        }
+
+        private class Request
+        {
+        }
+
+        private class Item
+        {
+        }
+
+        private class Result
         {
         }
     }

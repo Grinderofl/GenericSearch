@@ -4,6 +4,7 @@ using System.Reflection;
 using GenericSearch.Definition;
 using GenericSearch.Exceptions;
 using GenericSearch.Searches.Activation;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericSearch.Configuration.Factories

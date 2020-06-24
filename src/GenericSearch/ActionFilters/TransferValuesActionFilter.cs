@@ -23,7 +23,7 @@ namespace GenericSearch.ActionFilters
         {
             var result = await next();
 
-            var resultModel = result.Result.GetModel();
+            var resultModel = result.Result?.GetModel();
             if (resultModel == null)
             {
                 return;
@@ -53,7 +53,7 @@ namespace GenericSearch.ActionFilters
                 return;
             }
 
-            if (!configuration.PostRedirectGetConfiguration.Enabled)
+            if (!configuration.TransferValuesConfiguration.Enabled)
             {
                 return;
             }

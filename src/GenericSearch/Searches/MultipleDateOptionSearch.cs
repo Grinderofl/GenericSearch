@@ -28,8 +28,6 @@ namespace GenericSearch.Searches
 
         protected override Expression BuildFilterExpression(Expression property)
         {
-            if (Is == null || !Is.Any()) return null;
-
             Expression searchExpression = null;
             foreach (var term in Is)
             {

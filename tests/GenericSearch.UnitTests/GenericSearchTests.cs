@@ -11,6 +11,7 @@ using GenericSearch.Exceptions;
 using GenericSearch.Internal;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
+using GenericSearch.Searches.Activation.Finders;
 using GenericSearch.UnitTests.ModelBinders;
 using Microsoft.Extensions.Options;
 using Moq;

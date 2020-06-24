@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
 using Moq;
@@ -213,7 +215,8 @@ namespace GenericSearch.UnitTests.ActionFilters
                 PostRedirectGetConfiguration = new PostRedirectGetConfiguration("Index", true),
                 PageConfiguration = new PageConfiguration("Page", 1),
                 RowsConfiguration = new RowsConfiguration("Rows", 20),
-                SortDirectionConfiguration = new SortDirectionConfiguration("Ordx", Direction.Ascending)
+                SortColumnConfiguration = new SortColumnConfiguration("Ordx", "Text"),
+                SortDirectionConfiguration = new SortDirectionConfiguration("Ordd", Direction.Ascending)
             };
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(listConfiguration);
@@ -242,6 +245,37 @@ namespace GenericSearch.UnitTests.ActionFilters
         {
             public TextSearch Text { get; set; } = new TextSearch("Text");
 
+            [BindNever]
+            public TextSearch Foo { get; set; }
+
+            [DefaultValue(1)]
+            public int Bar { get; set; } = 1;
+
+            [DefaultValue(1)]
+            public int Page { get; set; } = 1;
+
+            [DefaultValue(20)]
+            public int Rows { get; set; } = 20;
+
+            [DefaultValue("Text")]
+            public string Ordx { get; set; } = "Text";
+
+            [DefaultValue(Direction.Ascending)]
+            public Direction Ordd { get; set; } = Direction.Ascending;
+
+            public string Extra { get; set; }
+
+            public string[] Extras { get; set; } = {"Foo", "Bar"};
+            public TestEnum TestEnum { get; set; }
+
+            [DefaultValue(null)]
+            public string Baz { get; set; } = "FooBar";
+        }
+
+        private enum TestEnum
+        {
+            Foo,
+            Bar
         }
 
         private class TestItem
@@ -252,6 +286,11 @@ namespace GenericSearch.UnitTests.ActionFilters
         private class TestResult
         {
             public TextSearch Text { get; set; }
+            public int Page { get; set; }
+            public int Rows { get; set; }
+            public string Ordx { get; set; }
+            public Direction Ordd { get; set; }
+            public TextSearch Foo { get; set; }
         }
     }
 }
