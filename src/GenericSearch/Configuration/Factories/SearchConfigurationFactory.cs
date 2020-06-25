@@ -18,11 +18,15 @@ namespace GenericSearch.Configuration.Factories
         public SearchConfiguration Create(PropertyInfo requestProperty, IListDefinition source)
         {
             var search = source.SearchDefinitions.GetValueOrDefault(requestProperty);
-            var entityPath = search?.ItemPropertyPath ?? 
-                             propertyPathFinder.Find(source.ItemType, requestProperty.Name);
             var resultProperty = search?.ResultProperty ??
                                  source.ResultType.GetProperty(requestProperty.Name);
             var ignored = search?.Ignored ?? false;
+
+            var entityPath = ignored
+                ? null
+                : search?.ItemPropertyPath ??
+                  propertyPathFinder.Find(source.ItemType, requestProperty.Name);
+
             var factory = search?.Constructor;
             var activator = search?.ActivatorType != null
                 ? sp => (ISearchActivator) sp.GetRequiredService(search.ActivatorType)
