@@ -22,10 +22,8 @@ namespace GenericSearch.Configuration.Factories
                                  source.ResultType.GetProperty(requestProperty.Name);
             var ignored = search?.Ignored ?? false;
 
-            var entityPath = ignored
-                ? null
-                : search?.ItemPropertyPath ??
-                  propertyPathFinder.Find(source.ItemType, requestProperty.Name);
+            var entityPath = search?.ItemPropertyPath ??
+                             propertyPathFinder.Find(source.ItemType, requestProperty.Name);
 
             var factory = search?.Constructor;
             var activator = search?.ActivatorType != null

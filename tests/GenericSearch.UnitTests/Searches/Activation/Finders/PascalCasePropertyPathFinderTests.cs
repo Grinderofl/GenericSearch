@@ -16,11 +16,9 @@ namespace GenericSearch.UnitTests.Searches.Activation.Finders
         private readonly PascalCasePropertyPathFinder propertyPathFinder = new PascalCasePropertyPathFinder();
 
         [Fact]
-        public void No_Match_Throws()
+        public void No_Match_Succeeds()
         {
-            propertyPathFinder.Invoking(x => x.Find(typeof(Item), "ItemChildBar"))
-                .Should()
-                .ThrowExactly<PropertyNotFoundException>();
+            propertyPathFinder.Find(typeof(Item), "ItemChildBar").Should().BeNull();
         }
 
         private class Request

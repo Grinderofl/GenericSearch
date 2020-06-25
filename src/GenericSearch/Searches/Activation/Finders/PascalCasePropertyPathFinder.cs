@@ -39,7 +39,8 @@ namespace GenericSearch.Searches.Activation.Finders
 
                     if (i == matches.Length)
                     {
-                        throw new PropertyNotFoundException($"No property for {string.Join("", matches)} was found.");
+                        return null;
+                        //throw new PropertyNotFoundException($"No property for {string.Join("", matches)} was found.");
                     }
                 }
             }
