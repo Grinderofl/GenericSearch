@@ -53,6 +53,7 @@ namespace GenericSearch.Searches
             return Term1.HasValue || Term2.HasValue;
         }
 
+        [ExcludeFromCodeCoverage]
         protected override Expression BuildFilterExpression(Expression property)
         {
             Expression searchExpression1 = null;
@@ -73,6 +74,8 @@ namespace GenericSearch.Searches
             return searchExpression1 ?? searchExpression2;
         }
 
+        // Exclude due to the NotImplementedException as it should never get executed
+        [ExcludeFromCodeCoverage]
         private Expression GetFilterExpression(Expression property)
         {
             switch (Is)

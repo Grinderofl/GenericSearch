@@ -15,6 +15,11 @@ namespace GenericSearch.Searches.Activation.Finders
 
         public string Find(Type entityType, string source)
         {
+            if (entityType.GetProperty(source) != null)
+            {
+                return source;
+            }
+
             var path = new StringBuilder();
             var matches = expression.Matches(source).Select(ReplaceValue).ToArray();
 
@@ -40,7 +45,6 @@ namespace GenericSearch.Searches.Activation.Finders
                     if (i == matches.Length)
                     {
                         return null;
-                        //throw new PropertyNotFoundException($"No property for {string.Join("", matches)} was found.");
                     }
                 }
             }

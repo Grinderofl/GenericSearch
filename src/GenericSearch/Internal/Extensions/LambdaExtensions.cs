@@ -54,11 +54,13 @@ namespace GenericSearch.Internal.Extensions
             }
         }
 
-        public static string GetPropertyPath<T>(this Expression<Func<T, object>> path)
+
+        public static string GetPropertyPath<TSource>(this Expression<Func<TSource, object>> path)
         {
-            var expression = path.ToString().Split('.').Skip(1);
-            return string.Join(".", expression);
-            //return path.ToString().Split('.').Skip(1);
+            var propertyVisitor = new PropertyVisitor();
+            propertyVisitor.Visit(path.Body);
+            propertyVisitor.Path.Reverse();
+            return string.Join(".", propertyVisitor.Path.Select(x => x.Name));
         }
     }
 }

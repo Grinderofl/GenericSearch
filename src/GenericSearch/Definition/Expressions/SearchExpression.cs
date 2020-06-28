@@ -45,8 +45,9 @@ namespace GenericSearch.Definition.Expressions
 
         public ISearchExpression<TRequest, TItem, TResult> On(Expression<Func<TItem, object>> property)
         {
-            var expression = property.ToString();
-            var propertyPath = expression.Split(".").Skip(1);
+            var propertyPath = property.GetPropertyPath();
+            //var expression = property.ToString();
+            //var propertyPath = expression.Split(".").Skip(1);
             return On(string.Join(".", propertyPath));
         }
 
