@@ -4,14 +4,14 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GenericSearch.Internal
 {
-    [ExcludeFromCodeCoverage]
-    public class ModelProvider : IModelProvider
+    public class RequestModelProvider : IRequestModelProvider
     {
         private readonly IModelCache modelCache;
 
-        public ModelProvider(IModelCache modelCache) => this.modelCache = modelCache;
+        public RequestModelProvider(IModelCache modelCache) => this.modelCache = modelCache;
 
-        public object Provide()
+        [ExcludeFromCodeCoverage]
+        public object GetCurrentRequestModel()
         {
             var model = modelCache.Get();
             if (model == null)

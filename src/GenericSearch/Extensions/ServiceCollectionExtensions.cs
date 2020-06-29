@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericSearch.Extensions
 {
-    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
+        [ExcludeFromCodeCoverage]
         public static IGenericSearchServicesBuilder AddGenericSearch(this IServiceCollection services, params Assembly[] assemblies)
         {
             var builder = new GenericSearchServicesBuilder(services);

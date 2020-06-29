@@ -22,8 +22,8 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <returns></returns>
         public static string GetUrlForPage(this IHtmlHelper html, int page)
         {
-            var modelProvider = html.GetRequestService<IModelProvider>();
-            var model = modelProvider.Provide();
+            var modelProvider = html.GetRequestService<IRequestModelProvider>();
+            var model = modelProvider.GetCurrentRequestModel();
             if (model == null)
             {
                 throw new ModelProviderException($"No request model was provided. Does the current action match the configured list action?");

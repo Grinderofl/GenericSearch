@@ -26,7 +26,7 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NoResult_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new TransferValuesActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -48,13 +48,13 @@ namespace GenericSearch.UnitTests.ActionFilters
             await actionFilter.OnActionExecutionAsync(actionExecutingContext, actionExecutionDelegate.Object);
 
             actionExecutingContext.Result.Should().BeNull();
-            modelProvider.Verify(x => x.Provide(), Times.Never);
+            modelProvider.Verify(x => x.GetCurrentRequestModel(), Times.Never);
         }
 
         [Fact]
         public async Task NoResultModel_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new TransferValuesActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -80,13 +80,13 @@ namespace GenericSearch.UnitTests.ActionFilters
             await actionFilter.OnActionExecutionAsync(actionExecutingContext, actionExecutionDelegate.Object);
 
             actionExecutingContext.Result.Should().BeNull();
-            modelProvider.Verify(x => x.Provide(), Times.Never);
+            modelProvider.Verify(x => x.GetCurrentRequestModel(), Times.Never);
         }
 
         [Fact]
         public async Task NoRequestModel_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new TransferValuesActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -120,8 +120,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task NoConfiguration_Fails()
         {
             var requestModel = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(requestModel);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(requestModel);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new TransferValuesActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -154,8 +154,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task ConfigurationResultType_ResultModelType_Mismatch_Fails()
         {
             var requestModel = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(requestModel);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(requestModel);
 
             var listConfiguration = new Mock<IListConfiguration>();
             listConfiguration.SetupGet(x => x.ResultType).Returns(typeof(TestItem));
@@ -193,8 +193,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task RouteValues_Action_Mismatch_Fails()
         {
             var requestModel = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(requestModel);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(requestModel);
 
             var transferValuesConfiguration = new Mock<ITransferValuesConfiguration>();
             transferValuesConfiguration.SetupGet(x => x.ActionName).Returns("Index");
@@ -241,8 +241,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task Disabled_Fails()
         {
             var requestModel = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(requestModel);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(requestModel);
 
             var transferValuesConfiguration = new Mock<ITransferValuesConfiguration>();
             transferValuesConfiguration.SetupGet(x => x.ActionName).Returns("Index");
@@ -296,8 +296,8 @@ namespace GenericSearch.UnitTests.ActionFilters
             var requestModel = new TestRequest();
             var resultModel = new TestResult();
 
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(requestModel);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(requestModel);
 
             var transferValuesConfiguration = new Mock<ITransferValuesConfiguration>();
             transferValuesConfiguration.SetupGet(x => x.ActionName).Returns("Index");

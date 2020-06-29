@@ -26,7 +26,7 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NotPostRequest_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -52,7 +52,7 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NotControllerActionDescriptor_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -78,8 +78,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NoModelToProvide_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(null);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(null);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -106,8 +106,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task NoConfiguration_Fails()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns((ListConfiguration) null);
@@ -136,8 +136,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task ActionName_Mismatch_Fails()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))
@@ -171,8 +171,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task Enabled_False_Fails()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))
@@ -206,8 +206,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task Succeeds()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))

@@ -26,7 +26,7 @@ namespace GenericSearch.IntegrationTests
         protected static (IGenericSearch search, TRequest request) Create<TRequest, TProfile>() where TRequest : new() where TProfile : ListProfile, new()
         {
             var services = new ServiceCollection();
-            services.AddDefaultGenericSearch().AddProfile<TProfile>();
+            services.AddDefaultGenericSearch(typeof(GenericSearch).Assembly).AddProfile<TProfile>();
             var rootProvider = services.BuildServiceProvider();
             var scopedProvider = rootProvider.CreateScope().ServiceProvider;
 

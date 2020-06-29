@@ -31,6 +31,7 @@ namespace GenericSearch.Configuration
         public IGenericSearchServicesBuilder AddProfilesFromAssembly(Assembly assembly)
         {
             var types = assembly.GetExportedTypes()
+                .Where(x => !x.IsAbstract)
                 .Where(x => x.GetInterfaces().Contains(typeof(IListDefinitionSource)));
 
             foreach (var type in types)
@@ -81,7 +82,7 @@ namespace GenericSearch.Configuration
             services.TryAddSingleton<IRequestFactoryConfigurationFactory, RequestFactoryConfigurationFactory>();
             services.TryAddSingleton<IPropertyPathFinder, PascalCasePropertyPathFinder>();
 
-            services.TryAddScoped<IModelProvider, ModelProvider>();
+            services.TryAddScoped<IRequestModelProvider, RequestModelProvider>();
             services.TryAddScoped<IGenericSearch, GenericSearch>();
             services.TryAddSingleton<IRequestActivator, RequestActivator>();
             services.TryAddScoped<ISearchPropertyActivator, SearchPropertyActivator>();

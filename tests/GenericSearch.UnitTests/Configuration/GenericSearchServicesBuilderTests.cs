@@ -211,7 +211,7 @@ namespace GenericSearch.UnitTests.Configuration
 
             services.Count.Should().Be(count);
         }
-
+        
         [Fact]
         public void AddPostToGetRedirects_Executes_Once()
         {

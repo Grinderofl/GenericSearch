@@ -5,7 +5,7 @@ using GenericSearch.Internal;
 namespace GenericSearch.Exceptions
 {
     /// <summary>
-    /// Represents errors in <see cref="ModelProvider"/>
+    /// Represents errors in <see cref="RequestModelProvider"/>
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class ModelProviderException : Exception

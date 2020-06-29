@@ -16,13 +16,13 @@ namespace GenericSearch.ActionFilters
 {
     public class PostRedirectGetActionFilter : IAsyncActionFilter, IOrderedFilter
     {
-        private readonly IModelProvider modelProvider;
+        private readonly IRequestModelProvider requestModelProvider;
         private readonly IListConfigurationProvider configurationProvider;
 
-        public PostRedirectGetActionFilter(IModelProvider modelProvider,
+        public PostRedirectGetActionFilter(IRequestModelProvider requestModelProvider,
                                            IListConfigurationProvider configurationProvider)
         {
-            this.modelProvider = modelProvider;
+            this.requestModelProvider = requestModelProvider;
             this.configurationProvider = configurationProvider;
         }
 
@@ -50,7 +50,7 @@ namespace GenericSearch.ActionFilters
                 return false;
             }
 
-            var model = modelProvider.Provide();
+            var model = requestModelProvider.GetCurrentRequestModel();
             if (model == null)
             {
                 return false;

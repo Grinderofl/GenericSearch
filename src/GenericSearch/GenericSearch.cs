@@ -10,19 +10,19 @@ namespace GenericSearch
 {
     public class GenericSearch : IGenericSearch
     {
-        private readonly IListConfigurationProvider configurationProvider;
-        private readonly IModelProvider provider;
+        protected IListConfigurationProvider ConfigurationProvider { get; }
+        protected IRequestModelProvider RequestModelProvider { get; }
 
-        public GenericSearch(IListConfigurationProvider configurationProvider, IModelProvider provider)
+        public GenericSearch(IListConfigurationProvider configurationProvider, IRequestModelProvider requestModelProvider)
         {
-            this.configurationProvider = configurationProvider;
-            this.provider = provider;
+            ConfigurationProvider = configurationProvider;
+            RequestModelProvider = requestModelProvider;
         }
 
-        private IListConfiguration GetConfiguration(object request)
+        protected virtual IListConfiguration GetRequestModelListConfiguration(object requestModel)
         {
-            var requestType = request.GetType();
-            var configuration = configurationProvider.GetConfiguration(requestType);
+            var requestType = requestModel.GetType();
+            var configuration = ConfigurationProvider.GetConfiguration(requestType);
 
             if (configuration == null)
             {
@@ -32,9 +32,14 @@ namespace GenericSearch
             return configuration;
         }
 
-        public IQueryable<T> Search<T>(IQueryable<T> query, object request)
+        protected virtual object GetCurrentRequestModel()
         {
-            var configuration = GetConfiguration(request);
+            return RequestModelProvider.GetCurrentRequestModel();
+        }
+
+        public virtual IQueryable<T> Search<T>(IQueryable<T> query, object request)
+        {
+            var configuration = GetRequestModelListConfiguration(request);
 
             foreach (var searchConfiguration in configuration.SearchConfigurations.Where(x => !x.Ignored))
             {
@@ -54,15 +59,15 @@ namespace GenericSearch
             return query;
         }
         
-        public IQueryable<T> Search<T>(IQueryable<T> query)
+        public virtual IQueryable<T> Search<T>(IQueryable<T> query)
         {
-            var request = provider.Provide();
+            var request = GetCurrentRequestModel();
             return Search(query, request);
         }
 
-        public IQueryable<T> Sort<T>(IQueryable<T> query, object request)
+        public virtual IQueryable<T> Sort<T>(IQueryable<T> query, object request)
         {
-            var configuration = GetConfiguration(request);
+            var configuration = GetRequestModelListConfiguration(request);
 
             var sortColumn = (string) configuration.SortColumnConfiguration?.RequestProperty?.GetValue(request);
             
@@ -80,17 +85,17 @@ namespace GenericSearch
 
         }
 
-        public IQueryable<T> Sort<T>(IQueryable<T> query)
+        public virtual IQueryable<T> Sort<T>(IQueryable<T> query)
         {
-            var request = provider.Provide();
+            var request = GetCurrentRequestModel();
             return Sort(query, request);
         }
 
-        public IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
+        public virtual IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
         {
-            var configuration = GetConfiguration(request);
+            var configuration = GetRequestModelListConfiguration(request);
 
-            // TODO: Get Name property value from a querystringvalueprovider or something similar?
+            // TODO: Get Name property value from a querystringvalueModelProvider or something similar?
 
             var page = (int?) configuration.PageConfiguration?.RequestProperty?.GetValue(request);
             var rows = (int?) configuration.RowsConfiguration?.RequestProperty?.GetValue(request);
@@ -119,9 +124,9 @@ namespace GenericSearch
             return query.Skip(skip).Take(rows.Value);
         }
 
-        public IQueryable<T> Paginate<T>(IQueryable<T> query)
+        public virtual IQueryable<T> Paginate<T>(IQueryable<T> query)
         {
-            var request = provider.Provide();
+            var request = GetCurrentRequestModel();
             return Paginate(query, request);
         }
     }

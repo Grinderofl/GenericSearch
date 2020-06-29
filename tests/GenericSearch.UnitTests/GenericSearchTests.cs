@@ -8,6 +8,7 @@ using GenericSearch.Configuration;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition.Expressions;
 using GenericSearch.Exceptions;
+using GenericSearch.Extensions;
 using GenericSearch.Internal;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
@@ -65,7 +66,7 @@ namespace GenericSearch.UnitTests
             request.Text.Is = TextSearch.Comparer.Contains;
             request.Text.Term = "ir";
 
-            var result = search.Search(Query, request).ToArray();
+            var result = Query.Search(search, request).ToArray();
             result.Length.Should().Be(2);
             result[0].Id.Should().Be(1);
             result[1].Id.Should().Be(3);
@@ -78,12 +79,12 @@ namespace GenericSearch.UnitTests
             request.Text.Is = TextSearch.Comparer.Contains;
             request.Text.Term = "ir";
 
-            var modelCache = new Mock<IModelProvider>();
-            modelCache.Setup(x => x.Provide()).Returns(request);
+            var modelCache = new Mock<IRequestModelProvider>();
+            modelCache.Setup(x => x.GetCurrentRequestModel()).Returns(request);
 
             var search = new GenericSearch(CreateProvider(), modelCache.Object);
 
-            var result = search.Search(Query).ToArray();
+            var result = Query.Search(search).ToArray();
             result.Length.Should().Be(2);
             result[0].Id.Should().Be(1);
             result[1].Id.Should().Be(3);
@@ -111,7 +112,7 @@ namespace GenericSearch.UnitTests
             request.Ordx = nameof(Item.Text);
             request.Ordd = Direction.Descending;
 
-            var result = search.Sort(Query, request).ToArray();
+            var result = Query.Sort(search, request).ToArray();
 
             result[0].Id.Should().Be(3);
             result[1].Id.Should().Be(6);
@@ -129,12 +130,12 @@ namespace GenericSearch.UnitTests
             request.Ordx = nameof(Item.Text);
             request.Ordd = Direction.Descending;
 
-            var modelCache = new Mock<IModelProvider>();
-            modelCache.Setup(x => x.Provide()).Returns(request);
+            var modelCache = new Mock<IRequestModelProvider>();
+            modelCache.Setup(x => x.GetCurrentRequestModel()).Returns(request);
 
             var search = new GenericSearch(CreateProvider(), modelCache.Object);
 
-            var result = search.Sort(Query).ToArray();
+            var result = Query.Sort(search).ToArray();
 
             result[0].Id.Should().Be(3);
             result[1].Id.Should().Be(6);
@@ -151,12 +152,12 @@ namespace GenericSearch.UnitTests
             var request = CreateRequest();
             request.Ordx = nameof(Item.Text);
             
-            var modelCache = new Mock<IModelProvider>();
-            modelCache.Setup(x => x.Provide()).Returns(request);
+            var modelCache = new Mock<IRequestModelProvider>();
+            modelCache.Setup(x => x.GetCurrentRequestModel()).Returns(request);
 
             var search = new GenericSearch(CreateProvider(), modelCache.Object);
 
-            var result = search.Sort(Query).ToArray();
+            var result = Query.Sort(search, request).ToArray();
 
             result[0].Id.Should().Be(1);
             result[1].Id.Should().Be(2);
@@ -176,8 +177,8 @@ namespace GenericSearch.UnitTests
             request.Page = 2;
             request.Rows = 3;
 
-            var result = search.Paginate(Query, request).ToArray();
-
+            var result = Query.Paginate(search, request).ToArray();
+            
             result.Length.Should().Be(3);
 
             result[0].Id.Should().Be(4);
@@ -192,12 +193,12 @@ namespace GenericSearch.UnitTests
             request.Page = 2;
             request.Rows = 3;
 
-            var modelCache = new Mock<IModelProvider>();
-            modelCache.Setup(x => x.Provide()).Returns(request);
+            var modelCache = new Mock<IRequestModelProvider>();
+            modelCache.Setup(x => x.GetCurrentRequestModel()).Returns(request);
 
             var search = new GenericSearch(CreateProvider(), modelCache.Object);
 
-            var result = search.Paginate(Query).ToArray();
+            var result = Query.Paginate(search).ToArray();
 
             result.Length.Should().Be(3);
 
@@ -295,16 +296,9 @@ namespace GenericSearch.UnitTests
 
         private class Request
         {
-            //public DateSearch Date { get; set; }
             public DecimalSearch Decimal { get; set; }
             public IntegerSearch Integer { get; set; }
-            //public MultipleDateOptionSearch MultipleDateOption { get; set; }
-            //public MultipleIntegerOptionSearch MultipleIntegerOption { get; set; }
-            //public MultipleTextOptionSearch MultipleTextOption { get; set; }
-            //public OptionalBooleanSearch OptionalBoolean { get; set; }
-            //public SingleDateOptionSearch SingleDateOption { get; set; }
-            //public SingleIntegerOptionSearch SingleIntegerOption { get; set; }
-            //public SingleTextOptionSearch SingleTextOption { get; set; }
+
             public TextSearch Text { get; set; }
 
             public int Page { get; set; }
@@ -327,31 +321,15 @@ namespace GenericSearch.UnitTests
 
             public int Id { get; set; }
 
-            //public DateTime Date { get; set; }
             public decimal Decimal { set; get; }
             public int Integer { get; set; }
-            //public DateTime MultipleDateOption { get; set; }
-            //public int MultipleIntegerOption { get; set; }
-            //public string MultipleTextOption { get; set; }
-            //public bool OptionalBoolean { get; set; }
-            //public DateTime SingleDateOption { get; set; }
-            //public int SingleIntegerOption { get; set; }
-            //public string SingleTextOption { get; set; }
             public string Text { get; set; }
         }
 
         private class Result
         {
-            //public DateSearch Date { get; set; }
             public DecimalSearch Decimal { get; set; }
             public IntegerSearch Integer { get; set; }
-            //public MultipleDateOptionSearch MultipleDateOption { get; set; }
-            //public MultipleIntegerOptionSearch MultipleIntegerOption { get; set; }
-            //public MultipleTextOptionSearch MultipleTextOption { get; set; }
-            //public OptionalBooleanSearch OptionalBoolean { get; set; }
-            //public SingleDateOptionSearch SingleDateOption { get; set; }
-            //public SingleIntegerOptionSearch SingleIntegerOption { get; set; }
-            //public SingleTextOptionSearch SingleTextOption { get; set; }
             public TextSearch Text { get; set; }
 
             public int Page { get; set; }

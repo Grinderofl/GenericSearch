@@ -10,12 +10,12 @@ namespace GenericSearch.ActionFilters
 {
     public class TransferValuesActionFilter : IAsyncActionFilter, IOrderedFilter
     {
-        private readonly IModelProvider modelProvider;
+        private readonly IRequestModelProvider requestModelProvider;
         private readonly IListConfigurationProvider configurationProvider;
 
-        public TransferValuesActionFilter(IModelProvider modelProvider, IListConfigurationProvider configurationProvider)
+        public TransferValuesActionFilter(IRequestModelProvider requestModelProvider, IListConfigurationProvider configurationProvider)
         {
-            this.modelProvider = modelProvider;
+            this.requestModelProvider = requestModelProvider;
             this.configurationProvider = configurationProvider;
         }
 
@@ -29,7 +29,7 @@ namespace GenericSearch.ActionFilters
                 return;
             }
 
-            var requestModel = modelProvider.Provide();
+            var requestModel = requestModelProvider.GetCurrentRequestModel();
             if (requestModel == null)
             {
                 return;

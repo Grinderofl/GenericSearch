@@ -66,8 +66,8 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
 
         public static IReadOnlyList<SelectListItem> GetPropertiesSelectListForModel(this IHtmlHelper html)
         {
-            var modelProvider = html.GetRequestService<IModelProvider>();
-            var model = modelProvider.Provide();
+            var modelProvider = html.GetRequestService<IRequestModelProvider>();
+            var model = modelProvider.GetCurrentRequestModel();
 
             if (model == null)
             {
