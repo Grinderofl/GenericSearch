@@ -161,6 +161,23 @@ namespace GenericSearch.UnitTests.Configuration
         }
 
         [Fact]
+        public void Configure_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.Configure(x =>
+            {
+                x.Create<Request, Item, Result>();
+            });
+
+            var service = services.SingleOrDefault(x => x.ServiceType == typeof(IListDefinition));
+            service.Should().NotBeNull();
+
+            Debug.Assert(service != null, nameof(service) + " != null");
+            service.Lifetime.Should().Be(ServiceLifetime.Singleton);
+        }
+
+        [Fact]
         public void AddDefaultServices_Succeeds()
         {
             var services = new ServiceCollection();
