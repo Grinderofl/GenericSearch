@@ -109,7 +109,7 @@ END) = CAST(1 AS bit)");
         {
             public MultipleDateOptionItemProfile()
             {
-                CreateFilter<MultipleDateOptionRequest, MultipleDateOptionItem, MultipleDateOptionResult>();
+                Create<MultipleDateOptionRequest, MultipleDateOptionItem, MultipleDateOptionResult>();
             }
         }
 
@@ -127,7 +127,7 @@ END) = CAST(1 AS bit)");
         {
             public PostProfile()
             {
-                CreateFilter<PostRequest, Post, PostResult>()
+                Create<PostRequest, Post, PostResult>()
                     .Search(x => x.AuthorDateOfBirth, x => x.On(c => c.Author.DateOfBirth));
             }
         }

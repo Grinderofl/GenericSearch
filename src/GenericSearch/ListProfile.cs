@@ -6,7 +6,14 @@ namespace GenericSearch
 {
     public abstract class ListProfile : IListDefinitionSource
     {
-        public IListExpression<TRequest, TItem, TResult> CreateFilter<TRequest, TItem, TResult>()
+        /// <summary>
+        /// Creates a new list definition.
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        public IListExpression<TRequest, TItem, TResult> Create<TRequest, TItem, TResult>()
         {
             var expression = new ListExpression<TRequest, TItem, TResult>();
             definitions.Add(expression);

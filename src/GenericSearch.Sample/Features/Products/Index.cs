@@ -88,7 +88,7 @@ namespace GenericSearch.Sample.Features.Products
         {
             public SearchProfile()
             {
-                CreateFilter<Query, Product, Model>()
+                Create<Query, Product, Model>()
                     .Search(x => x.Category, x => x.On(c => c.Category.CategoryName));
             }
         }

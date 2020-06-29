@@ -97,7 +97,7 @@ WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
         {
             public SingleDateOptionItemProfile()
             {
-                CreateFilter<SingleDateOptionRequest, SingleDateOptionItem, SingleDateOptionResult>();
+                Create<SingleDateOptionRequest, SingleDateOptionItem, SingleDateOptionResult>();
             }
         }
 
@@ -115,7 +115,7 @@ WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
         {
             public PostProfile()
             {
-                CreateFilter<PostRequest, Post, PostResult>()
+                Create<PostRequest, Post, PostResult>()
                     .Search(x => x.AuthorDateOfBirth, x => x.On(c => c.Author.DateOfBirth));
             }
         }

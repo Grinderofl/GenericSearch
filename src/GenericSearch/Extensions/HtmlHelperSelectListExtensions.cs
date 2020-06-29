@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using GenericSearch.Attributes;
+using GenericSearch;
 using GenericSearch.Configuration;
 using GenericSearch.Internal;
 using GenericSearch.Internal.Extensions;

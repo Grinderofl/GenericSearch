@@ -99,7 +99,7 @@ WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
         {
             public TextItemProfile()
             {
-                CreateFilter<TextRequest, TextItem, TextResult>();
+                Create<TextRequest, TextItem, TextResult>();
             }
         }
 
@@ -117,7 +117,7 @@ WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
         {
             public PostProfile()
             {
-                CreateFilter<PostRequest, Post, PostResult>();
+                Create<PostRequest, Post, PostResult>();
             }
         }
     }
