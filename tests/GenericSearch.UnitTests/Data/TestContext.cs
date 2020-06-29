@@ -1,8 +1,8 @@
-using GenericSearch.IntegrationTests.Internal.Data.Entities;
+using GenericSearch.UnitTests.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace GenericSearch.IntegrationTests.Internal.Data
+namespace GenericSearch.UnitTests.Data
 {
     public class TestContext : DbContext
     {

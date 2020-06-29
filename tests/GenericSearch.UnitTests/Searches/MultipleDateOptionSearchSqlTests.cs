@@ -4,23 +4,23 @@ using System.Linq;
 using System.Linq.Expressions;
 using FluentAssertions;
 using GenericSearch.Extensions;
-using GenericSearch.IntegrationTests.Internal;
-using GenericSearch.IntegrationTests.Internal.Data.Entities;
 using GenericSearch.Searches;
+using GenericSearch.UnitTests.Data;
+using GenericSearch.UnitTests.Data.Entities;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace GenericSearch.IntegrationTests.Searches
+namespace GenericSearch.UnitTests.Searches
 {
     [Collection("Sequential")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-    public class SingleDateOptionSearchSqlTests : IntegrationTestBase
+    public class MultipleDateOptionSearchSqlTests : IntegrationTestBase
     {
         private readonly ITestOutputHelper testOutputHelper;
 
-        public SingleDateOptionSearchSqlTests(ITestOutputHelper testOutputHelper)
+        public MultipleDateOptionSearchSqlTests(ITestOutputHelper testOutputHelper)
         {
             this.testOutputHelper = testOutputHelper;
         }
@@ -28,12 +28,12 @@ namespace GenericSearch.IntegrationTests.Searches
         [Fact]
         public void Projection_Is_Suceeds()
         {
-            var (search, request) = Create<SingleDateOptionRequest, SingleDateOptionItemProfile>();
+            var (search, request) = Create<MultipleDateOptionRequest, MultipleDateOptionItemProfile>();
 
-            request.AuthorBirthDate.Is = new DateTime(1999, 2, 13);
+            request.AuthorBirthDate.Is = new[] {new DateTime(1999, 2, 13), new DateTime(1982, 10, 3)};
             
             var query = Context.Posts
-                .Select(SingleDateOptionItem.Projection)
+                .Select(MultipleDateOptionItem.Projection)
                 .Search(search, request);
 
             var result = query.ToSql();
@@ -42,7 +42,13 @@ namespace GenericSearch.IntegrationTests.Searches
 FROM [Posts] AS [p]
 INNER JOIN [Authors] AS [a] ON [p].[AuthorId] = [a].[Id]
 INNER JOIN [Blogs] AS [b] ON [p].[BlogId] = [b].[Id]
-WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
+WHERE (CASE
+    WHEN [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000' THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END | CASE
+    WHEN [a].[DateOfBirth] = '1982-10-03T00:00:00.0000000' THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END) = CAST(1 AS bit)");
         }
 
         [Fact]
@@ -50,7 +56,7 @@ WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
         {
             var (search, request) = Create<PostRequest, PostProfile>();
 
-            request.AuthorDateOfBirth.Is = new DateTime(1999, 2, 13);
+            request.AuthorDateOfBirth.Is = new[] {new DateTime(1999, 2, 13), new DateTime(1982, 10, 3)};
 
             var query = Context.Posts.Search(search, request);
 
@@ -59,19 +65,25 @@ WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
             result.Should().Be(@"SELECT [p].[Id], [p].[AuthorId], [p].[BlogId], [p].[Content], [p].[Created], [p].[Published], [p].[Title]
 FROM [Posts] AS [p]
 INNER JOIN [Authors] AS [a] ON [p].[AuthorId] = [a].[Id]
-WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
+WHERE (CASE
+    WHEN [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000' THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END | CASE
+    WHEN [a].[DateOfBirth] = '1982-10-03T00:00:00.0000000' THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END) = CAST(1 AS bit)");
         }
 
 
-        private class SingleDateOptionRequest
+        private class MultipleDateOptionRequest
         {
-            public SingleDateOptionSearch AuthorBirthDate { get; set; } = new SingleDateOptionSearch(nameof(AuthorBirthDate));
+            public MultipleDateOptionSearch AuthorBirthDate { get; set; } = new MultipleDateOptionSearch(nameof(AuthorBirthDate));
         }
 
-        private class SingleDateOptionItem
+        private class MultipleDateOptionItem
         {
-            public static readonly Expression<Func<Post, SingleDateOptionItem>> Projection =
-                x => new SingleDateOptionItem()
+            public static readonly Expression<Func<Post, MultipleDateOptionItem>> Projection =
+                x => new MultipleDateOptionItem()
                 {
                     Blog = x.Blog.Name,
                     Author = $"{x.Author.FirstName} {x.Author.LastName}",
@@ -88,27 +100,27 @@ WHERE [a].[DateOfBirth] = '1999-02-13T00:00:00.0000000'");
             public string Content { get; set; }
         }
 
-        private class SingleDateOptionResult
+        private class MultipleDateOptionResult
         {
-            public SingleDateOptionSearch Blog { get; set; }
+            public MultipleDateOptionSearch Blog { get; set; }
         }
 
-        private class SingleDateOptionItemProfile : ListProfile
+        private class MultipleDateOptionItemProfile : ListProfile
         {
-            public SingleDateOptionItemProfile()
+            public MultipleDateOptionItemProfile()
             {
-                CreateFilter<SingleDateOptionRequest, SingleDateOptionItem, SingleDateOptionResult>();
+                CreateFilter<MultipleDateOptionRequest, MultipleDateOptionItem, MultipleDateOptionResult>();
             }
         }
 
         private class PostRequest
         {
-            public SingleDateOptionSearch AuthorDateOfBirth { get; set; } = new SingleDateOptionSearch("Author.DateOfBirth");
+            public MultipleDateOptionSearch AuthorDateOfBirth { get; set; } = new MultipleDateOptionSearch("Author.DateOfBirth");
         }
 
         private class PostResult
         {
-            public SingleDateOptionSearch AuthorDateOfBirth { get; set; }
+            public MultipleDateOptionSearch AuthorDateOfBirth { get; set; }
         }
 
         private class PostProfile : ListProfile

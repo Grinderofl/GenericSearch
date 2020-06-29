@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace GenericSearch.IntegrationTests.Internal
+namespace GenericSearch.UnitTests.Data
 {
     public static class QueryableExtensions
     {

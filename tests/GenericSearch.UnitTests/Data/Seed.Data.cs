@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GenericSearch.IntegrationTests.Internal.Data
+namespace GenericSearch.UnitTests.Data
 {
     internal partial class Seed
     {

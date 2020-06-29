@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GenericSearch.IntegrationTests.Internal.Data.Entities
+namespace GenericSearch.UnitTests.Data.Entities
 {
     public class Blog
     {

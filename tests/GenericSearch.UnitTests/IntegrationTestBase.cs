@@ -1,13 +1,11 @@
 using GenericSearch.Configuration;
 using GenericSearch.Extensions;
-using GenericSearch.IntegrationTests.Internal;
-using GenericSearch.IntegrationTests.Internal.Data;
 using GenericSearch.ModelBinders.Activation;
-using GenericSearch.Searches.Activation;
+using GenericSearch.UnitTests.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericSearch.IntegrationTests
+namespace GenericSearch.UnitTests
 {
     public abstract class IntegrationTestBase
     {

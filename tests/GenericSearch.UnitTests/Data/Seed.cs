@@ -1,6 +1,6 @@
-using GenericSearch.IntegrationTests.Internal.Data.Entities;
+using GenericSearch.UnitTests.Data.Entities;
 
-namespace GenericSearch.IntegrationTests.Internal.Data
+namespace GenericSearch.UnitTests.Data
 {
     internal partial class Seed
     {

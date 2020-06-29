@@ -2,16 +2,15 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using FluentAssertions;
 using GenericSearch.Extensions;
-using GenericSearch.IntegrationTests.Internal;
-using GenericSearch.IntegrationTests.Internal.Data.Entities;
 using GenericSearch.Searches;
+using GenericSearch.UnitTests.Data;
+using GenericSearch.UnitTests.Data.Entities;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace GenericSearch.IntegrationTests.Searches
+namespace GenericSearch.UnitTests.Searches
 {
     [Collection("Sequential")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
