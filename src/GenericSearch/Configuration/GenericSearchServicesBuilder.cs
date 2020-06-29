@@ -128,7 +128,7 @@ namespace GenericSearch.Configuration
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddPostToGetRedirects()
+        public IGenericSearchServicesBuilder AddActionFilters()
         {
             if(services.All(x => x.ImplementationType != typeof(ConfigureMvcActionFilters)))
             {

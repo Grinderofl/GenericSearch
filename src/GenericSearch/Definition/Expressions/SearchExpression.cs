@@ -57,7 +57,7 @@ namespace GenericSearch.Definition.Expressions
             return this;
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> ConstructUsing(Func<ISearch> factoryMethod)
+        public ISearchExpression<TRequest, TItem, TResult> ActivateUsing(Func<ISearch> factoryMethod)
         {
             Constructor = factoryMethod;
             return this;

@@ -155,7 +155,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         public void Create_Property_ConstructUsing_Succeeds()
         {
             var definition = new ListExpression<Request, Item, Result>();
-            definition.Search(x => x.Text, x => x.ConstructUsing(() => new TextSearch()));
+            definition.Search(x => x.Text, x => x.ActivateUsing(() => new TextSearch()));
             var property = typeof(Request).GetProperty(nameof(Request.Text));
 
             var result = Factory.Create(property, definition);

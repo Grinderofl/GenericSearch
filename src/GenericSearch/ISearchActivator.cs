@@ -1,7 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using GenericSearch.Searches;
 
-namespace GenericSearch.Searches.Activation
+namespace GenericSearch
 {
     public interface ISearchActivator
     {

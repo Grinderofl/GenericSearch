@@ -25,7 +25,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             var definition = new ListExpression<Request, Item, Result>();
             
             definition
-                .Search(x => x.Text, x => x.ConstructUsing(() => new TextSearch()))
+                .Search(x => x.Text, x => x.ActivateUsing(() => new TextSearch()))
                 .Search(x => x.Integer, x => x.ActivateUsing(sp => new IntegerSearchActivator()))
                 .Property(x => x.Foo, x => x.DefaultValue("Test"))
                 .Property(x => x.Bar, x => x.Ignore());

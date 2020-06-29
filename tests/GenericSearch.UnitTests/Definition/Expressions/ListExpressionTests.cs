@@ -82,7 +82,7 @@ namespace GenericSearch.UnitTests.Definition.Expressions
         public void Search_Property_ConstructUsing_FactoryMethod_Succeeds()
         {
             var expression = new ListExpression<Request, Item, Result>();
-            expression.Search(x => x.Text, x => x.ConstructUsing(() => new TextSearch()));
+            expression.Search(x => x.Text, x => x.ActivateUsing(() => new TextSearch()));
 
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");

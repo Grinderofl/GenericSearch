@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace GenericSearch.Searches
+namespace GenericSearch
 {
     [ExcludeFromCodeCoverage]
     public abstract class Search<TEntity> : ISearch

@@ -217,10 +217,10 @@ namespace GenericSearch.UnitTests.Configuration
         {
             var services = new ServiceCollection();
             var builder = new GenericSearchServicesBuilder(services);
-            builder.AddPostToGetRedirects();
+            builder.AddActionFilters();
 
             var count = services.Count;
-            builder.AddPostToGetRedirects();
+            builder.AddActionFilters();
 
             services.Count.Should().Be(count);
         }
