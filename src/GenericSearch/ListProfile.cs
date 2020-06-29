@@ -4,7 +4,7 @@ using GenericSearch.Definition.Expressions;
 
 namespace GenericSearch
 {
-    public abstract class ListProfile : IListDefinitionSource
+    public class ListProfile : IListDefinitionSource
     {
         /// <summary>
         /// Creates a new list definition.

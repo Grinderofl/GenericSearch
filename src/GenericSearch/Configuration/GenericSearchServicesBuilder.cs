@@ -161,5 +161,20 @@ namespace GenericSearch.Configuration
             services.Configure(optionsAction);
             return this;
         }
+
+        public IGenericSearchServicesBuilder Configure(Action<ListProfile> configureAction)
+        {
+            var profile = new ListProfile();
+            configureAction(profile);
+
+            var source = (IListDefinitionSource) profile;
+
+            foreach (var definition in source.Definitions)
+            {
+                services.AddSingleton(definition);
+            }
+
+            return this;
+        }
     }
 }

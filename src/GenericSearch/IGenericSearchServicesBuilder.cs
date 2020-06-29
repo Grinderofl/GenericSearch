@@ -79,5 +79,12 @@ namespace GenericSearch
         /// <param name="optionsAction"></param>
         /// <returns></returns>
         IGenericSearchServicesBuilder ConfigureOptions(Action<GenericSearchOptions> optionsAction);
+
+        /// <summary>
+        /// Configures GenericSearch list definitions.
+        /// </summary>
+        /// <param name="configureAction"></param>
+        /// <returns></returns>
+        IGenericSearchServicesBuilder Configure(Action<ListProfile> configureAction);
     }
 }
