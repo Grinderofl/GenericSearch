@@ -10,12 +10,12 @@ namespace GenericSearch
         /// Creates a new list definition.
         /// </summary>
         /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        public IListExpression<TRequest, TItem, TResult> Create<TRequest, TItem, TResult>()
+        public IListExpression<TRequest, TEntity, TResult> Create<TRequest, TEntity, TResult>()
         {
-            var expression = new ListExpression<TRequest, TItem, TResult>();
+            var expression = new ListExpression<TRequest, TEntity, TResult>();
             definitions.Add(expression);
 
             return expression;

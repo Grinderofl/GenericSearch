@@ -16,8 +16,8 @@ namespace GenericSearch.UnitTests
             ResultType = resultType;
         }
 
-        public static TestListDefinition Create<TRequest, TItem, TResult>() => 
-            new TestListDefinition(typeof(TRequest), typeof(TItem), typeof(TResult));
+        public static TestListDefinition Create<TRequest, TEntity, TResult>() => 
+            new TestListDefinition(typeof(TRequest), typeof(TEntity), typeof(TResult));
 
         public Type RequestType { get; }
         public Type ItemType { get; }

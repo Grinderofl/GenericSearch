@@ -10,14 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericSearch.Definition.Expressions
 {
-    public class SearchExpression<TRequest, TItem, TResult> : ISearchDefinition, ISearchExpression<TRequest, TItem, TResult>
+    public class SearchExpression<TRequest, TEntity, TResult> : ISearchDefinition, ISearchExpression<TRequest, TEntity, TResult>
     {
         public PropertyInfo RequestProperty { get; }
 
         public bool Ignored { get; private set; }
 
-        //public string EntityPath { get; private set; }
-        
         public string ItemPropertyPath { get; private set; }
 
         public PropertyInfo ResultProperty { get; private set; }
@@ -31,19 +29,19 @@ namespace GenericSearch.Definition.Expressions
             RequestProperty = property.GetPropertyInfo();
         }
         
-        public ISearchExpression<TRequest, TItem, TResult> Ignore()
+        public ISearchExpression<TRequest, TEntity, TResult> Ignore()
         {
             Ignored = true;
             return this;
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> MapTo(Expression<Func<TResult, ISearch>> property)
+        public ISearchExpression<TRequest, TEntity, TResult> MapTo(Expression<Func<TResult, ISearch>> property)
         {
             ResultProperty = property.GetPropertyInfo();
             return this;
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> On(Expression<Func<TItem, object>> property)
+        public ISearchExpression<TRequest, TEntity, TResult> On(Expression<Func<TEntity, object>> property)
         {
             var propertyPath = property.GetPropertyPath();
             //var expression = property.ToString();
@@ -51,30 +49,30 @@ namespace GenericSearch.Definition.Expressions
             return On(string.Join(".", propertyPath));
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> On(string propertyPath)
+        public ISearchExpression<TRequest, TEntity, TResult> On(string propertyPath)
         {
             ItemPropertyPath = propertyPath;
             return this;
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> ActivateUsing(Func<ISearch> factoryMethod)
+        public ISearchExpression<TRequest, TEntity, TResult> ActivateUsing(Func<ISearch> factoryMethod)
         {
             Constructor = factoryMethod;
             return this;
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> ActivateUsing(Func<IServiceProvider, ISearchActivator> activator)
+        public ISearchExpression<TRequest, TEntity, TResult> ActivateUsing(Func<IServiceProvider, ISearchActivator> activator)
         {
             Activator = activator;
             return this;
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> ActivateUsing<TActivator>() where TActivator : ISearchActivator
+        public ISearchExpression<TRequest, TEntity, TResult> ActivateUsing<TActivator>() where TActivator : ISearchActivator
         {
             return ActivateUsing(typeof(TActivator));
         }
 
-        public ISearchExpression<TRequest, TItem, TResult> ActivateUsing(Type activatorType)
+        public ISearchExpression<TRequest, TEntity, TResult> ActivateUsing(Type activatorType)
         {
             ActivatorType = activatorType;
             return this;

@@ -21,9 +21,9 @@ namespace GenericSearch
 
         internal List<IListDefinition> Definitions { get; } = new List<IListDefinition>();
 
-        public IListExpression<TRequest, TItem, TResult> CreateFilter<TRequest, TItem, TResult>()
+        public IListExpression<TRequest, TEntity, TResult> CreateFilter<TRequest, TEntity, TResult>()
         {
-            var expression = new ListExpression<TRequest, TItem, TResult>();
+            var expression = new ListExpression<TRequest, TEntity, TResult>();
             Definitions.Add(expression);
             return expression;
         }
