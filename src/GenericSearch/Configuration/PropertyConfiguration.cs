@@ -4,7 +4,7 @@ using System.Reflection;
 namespace GenericSearch.Configuration
 {
     [DebuggerDisplay("PropertyConfiguration: Request = {RequestProperty.Name} Result = {ResultProperty.Name} DefaultValue = {DefaultValue}")]
-    public class PropertyConfiguration
+    public class PropertyConfiguration : IPropertyConfiguration
     {
         public PropertyConfiguration(PropertyInfo requestProperty, PropertyInfo resultProperty, object defaultValue, bool ignored)
         {

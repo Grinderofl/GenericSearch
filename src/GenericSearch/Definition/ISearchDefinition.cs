@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
@@ -9,7 +10,9 @@ namespace GenericSearch.Definition
     {
         bool Ignored { get; }
         PropertyInfo RequestProperty { get; }
-        PropertyInfo ItemProperty { get; }
+        string ItemPropertyPath { get; }
+        
+        //PropertyInfo EntityPath { get; }
         PropertyInfo ResultProperty { get; }
         Func<ISearch> Constructor { get; }
         Func<IServiceProvider, ISearchActivator> Activator { get; }

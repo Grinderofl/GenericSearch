@@ -10,7 +10,7 @@ namespace GenericSearch.Configuration
 {
     public class ListConfigurationProvider : IListConfigurationProvider
     {
-        internal readonly Dictionary<Type, ListConfiguration> Configurations = new Dictionary<Type, ListConfiguration>();
+        internal readonly Dictionary<Type, IListConfiguration> Configurations = new Dictionary<Type, IListConfiguration>();
         private readonly GenericSearchOptions options;
 
         public ListConfigurationProvider(IEnumerable<IListDefinitionSource> listDefinitions, IListConfigurationFactory listConfigurationFactory, IOptions<GenericSearchOptions> options)
@@ -32,7 +32,7 @@ namespace GenericSearch.Configuration
             }
         }
 
-        public ListConfiguration GetConfiguration(Type requestType) =>
+        public IListConfiguration GetConfiguration(Type requestType) =>
             Configurations.ContainsKey(requestType)
                 ? Configurations[requestType]
                 : null;

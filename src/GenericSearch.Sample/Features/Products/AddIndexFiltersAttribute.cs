@@ -23,7 +23,7 @@ namespace GenericSearch.Sample.Features.Products
 
             protected override async Task ModifyViewDataAsync(ViewDataDictionary viewData, CancellationToken cancellationToken)
             {
-                viewData["Supplier"] = await context.Suppliers
+                viewData["SupplierCompanyName"] = await context.Suppliers
                     .Select(x => x.CompanyName)
                     .Distinct()
                     .OrderBy(x => x)

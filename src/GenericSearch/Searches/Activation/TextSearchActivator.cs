@@ -1,9 +1,14 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace GenericSearch.Searches.Activation
 {
     public class TextSearchActivator : SearchActivator<TextSearch>
     {
-        public override ISearch Create(PropertyInfo itemProperty) => new TextSearch(itemProperty.Name);
+        public override ISearch Activate(string entityPath)
+        {
+            return new TextSearch(entityPath);
+        }
+
     }
 }

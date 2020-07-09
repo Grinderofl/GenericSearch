@@ -8,15 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericSearch.Extensions
 {
-    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
+        [ExcludeFromCodeCoverage]
         public static IGenericSearchServicesBuilder AddGenericSearch(this IServiceCollection services, params Assembly[] assemblies)
         {
             var builder = new GenericSearchServicesBuilder(services);
             foreach (var assembly in assemblies)
             {
-                builder.AddDefinitionsFromAssembly(assembly);
+                builder.AddProfilesFromAssembly(assembly);
             }
 
             return builder;
@@ -29,12 +29,12 @@ namespace GenericSearch.Extensions
                 .AddDefaultServices()
                 .AddDefaultActivators()
                 .AddModelBinder()
-                .AddPostToGetRedirects()
+                .AddActionFilters()
                 .ConfigureOptions(configureOptions);
 
             foreach (var assembly in assemblies)
             {
-                builder.AddDefinitionsFromAssembly(assembly);
+                builder.AddProfilesFromAssembly(assembly);
             }
 
             return builder;

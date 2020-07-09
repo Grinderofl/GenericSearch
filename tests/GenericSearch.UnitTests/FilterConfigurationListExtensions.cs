@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using GenericSearch.Configuration;
@@ -7,30 +8,30 @@ namespace GenericSearch.UnitTests
 {
     internal static class ListConfigurationExtensions
     {
-        public static PropertyInfo ResultPropertyFor(this ListConfiguration configuration, string requestPropertyName)
+        public static PropertyInfo ResultPropertyFor(this IListConfiguration configuration, string requestPropertyName)
         {
             return configuration.SearchConfigurations.ResultPropertyFor(requestPropertyName);
         }
 
-        public static PropertyInfo ItemPropertyFor(this ListConfiguration configuration, string requestPropertyName)
+        public static string ItemPropertyPathFor(this IListConfiguration configuration, string requestPropertyName)
         {
-            return configuration.SearchConfigurations.ItemPropertyFor(requestPropertyName);
+            return configuration.SearchConfigurations.ItemPropertyPathFor(requestPropertyName);
         }
 
         
-        public static SearchConfiguration Find(this IEnumerable<SearchConfiguration> list, string requestPropertyName)
+        public static ISearchConfiguration Find(this IEnumerable<ISearchConfiguration> list, string requestPropertyName)
         {
             return list.First(x => x.RequestProperty.Name == requestPropertyName);
         }
 
-        public static PropertyInfo ResultPropertyFor(this IEnumerable<SearchConfiguration> list, string requestPropertyName)
+        public static PropertyInfo ResultPropertyFor(this IEnumerable<ISearchConfiguration> list, string requestPropertyName)
         {
             return list.Find(requestPropertyName).ResultProperty;
         }
 
-        public static PropertyInfo ItemPropertyFor(this IEnumerable<SearchConfiguration> list, string requestPropertyName)
+        public static string ItemPropertyPathFor(this IEnumerable<ISearchConfiguration> list, string requestPropertyName)
         {
-            return list.Find(requestPropertyName).ItemProperty;
+            return list.Find(requestPropertyName).ItemPropertyPath;
         }
     }
 }

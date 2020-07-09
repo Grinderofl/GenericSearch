@@ -19,7 +19,7 @@ namespace GenericSearch.Sample.Features.Products
         public class Query : IRequest<Model>, ISortOrder
         {
             public TextSearch ProductName { get; set; }
-            public SingleTextOptionSearch Supplier { get; set; }
+            public SingleTextOptionSearch SupplierCompanyName { get; set; }
             public SingleTextOptionSearch Category { get; set; }
             public OptionalBooleanSearch Discontinued { get; set; }
 
@@ -40,7 +40,7 @@ namespace GenericSearch.Sample.Features.Products
             public IEnumerable<Item> Items { get; }
 
             public TextSearch ProductName { get; set; }
-            public SingleTextOptionSearch Supplier { get; set; }
+            public SingleTextOptionSearch SupplierCompanyName { get; set; }
             public SingleTextOptionSearch Category { get; set; }
             public OptionalBooleanSearch Discontinued { get; set; }
 
@@ -88,7 +88,8 @@ namespace GenericSearch.Sample.Features.Products
         {
             public SearchProfile()
             {
-                CreateFilter<Query, Item, Model>();
+                Create<Query, Product, Model>()
+                    .Search(x => x.Category, x => x.On(c => c.Category.CategoryName));
             }
         }
 
@@ -108,12 +109,13 @@ namespace GenericSearch.Sample.Features.Products
             public async Task<Model> Handle(Query request, CancellationToken cancellationToken)
             {
                 var items = context.Products
-                    .ProjectTo<Item>(mapper)
                     .Search(genericSearch)
                     .Sort(genericSearch);
 
                 var count = await items.CountAsync(cancellationToken);
-                var results = await items.Paginate(genericSearch).ToListAsync(cancellationToken);
+                var results = await items.Paginate(genericSearch)
+                    .ProjectTo<Item>(mapper)
+                    .ToListAsync(cancellationToken);
 
                 return new Model(results, count);
             }

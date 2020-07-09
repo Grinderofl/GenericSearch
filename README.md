@@ -43,7 +43,7 @@ GenericSearch aims to change this and take advantage of convention-over-configur
 
 1. Install the NuGet package:
 
-   `Install-Package GenericSearch.1.0.0-preview.2` 
+   `Install-Package GenericSearch.0.1.0`
    
 2. Register and configure GenericSearch with your application services:
 
@@ -54,7 +54,7 @@ GenericSearch aims to change this and take advantage of convention-over-configur
        services.AddDefaultGenericSearch()
            .ConfigureOptions(x => 
    		{
-               x.CreateFilter<Request, Item, Result>();
+               x.CreateFilter<Request, Entity, Result>();
            });
    }
    
@@ -64,7 +64,7 @@ GenericSearch aims to change this and take advantage of convention-over-configur
        services.AddDefaultGenericSearch();
        services.Configure<GenericSearchOptions>(x => 
    	{
-           x.CreateFilter<Request, Item, Result>();
+           x.CreateFilter<Request, Entity, Result>();
        });
    }
    
@@ -79,7 +79,7 @@ GenericSearch aims to change this and take advantage of convention-over-configur
    {
        public void Configure(GenericSearchOptions options)
        {
-           options.CreateFilter<Request, Item, Result>();
+           options.CreateFilter<Request, Entity, Result>();
        }
    }
    
@@ -93,7 +93,7 @@ GenericSearch aims to change this and take advantage of convention-over-configur
    {
        public SearchProfile()
        {
-           CreateFilter<Request, Item, Result>();
+           CreateFilter<Request, Entity, Result>();
        }
    }
    

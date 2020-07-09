@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
 using Moq;
@@ -24,7 +26,7 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NotPostRequest_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -50,7 +52,7 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NotControllerActionDescriptor_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
+            var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -76,8 +78,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         [Fact]
         public async Task NoModelToProvide_Fails()
         {
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(null);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(null);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
@@ -104,8 +106,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task NoConfiguration_Fails()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns((ListConfiguration) null);
@@ -134,8 +136,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task ActionName_Mismatch_Fails()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))
@@ -169,8 +171,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task Enabled_False_Fails()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))
@@ -204,8 +206,8 @@ namespace GenericSearch.UnitTests.ActionFilters
         public async Task Succeeds()
         {
             var model = new TestRequest();
-            var modelProvider = new Mock<IModelProvider>();
-            modelProvider.Setup(x => x.Provide()).Returns(model);
+            var modelProvider = new Mock<IRequestModelProvider>();
+            modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
 
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))
@@ -213,7 +215,8 @@ namespace GenericSearch.UnitTests.ActionFilters
                 PostRedirectGetConfiguration = new PostRedirectGetConfiguration("Index", true),
                 PageConfiguration = new PageConfiguration("Page", 1),
                 RowsConfiguration = new RowsConfiguration("Rows", 20),
-                SortDirectionConfiguration = new SortDirectionConfiguration("Ordx", Direction.Ascending)
+                SortColumnConfiguration = new SortColumnConfiguration("Ordx", "Text"),
+                SortDirectionConfiguration = new SortDirectionConfiguration("Ordd", Direction.Ascending)
             };
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(listConfiguration);
@@ -242,6 +245,41 @@ namespace GenericSearch.UnitTests.ActionFilters
         {
             public TextSearch Text { get; set; } = new TextSearch("Text");
 
+            public IntegerSearch Integer { get; set; } = new IntegerSearch("Integer") {Term1 = 1};
+
+            [BindNever]
+            public TextSearch Foo { get; set; }
+
+            public TestSearch FooIgnored { get; set; } = new TestSearch();
+
+            [DefaultValue(1)]
+            public int Bar { get; set; } = 1;
+
+            [DefaultValue(1)]
+            public int Page { get; set; } = 1;
+
+            [DefaultValue(20)]
+            public int Rows { get; set; } = 20;
+
+            [DefaultValue("Text")]
+            public string Ordx { get; set; } = "Text";
+
+            [DefaultValue(Direction.Ascending)]
+            public Direction Ordd { get; set; } = Direction.Ascending;
+
+            public string Extra { get; set; }
+
+            public string[] Extras { get; set; } = {"Foo", "Bar"};
+            public TestEnum TestEnum { get; set; }
+
+            [DefaultValue(null)]
+            public string Baz { get; set; } = "FooBar";
+        }
+
+        private enum TestEnum
+        {
+            Foo,
+            Bar
         }
 
         private class TestItem
@@ -252,6 +290,25 @@ namespace GenericSearch.UnitTests.ActionFilters
         private class TestResult
         {
             public TextSearch Text { get; set; }
+            public IntegerSearch Integer { get; set; }
+            public TestSearch FooIgnored { get; set; }
+            public int Page { get; set; }
+            public int Rows { get; set; }
+            public string Ordx { get; set; }
+            public Direction Ordd { get; set; }
+            public TextSearch Foo { get; set; }
+        }
+
+        private class TestSearch : ISearch
+        {
+            [BindNever]
+            public string IgnoreMe { get; set; }
+            public bool IsActive() => false;
+
+            public IQueryable<T> ApplyToQuery<T>(IQueryable<T> query)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -8,6 +8,8 @@ using GenericSearch.Configuration;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition;
 using GenericSearch.Exceptions;
+using GenericSearch.Searches.Activation;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -27,7 +29,7 @@ namespace GenericSearch.UnitTests.Configuration
             optionsMock = new Mock<IOptions<GenericSearchOptions>>();
             optionsMock.SetupGet(x => x.Value).Returns(options);
 
-            var filterConfigurationFactory = new SearchConfigurationFactory();
+            var filterConfigurationFactory = new SearchConfigurationFactory(new PascalCasePropertyPathFinder());
             var pageConfigurationFactory = new PageConfigurationFactory(optionsMock.Object);
             var rowsConfigurationFactory = new RowsConfigurationFactory(optionsMock.Object);
             var sortColumnConfigurationFactory = new SortColumnConfigurationFactory(optionsMock.Object);
@@ -51,7 +53,7 @@ namespace GenericSearch.UnitTests.Configuration
         {
             public ValidProfile()
             {
-                CreateFilter<Request, Item, Result>();
+                Create<Request, Item, Result>();
             }
         }
 
@@ -59,7 +61,7 @@ namespace GenericSearch.UnitTests.Configuration
         {
             public DuplicateProfile()
             {
-                CreateFilter<Request, Item, Result>();
+                Create<Request, Item, Result>();
             }
         }
 

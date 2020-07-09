@@ -39,6 +39,7 @@ partial class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
     [CI] readonly AzurePipelines Pipelines;
+    [CI] readonly GitHubActions Actions;
     [GitVersion] readonly GitVersion GitVersion;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
@@ -104,6 +105,15 @@ partial class Build : NukeBuild
                            .SetInformationalVersion(GitVersion.InformationalVersion)
                            .SetPackageReleaseNotes(changeLog)
                        );
+        });
+
+    Target UploadArtifacts => _ => _
+        .DependsOn(Pack)
+        .Consumes(Pack)
+        .OnlyWhenStatic(() => IsServerBuild)
+        .Executes(() =>
+        {
+            
         });
 
     Target UpdateBuildNumber => _ => _

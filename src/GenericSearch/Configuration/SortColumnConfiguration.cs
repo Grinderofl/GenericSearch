@@ -2,7 +2,7 @@
 
 namespace GenericSearch.Configuration
 {
-    public class SortColumnConfiguration
+    public class SortColumnConfiguration : ISortColumnConfiguration
     {
         public SortColumnConfiguration(PropertyInfo requestProperty, PropertyInfo resultProperty, object defaultValue)
         {

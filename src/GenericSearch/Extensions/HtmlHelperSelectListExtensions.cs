@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using GenericSearch.Attributes;
+using GenericSearch;
 using GenericSearch.Configuration;
 using GenericSearch.Internal;
 using GenericSearch.Internal.Extensions;
@@ -66,8 +66,8 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
 
         public static IReadOnlyList<SelectListItem> GetPropertiesSelectListForModel(this IHtmlHelper html)
         {
-            var modelProvider = html.GetRequestService<IModelProvider>();
-            var model = modelProvider.Provide();
+            var modelProvider = html.GetRequestService<IRequestModelProvider>();
+            var model = modelProvider.GetCurrentRequestModel();
 
             if (model == null)
             {

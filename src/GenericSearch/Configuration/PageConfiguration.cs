@@ -2,7 +2,7 @@
 
 namespace GenericSearch.Configuration
 {
-    public class PageConfiguration
+    public class PageConfiguration : IPageConfiguration
     {
         public PageConfiguration(PropertyInfo requestProperty, PropertyInfo resultProperty, int defaultValue)
         {

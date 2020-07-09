@@ -39,7 +39,7 @@ namespace GenericSearch.Configuration.Factories
             this.requestFactoryConfigurationFactory = requestFactoryConfigurationFactory;
         }
 
-        public ListConfiguration Create(IListDefinition source)
+        public IListConfiguration Create(IListDefinition source)
         {
             var configuration = new ListConfiguration(source.RequestType, source.ItemType, source.ResultType);
             

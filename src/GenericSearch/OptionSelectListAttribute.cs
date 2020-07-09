@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace GenericSearch.Attributes
+namespace GenericSearch
 {
     /// <summary>
     ///     OptionSelectListAttribute is an attribute to set a specific index key for retrieving

@@ -26,11 +26,6 @@ namespace GenericSearch.Searches
 
         protected override Expression BuildFilterExpression(Expression property)
         {
-            if (!IsActive())
-            {
-                return null;
-            }
-
             return Expression.Equal(property, Expression.Constant(Is));
         }
     }

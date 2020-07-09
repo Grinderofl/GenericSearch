@@ -5,6 +5,8 @@ using FluentAssertions;
 using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition.Expressions;
 using GenericSearch.Searches;
+using GenericSearch.Searches.Activation;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -21,7 +23,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             var optionsMock = new Mock<IOptions<GenericSearchOptions>>();
             optionsMock.SetupGet(x => x.Value).Returns(options);
 
-            var filterConfigurationFactory = new SearchConfigurationFactory();
+            var filterConfigurationFactory = new SearchConfigurationFactory(new PascalCasePropertyPathFinder());
             var pageConfigurationFactory = new PageConfigurationFactory(optionsMock.Object);
             var rowsConfigurationFactory = new RowsConfigurationFactory(optionsMock.Object);
             var sortColumnConfigurationFactory = new SortColumnConfigurationFactory(optionsMock.Object);
@@ -55,9 +57,9 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.ResultType.Should().Be<Result>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Text");
-            configuration.ItemPropertyFor("Text").Name.Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Integer");
-            configuration.ItemPropertyFor("Integer").Name.Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
             
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("Page");
@@ -102,9 +104,9 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.ResultType.Should().Be<DifferentFiltersResult>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Integer");
-            configuration.ItemPropertyFor("Text").Name.Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Text");
-            configuration.ItemPropertyFor("Integer").Name.Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
 
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("Page");
@@ -149,9 +151,9 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.ResultType.Should().Be<DifferentPageAndRowsResult>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Text");
-            configuration.ItemPropertyFor("Text").Name.Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Integer");
-            configuration.ItemPropertyFor("Integer").Name.Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
 
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("CurrentPage");
@@ -196,9 +198,9 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.ResultType.Should().Be<DifferentPageAndRowsResult>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Text");
-            configuration.ItemPropertyFor("Text").Name.Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Integer");
-            configuration.ItemPropertyFor("Integer").Name.Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
 
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("CurrentPage");

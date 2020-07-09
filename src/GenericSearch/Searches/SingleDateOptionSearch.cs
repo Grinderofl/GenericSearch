@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 1591
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
@@ -26,8 +27,9 @@ namespace GenericSearch.Searches
         }
 
         protected override Expression BuildFilterExpression(Expression property)
-            => Is.HasValue
-                   ? Expression.Equal(property, Expression.Constant(Is.Value.Date))
-                   : null;
+        {
+            Debug.Assert(Is != null, nameof(Is) + " != null");
+            return Expression.Equal(property, Expression.Constant(Is.Value.Date));
+        }
     }
 }

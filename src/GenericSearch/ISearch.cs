@@ -1,7 +1,7 @@
 ﻿#pragma warning disable 1591
 using System.Linq;
 
-namespace GenericSearch.Searches
+namespace GenericSearch
 {
     public interface ISearch
     {

@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using FluentAssertions;
 using GenericSearch.Configuration.Factories;
+using GenericSearch.Definition.Expressions;
 using GenericSearch.ModelBinders.Activation;
 using GenericSearch.Searches;
+using GenericSearch.Searches.Activation;
 using GenericSearch.Searches.Activation.Factories;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -11,19 +16,27 @@ using Xunit;
 
 namespace GenericSearch.UnitTests.ModelBinders.Activation
 {
-    public class RequestPropertyActivatorTests
+    public class SearchPropertyActivatorTests
     {
         private readonly Request model;
-
-        public RequestPropertyActivatorTests()
+        
+        public SearchPropertyActivatorTests()
         {
-            var definition = TestListDefinition.Create<Request, Item, Result>();
+            var definition = new ListExpression<Request, Item, Result>();
+            
+            definition
+                .Search(x => x.Text, x => x.ActivateUsing(() => new TextSearch()))
+                .Search(x => x.Integer, x => x.ActivateUsing(sp => new IntegerSearchActivator()))
+                .Property(x => x.Foo, x => x.DefaultValue("Test"))
+                .Property(x => x.Bar, x => x.Ignore());
+            
+
             var mock = new Mock<IOptions<GenericSearchOptions>>();
             mock.Setup(x => x.Value)
                 .Returns(new GenericSearchOptions());
             var options = mock.Object;
 
-            var factory = new ListConfigurationFactory(new SearchConfigurationFactory(),
+            var factory = new ListConfigurationFactory(new SearchConfigurationFactory(new PascalCasePropertyPathFinder()),
                                                        new PageConfigurationFactory(options),
                                                        new RowsConfigurationFactory(options),
                                                        new SortColumnConfigurationFactory(options),
@@ -40,7 +53,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             model = new Request();
             
             var activatorFactory = new SearchActivatorFactory(serviceProvider);
-            var activator = new RequestPropertyActivator(activatorFactory);
+            var activator = new SearchPropertyActivator(activatorFactory, serviceProvider);
 
             activator.Activate(configuration, model);
         }
@@ -76,6 +89,8 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             public SingleIntegerOptionSearch SingleIntegerOption { get; set; }
             public SingleTextOptionSearch SingleTextOption { get; set; }
             public TextSearch Text { get; set; }
+            public string Foo { get; set; }
+            public string Bar { get; set; }
         }
 
         private class Item
@@ -106,6 +121,8 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             public SingleIntegerOptionSearch SingleIntegerOption { get; set; }
             public SingleTextOptionSearch SingleTextOption { get; set; }
             public TextSearch Text { get; set; }
+            public string Property { get; set; }
+            public string Property2 { get; set; }
         }
     }
 

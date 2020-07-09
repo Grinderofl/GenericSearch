@@ -7,7 +7,7 @@ namespace GenericSearch
     /// Offers a reusable base class for a paged viewmodel result
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public abstract class PagedResult
+    public abstract class PagedResult : IPagedResult, IHasActivePage
     {
         /// <summary>
         /// Initializes a new instance of <see cref="PagedResult"/>

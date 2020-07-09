@@ -16,14 +16,14 @@ namespace GenericSearch.UnitTests.Searches.Activation
             .Where(x => !x.IsGenericType)
             .Where(x => !x.IsAbstract)
             .Where(x => typeof(AbstractSearch).IsAssignableFrom(x))
-            .Select(x => new object[] {x});
+            .Select(x => new object[] { x });
 
         public static IEnumerable<object[]> ActivatorTypes => AllTypes
             .Where(x => !x.IsGenericType)
             .Where(x => !x.IsAbstract)
             .Where(x => x != typeof(FallbackSearchActivator))
             .Where(x => x.GetInterfaces().Contains(typeof(ISearchActivator)))
-            .Select(x => new object[] {x});
+            .Select(x => new object[] { x });
 
         private static readonly Type GenericType = typeof(ISearchActivator<>);
         private static readonly Type[] AllTypes = typeof(GenericSearchOptions).Assembly.GetExportedTypes();
@@ -39,8 +39,8 @@ namespace GenericSearch.UnitTests.Searches.Activation
 
         public string TestProperty { get; set; }
 
-        private static readonly PropertyInfo TestPropertyInfo = 
-            typeof(SearchActivatorTests).GetProperty(nameof(TestProperty));
+        private static readonly string ItemPropertyPath =
+            typeof(SearchActivatorTests).GetProperty(nameof(TestProperty)).Name;
 
         [Theory]
         [MemberData(nameof(ActivatorTypes))]
@@ -49,7 +49,7 @@ namespace GenericSearch.UnitTests.Searches.Activation
             var activator = Activator.CreateInstance(implementation) as ISearchActivator;
 
             Debug.Assert(activator != null, nameof(activator) + " != null");
-            var search = activator.Create(TestPropertyInfo);
+            var search = activator.Activate(ItemPropertyPath);
 
             search.Should().NotBeNull();
 

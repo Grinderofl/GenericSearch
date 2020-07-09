@@ -9,6 +9,7 @@ using GenericSearch.Internal;
 using GenericSearch.ModelBinders.Activation;
 using GenericSearch.Searches.Activation;
 using GenericSearch.Searches.Activation.Factories;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -27,21 +28,40 @@ namespace GenericSearch.Configuration
 
         private bool defaultActivatorsAdded;
 
-        public IGenericSearchServicesBuilder AddDefinitionsFromAssembly(Assembly assembly)
+        public IGenericSearchServicesBuilder AddProfilesFromAssembly(Assembly assembly)
         {
             var types = assembly.GetExportedTypes()
+                .Where(x => !x.IsAbstract)
                 .Where(x => x.GetInterfaces().Contains(typeof(IListDefinitionSource)));
 
             foreach (var type in types)
             {
-                services.AddSingleton(typeof(IListDefinitionSource), type);
+                AddProfile(type);
             }
 
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddDefinitionsFromAssemblyOf<T>() => 
-            AddDefinitionsFromAssembly(typeof(T).Assembly);
+        public IGenericSearchServicesBuilder AddProfile<T>() where T : class, IListDefinitionSource
+        {
+            services.AddSingleton<IListDefinitionSource, T>();
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddProfile<T>(T profile) where T : IListDefinitionSource
+        {
+            services.AddSingleton<IListDefinitionSource>(profile);
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddProfile(Type profileType)
+        {
+            services.AddSingleton(typeof(IListDefinitionSource), profileType);
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddProfilesFromAssemblyOf<T>() => 
+            AddProfilesFromAssembly(typeof(T).Assembly);
 
         public IGenericSearchServicesBuilder AddDefaultServices()
         {
@@ -60,11 +80,12 @@ namespace GenericSearch.Configuration
             services.TryAddSingleton<IPostRedirectGetConfigurationFactory, PostRedirectGetConfigurationFactory>();
             services.TryAddSingleton<ITransferValuesConfigurationFactory, TransferValuesConfigurationFactory>();
             services.TryAddSingleton<IRequestFactoryConfigurationFactory, RequestFactoryConfigurationFactory>();
-            
-            services.TryAddScoped<IModelProvider, ModelProvider>();
+            services.TryAddSingleton<IPropertyPathFinder, PascalCasePropertyPathFinder>();
+
+            services.TryAddScoped<IRequestModelProvider, RequestModelProvider>();
             services.TryAddScoped<IGenericSearch, GenericSearch>();
             services.TryAddSingleton<IRequestActivator, RequestActivator>();
-            services.TryAddScoped<IRequestPropertyActivator, RequestPropertyActivator>();
+            services.TryAddScoped<ISearchPropertyActivator, SearchPropertyActivator>();
             services.TryAddScoped<ISearchActivatorFactory, SearchActivatorFactory>();
             
 
@@ -107,7 +128,7 @@ namespace GenericSearch.Configuration
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddPostToGetRedirects()
+        public IGenericSearchServicesBuilder AddActionFilters()
         {
             if(services.All(x => x.ImplementationType != typeof(ConfigureMvcActionFilters)))
             {
@@ -138,6 +159,21 @@ namespace GenericSearch.Configuration
         public IGenericSearchServicesBuilder ConfigureOptions(Action<GenericSearchOptions> optionsAction)
         {
             services.Configure(optionsAction);
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder Configure(Action<ListProfile> configureAction)
+        {
+            var profile = new ListProfile();
+            configureAction(profile);
+
+            var source = (IListDefinitionSource) profile;
+
+            foreach (var definition in source.Definitions)
+            {
+                services.AddSingleton(definition);
+            }
+
             return this;
         }
     }

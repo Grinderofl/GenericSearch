@@ -22,9 +22,7 @@ namespace GenericSearch.Searches
         public override bool IsActive() 
             => Is.HasValue;
 
-        protected override Expression BuildFilterExpression(Expression property)
-            => Is.HasValue
-                   ? Expression.Equal(property, Expression.Constant(Is))
-                   : null;
+        protected override Expression BuildFilterExpression(Expression property) 
+            => Expression.Equal(property, Expression.Constant(Is));
     }
 }

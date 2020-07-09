@@ -5,6 +5,7 @@ using GenericSearch.Configuration.Factories;
 using GenericSearch.Definition.Expressions;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
+using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class SearchConfigurationFactoryTests
     {
-        private SearchConfigurationFactory Factory => new SearchConfigurationFactory();
+        private SearchConfigurationFactory Factory => new SearchConfigurationFactory(new PascalCasePropertyPathFinder());
 
         [Fact]
         public void Create_ByConvention_Succeeds()
@@ -26,7 +27,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -43,7 +44,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -60,7 +61,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Bar");
             result.Ignored.Should().BeFalse();
         }
@@ -77,8 +78,59 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Bar");
+            result.ItemPropertyPath.Should().Be("Bar");
             result.ResultProperty.Name.Should().Be("Text");
+            result.Ignored.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Create_ChildProperty_Succeeds()
+        {
+            var definition = new ListExpression<Request, Item, Result>();
+            definition.Search(x => x.ChildBaz);
+            var property = typeof(Request).GetProperty(nameof(Request.ChildBaz));
+
+            var result = Factory.Create(property, definition);
+
+            result.Constructor.Should().BeNull();
+            result.Activator.Should().BeNull();
+            result.RequestProperty.Name.Should().Be("ChildBaz");
+            result.ItemPropertyPath.Should().Be("Child.Baz");
+            result.ResultProperty.Name.Should().Be("ChildBaz");
+            result.Ignored.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Create_ChildProperty_On_Path_Succeeds()
+        {
+            var definition = new ListExpression<Request, Item, Result>();
+            definition.Search(x => x.ChildBaz, x => x.On("Child.Baz"));
+            var property = typeof(Request).GetProperty(nameof(Request.ChildBaz));
+
+            var result = Factory.Create(property, definition);
+
+            result.Constructor.Should().BeNull();
+            result.Activator.Should().BeNull();
+            result.RequestProperty.Name.Should().Be("ChildBaz");
+            result.ItemPropertyPath.Should().Be("Child.Baz");
+            result.ResultProperty.Name.Should().Be("ChildBaz");
+            result.Ignored.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Create_ChildProperty_On_Property_Succeeds()
+        {
+            var definition = new ListExpression<Request, Item, Result>();
+            definition.Search(x => x.ChildBaz, x => x.On(c => c.Child.Baz));
+            var property = typeof(Request).GetProperty(nameof(Request.ChildBaz));
+
+            var result = Factory.Create(property, definition);
+
+            result.Constructor.Should().BeNull();
+            result.Activator.Should().BeNull();
+            result.RequestProperty.Name.Should().Be("ChildBaz");
+            result.ItemPropertyPath.Should().Be("Child.Baz");
+            result.ResultProperty.Name.Should().Be("ChildBaz");
             result.Ignored.Should().BeFalse();
         }
 
@@ -94,7 +146,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeTrue();
         }
@@ -103,7 +155,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         public void Create_Property_ConstructUsing_Succeeds()
         {
             var definition = new ListExpression<Request, Item, Result>();
-            definition.Search(x => x.Text, x => x.ConstructUsing(() => new TextSearch()));
+            definition.Search(x => x.Text, x => x.ActivateUsing(() => new TextSearch()));
             var property = typeof(Request).GetProperty(nameof(Request.Text));
 
             var result = Factory.Create(property, definition);
@@ -111,7 +163,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().NotBeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -128,7 +180,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().NotBeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
 
@@ -153,7 +205,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Activator.Should().NotBeNull();
             result.Activator.Should().BeOfType(typeof(Func<IServiceProvider, ISearchActivator>));
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
 
@@ -178,7 +230,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             result.Activator.Should().NotBeNull();
             result.Activator.Should().BeOfType(typeof(Func<IServiceProvider, ISearchActivator>));
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemProperty.Name.Should().Be("Text");
+            result.ItemPropertyPath.Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
 
@@ -194,17 +246,25 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         {
             public string Text { get; set; }
             public string Bar { get; set; }
+            public SubItem Child { get; set; }
+        }
+
+        private class SubItem
+        {
+            public string Baz { get; set; }
         }
 
         private class Request
         {
             public TextSearch Text { get; set; }
+            public TextSearch ChildBaz { get; set; }
         }
 
         private class Result
         {
             public TextSearch Text { get; set; }
             public TextSearch Bar { get; set; }
+            public TextSearch ChildBaz { get; set; }
         }
     }
 }

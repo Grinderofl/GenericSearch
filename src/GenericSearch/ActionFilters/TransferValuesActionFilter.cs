@@ -10,12 +10,12 @@ namespace GenericSearch.ActionFilters
 {
     public class TransferValuesActionFilter : IAsyncActionFilter, IOrderedFilter
     {
-        private readonly IModelProvider modelProvider;
+        private readonly IRequestModelProvider requestModelProvider;
         private readonly IListConfigurationProvider configurationProvider;
 
-        public TransferValuesActionFilter(IModelProvider modelProvider, IListConfigurationProvider configurationProvider)
+        public TransferValuesActionFilter(IRequestModelProvider requestModelProvider, IListConfigurationProvider configurationProvider)
         {
-            this.modelProvider = modelProvider;
+            this.requestModelProvider = requestModelProvider;
             this.configurationProvider = configurationProvider;
         }
 
@@ -23,13 +23,13 @@ namespace GenericSearch.ActionFilters
         {
             var result = await next();
 
-            var resultModel = result.Result.GetModel();
+            var resultModel = result.Result?.GetModel();
             if (resultModel == null)
             {
                 return;
             }
 
-            var requestModel = modelProvider.Provide();
+            var requestModel = requestModelProvider.GetCurrentRequestModel();
             if (requestModel == null)
             {
                 return;
@@ -53,7 +53,7 @@ namespace GenericSearch.ActionFilters
                 return;
             }
 
-            if (!configuration.PostRedirectGetConfiguration.Enabled)
+            if (!configuration.TransferValuesConfiguration.Enabled)
             {
                 return;
             }
@@ -84,7 +84,7 @@ namespace GenericSearch.ActionFilters
         }
 
         
-        public static bool IsSatisfiedByAction(ListConfiguration listConfiguration, ActionDescriptor actionDescriptor)
+        public static bool IsSatisfiedByAction(IListConfiguration listConfiguration, ActionDescriptor actionDescriptor)
         {
             if (!actionDescriptor.RouteValues["action"]
                     .Equals(listConfiguration.TransferValuesConfiguration.ActionName, StringComparison.OrdinalIgnoreCase) &&

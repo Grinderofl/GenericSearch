@@ -4,18 +4,25 @@ using GenericSearch.Definition.Expressions;
 
 namespace GenericSearch
 {
-    public abstract class ListProfile : IListDefinitionSource
+    public class ListProfile : IListDefinitionSource
     {
-        public IListExpression<TRequest, TItem, TResult> CreateFilter<TRequest, TItem, TResult>()
+        /// <summary>
+        /// Creates a new list definition.
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        public IListExpression<TRequest, TEntity, TResult> Create<TRequest, TEntity, TResult>()
         {
-            var expression = new ListExpression<TRequest, TItem, TResult>();
-            configurations.Add(expression);
+            var expression = new ListExpression<TRequest, TEntity, TResult>();
+            definitions.Add(expression);
 
             return expression;
         }
 
-        private readonly List<IListDefinition> configurations = new List<IListDefinition>();
+        private readonly List<IListDefinition> definitions = new List<IListDefinition>();
 
-        List<IListDefinition> IListDefinitionSource.Definitions => configurations;
+        List<IListDefinition> IListDefinitionSource.Definitions => definitions;
     }
 }
