@@ -86,5 +86,15 @@ namespace GenericSearch
         /// <param name="configureAction"></param>
         /// <returns></returns>
         IGenericSearchServicesBuilder Configure(Action<ListProfile> configureAction);
+
+        /// <summary>
+        /// Adds a new list definition to GenericSearch pipeline.
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        IGenericSearchServicesBuilder AddList<TRequest, TEntity, TResult>(Action<IListExpression<TRequest, TEntity, TResult>> action = null);
     }
 }

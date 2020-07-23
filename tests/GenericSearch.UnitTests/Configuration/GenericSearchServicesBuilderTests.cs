@@ -167,7 +167,7 @@ namespace GenericSearch.UnitTests.Configuration
             var builder = new GenericSearchServicesBuilder(services);
             builder.Configure(x =>
             {
-                x.Create<Request, Item, Result>();
+                x.AddList<Request, Item, Result>();
             });
 
             var service = services.SingleOrDefault(x => x.ServiceType == typeof(IListDefinition));
@@ -249,7 +249,28 @@ namespace GenericSearch.UnitTests.Configuration
             var builder = new GenericSearchServicesBuilder(services);
             builder.AddDefaultActivators()
                 .AddDefaultServices();
-            builder.ConfigureOptions(x => x.CreateFilter<Request, Item, Result>());
+            builder.ConfigureOptions(x => x.AddList<Request, Item, Result>());
+
+            var provider = services.BuildServiceProvider();
+
+            var configurationProvider =
+                provider.CreateScope().ServiceProvider.GetRequiredService<IListConfigurationProvider>();
+
+            var configuration = configurationProvider.GetConfiguration(typeof(Request));
+
+            configuration.Should().NotBeNull();
+            configuration.ItemType.Should().Be<Item>();
+            configuration.ResultType.Should().Be<Result>();
+        }
+
+        [Fact]
+        public void AddList_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddDefaultActivators()
+                .AddDefaultServices();
+            builder.AddList<Request, Item, Result>();
 
             var provider = services.BuildServiceProvider();
 

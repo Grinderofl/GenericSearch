@@ -40,7 +40,7 @@ namespace GenericSearch.Sample
     {
         public void Configure(GenericSearchOptions options)
         {
-            options.CreateFilter<Index.Query, Index.Projection, Index.Model>();
+            options.AddList<Index.Query, Index.Projection, Index.Model>();
         }
     }
 

@@ -7,13 +7,13 @@ namespace GenericSearch
     public class ListProfile : IListDefinitionSource
     {
         /// <summary>
-        /// Creates a new list definition.
+        /// Adds a new list definition.
         /// </summary>
         /// <typeparam name="TRequest"></typeparam>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        public IListExpression<TRequest, TEntity, TResult> Create<TRequest, TEntity, TResult>()
+        public IListExpression<TRequest, TEntity, TResult> AddList<TRequest, TEntity, TResult>()
         {
             var expression = new ListExpression<TRequest, TEntity, TResult>();
             definitions.Add(expression);

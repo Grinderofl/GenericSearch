@@ -53,7 +53,7 @@ namespace GenericSearch.UnitTests.Configuration
         {
             public ValidProfile()
             {
-                Create<Request, Item, Result>();
+                AddList<Request, Item, Result>();
             }
         }
 
@@ -61,7 +61,7 @@ namespace GenericSearch.UnitTests.Configuration
         {
             public DuplicateProfile()
             {
-                Create<Request, Item, Result>();
+                AddList<Request, Item, Result>();
             }
         }
 

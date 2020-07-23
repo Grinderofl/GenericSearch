@@ -176,5 +176,14 @@ namespace GenericSearch.Configuration
 
             return this;
         }
+
+        public IGenericSearchServicesBuilder AddList<TRequest, TEntity, TResult>(Action<IListExpression<TRequest, TEntity, TResult>> action = null)
+        {
+            var profile = new ListProfile();
+            var expression = profile.AddList<TRequest, TEntity, TResult>();
+            action?.Invoke(expression);
+            services.AddSingleton<IListDefinitionSource>(profile);
+            return this;
+        }
     }
 }
