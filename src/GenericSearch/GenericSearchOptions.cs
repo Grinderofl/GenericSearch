@@ -112,10 +112,28 @@ namespace GenericSearch
         /// </summary>
         public bool TransferValuesEnabled { get; set; } = true;
 
+        /// <summary>
+        /// Specifies the <see cref="IRequestFactory"/> to use to activate request models.
+        /// <remarks>
+        /// The default value is null.
+        /// </remarks>
+        /// </summary>
         public Type DefaultRequestFactoryType { get; set; }
 
+        /// <summary>
+        /// Specifies the service provider factory method to use to activate request models.
+        /// <remarks>
+        /// The default value is null.
+        /// </remarks>
+        /// </summary>
         public Func<IServiceProvider, Type, object> DefaultRequestFactoryServiceProvider { get; set; }
 
+        /// <summary>
+        /// Specifies the factory method to use to activate request models.
+        /// <remarks>
+        /// The default value is <code>Activator.CreateInstance</code>.
+        /// </remarks>
+        /// </summary>
         public Func<Type, object> DefaultRequestFactoryMethod { get; set; }
 
         public GenericSearchOptions UseRequestFactory<T>() where T : class, IRequestFactory
