@@ -1,7 +1,6 @@
 # GenericSearch for ASP.NET Core
 
-[![Build Status](https://dev.azure.com/sulenero/GenericSearch/_apis/build/status/GenericSearch?branchName=master)](https://dev.azure.com/sulenero/GenericSearch/_build/latest?definitionId=11&branchName=master)
-![Build](https://github.com/Grinderofl/GenericSearch/workflows/Build/badge.svg)
+![CI](https://github.com/Grinderofl/GenericSearch/workflows/CI/badge.svg?branch=master)
 
 
 ## Table of Contents
@@ -30,12 +29,6 @@ While it's normal for proof of concepts and  smaller projects to search lengthy 
 GenericSearch also solves another two problems - pagination and back-forward browser functionality. This is done through intercepting a `POST` request to the controller action method for the list page, creating a `RouteValueDictionary` of submitted post data which differ from their default values, and finally redirecting the user to the same action method with `GET` as the request method.
 
 The library comes with number of commonly used filter types, ranging from "contains text" to "is one of the dates from a multi select list". It's also very easy to extend built-in filters, add your own filters, and use said filters in your lists.
-
-Commonly used approaches and examples provided in various tutorials tend to involve a nest of conditional statements. While this is acceptable in small projects which have limited list views and columns, bigger projects need a more maintainable way of providing said features. In addition, there is another layer of pain when persisting filters through different pages and retaining the functionality of the browser back-button.
-
-There have been many attempts to solve these problems, ranging from base classes and boxing magic to heavyweight services and frontend libraries, but so far the ease of use and ability to fit into developers' workflow has been lacking.
-
-GenericSearch aims to change this and take advantage of convention-over-configuration design to provide reusability, and once-only data collection during startup for efficient runtime performance.
 
 
 
