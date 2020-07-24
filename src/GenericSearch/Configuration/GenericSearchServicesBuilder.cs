@@ -128,11 +128,21 @@ namespace GenericSearch.Configuration
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddActionFilters()
+        public IGenericSearchServicesBuilder AddTransferValuesActionFilter()
         {
-            if(services.All(x => x.ImplementationType != typeof(ConfigureMvcActionFilters)))
+            if(services.All(x => x.ImplementationType != typeof(AddTransferValuesActionFilter)))
             {
-                services.ConfigureOptions<ConfigureMvcActionFilters>();
+                services.ConfigureOptions<AddTransferValuesActionFilter>();
+            }
+
+            return this;
+        }
+
+        public IGenericSearchServicesBuilder AddPostRedirectGetActionFilter()
+        {
+            if(services.All(x => x.ImplementationType != typeof(AddPostRedirectGetActionFilter)))
+            {
+                services.ConfigureOptions<AddPostRedirectGetActionFilter>();
             }
 
             return this;

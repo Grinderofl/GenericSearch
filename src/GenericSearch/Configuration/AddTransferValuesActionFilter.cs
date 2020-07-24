@@ -9,12 +9,11 @@ using Microsoft.Extensions.Options;
 namespace GenericSearch.Configuration
 {
     [ExcludeFromCodeCoverage]
-    public class ConfigureMvcActionFilters : IConfigureOptions<MvcOptions>
+    public class AddTransferValuesActionFilter : IConfigureOptions<MvcOptions>
     {
         public void Configure(MvcOptions options)
         {
             options.Filters.Add<TransferValuesActionFilter>();
-            options.Filters.Add<PostRedirectGetActionFilter>();
         }
     }
 }

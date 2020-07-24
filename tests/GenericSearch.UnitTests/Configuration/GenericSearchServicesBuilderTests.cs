@@ -234,10 +234,10 @@ namespace GenericSearch.UnitTests.Configuration
         {
             var services = new ServiceCollection();
             var builder = new GenericSearchServicesBuilder(services);
-            builder.AddActionFilters();
+            builder.AddTransferValuesActionFilter();
 
             var count = services.Count;
-            builder.AddActionFilters();
+            builder.AddTransferValuesActionFilter();
 
             services.Count.Should().Be(count);
         }

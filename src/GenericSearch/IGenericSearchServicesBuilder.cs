@@ -61,10 +61,16 @@ namespace GenericSearch
         IGenericSearchServicesBuilder AddModelBinder();
 
         /// <summary>
-        /// Adds POST-redirect-GET and Transfer Values action filters to GenericSearch services.
+        /// Adds Transfer Values action filter to MVC pipeline.
         /// </summary>
         /// <returns></returns>
-        IGenericSearchServicesBuilder AddActionFilters();
+        IGenericSearchServicesBuilder AddTransferValuesActionFilter();
+
+        /// <summary>
+        /// Adds POST-Redirect-GET action filter to MVC pipeline.
+        /// </summary>
+        /// <returns></returns>
+        IGenericSearchServicesBuilder AddPostRedirectGetActionFilter();
 
         /// <summary>
         /// Adds a search activator to GenericSearch services.

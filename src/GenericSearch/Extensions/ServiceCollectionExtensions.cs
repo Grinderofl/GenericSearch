@@ -29,7 +29,8 @@ namespace GenericSearch.Extensions
                 .AddDefaultServices()
                 .AddDefaultActivators()
                 .AddModelBinder()
-                .AddActionFilters()
+                .AddTransferValuesActionFilter()
+                .AddPostRedirectGetActionFilter()
                 .ConfigureOptions(configureOptions);
 
             foreach (var assembly in assemblies)
