@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GenericSearch.Configuration;
 using GenericSearch.Definition;
 using GenericSearch.Definition.Expressions;
@@ -117,5 +118,33 @@ namespace GenericSearch
 
         public Func<Type, object> DefaultRequestFactoryMethod { get; set; }
 
+        public GenericSearchOptions UseRequestFactory<T>() where T : class, IRequestFactory
+        {
+            DefaultRequestFactoryType = typeof(T);
+            return this;
+        }
+
+        public GenericSearchOptions UseRequestFactory(Type type)
+        {
+            if (!type.GetInterfaces().Contains(typeof(IRequestFactory)))
+            {
+                throw new ArgumentException($"Provided type does not implement {nameof(IRequestFactory)}", nameof(type));
+            }
+
+            DefaultRequestFactoryType = type;
+            return this;
+        }
+
+        public GenericSearchOptions UseRequestFactory(Func<Type, object> method)
+        {
+            DefaultRequestFactoryMethod = method;
+            return this;
+        }
+
+        public GenericSearchOptions UseRequestFactory(Func<IServiceProvider, Type, object> serviceProviderMethod)
+        {
+            DefaultRequestFactoryServiceProvider = serviceProviderMethod;
+            return this;
+        }
     }
 }

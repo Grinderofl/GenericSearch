@@ -195,5 +195,11 @@ namespace GenericSearch.Configuration
             services.AddSingleton<IListDefinitionSource>(profile);
             return this;
         }
+
+        public IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IRequestFactory
+        {
+            services.AddScoped<IRequestFactory, TRequestFactory>();
+            return this;
+        }
     }
 }

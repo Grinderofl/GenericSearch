@@ -53,47 +53,15 @@ The library comes with number of commonly used filter types, ranging from "conta
 2. Register and configure GenericSearch with your application services:
 
    ```c#
-   // Option 1: ConfigureOptions() in GenericSearch service builder
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddDefaultGenericSearch()
-           .ConfigureOptions(x => 
-   		{
-               x.CreateFilter<Request, Entity, Result>();
-           });
-   }
-   
-   // Option 2: Configure<GenericSearchOptions>() in application service builder
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddDefaultGenericSearch();
-       services.Configure<GenericSearchOptions>(x => 
-   	{
-           x.CreateFilter<Request, Entity, Result>();
-       });
-   }
-   
-   // Option 3: Implement IConfigureOptions<GenericSearchOptions>
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddDefaultGenericSearch();
-       services.ConfigureOptions<ConfigureGenericSearchOptions>();
-   }
-   
-   public class ConfigureGenericSearchOptions : IConfigureOptions<GenericSearchOptions>
-   {
-       public void Configure(GenericSearchOptions options)
-       {
-           options.CreateFilter<Request, Entity, Result>();
-       }
-   }
-   
-   // Option 4: Extend ListProfile
    public void ConfigureServices(IServiceCollection services)
    {
        services.AddDefaultGenericSearch(typeof(SearchProfile).Assembly);
    }
+   ```
    
+3. Extend `ListProfile` and declare your search types
+
+   ```c#
    public class SearchProfile : ListProfile
    {
        public SearchProfile()
@@ -101,10 +69,9 @@ The library comes with number of commonly used filter types, ranging from "conta
            CreateFilter<Request, Entity, Result>();
        }
    }
-   
    ```
-   
-3. Add features!
+
+4. Add your features
 
 ## Quickstart tutorial
 
