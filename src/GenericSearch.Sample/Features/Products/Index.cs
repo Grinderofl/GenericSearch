@@ -14,13 +14,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericSearch.Sample.Features.Products
 {
+    /// <summary>
+    /// This example performs search before creating the projection.
+    /// </summary>
     public static class Index
     {
         public class Query : IRequest<Model>, ISortOrder
         {
+            // Searches over Product.ProductName
             public TextSearch ProductName { get; set; }
+
+            // Searches over Product.Supplier.CompanyName
             public SingleTextOptionSearch SupplierCompanyName { get; set; }
+
+            // Searches over Product.Category
             public SingleTextOptionSearch Category { get; set; }
+
+            // Searches over Product.Discontinued
             public OptionalBooleanSearch Discontinued { get; set; }
 
             public Direction Ordd { get; set; }
@@ -110,11 +120,11 @@ namespace GenericSearch.Sample.Features.Products
             {
                 var items = context.Products
                     .Search(genericSearch)
-                    .Sort(genericSearch);
+                    .Sort(genericSearch)
+                    .ProjectTo<Item>(mapper);
 
                 var count = await items.CountAsync(cancellationToken);
                 var results = await items.Paginate(genericSearch)
-                    .ProjectTo<Item>(mapper)
                     .ToListAsync(cancellationToken);
 
                 return new Model(results, count);
