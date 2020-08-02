@@ -16,7 +16,7 @@ namespace GenericSearch.Configuration.Factories
         private readonly IPropertyConfigurationFactory propertyConfigurationFactory;
         private readonly IPostRedirectGetConfigurationFactory postRedirectGetConfigurationFactory;
         private readonly ITransferValuesConfigurationFactory transferValuesConfigurationFactory;
-        private readonly IRequestFactoryConfigurationFactory requestFactoryConfigurationFactory;
+        private readonly IModelActivatorConfigurationFactory modelActivatorConfigurationFactory;
 
         public ListConfigurationFactory(ISearchConfigurationFactory searchConfigurationFactory, 
                                         IPageConfigurationFactory pageConfigurationFactory, 
@@ -26,7 +26,7 @@ namespace GenericSearch.Configuration.Factories
                                         IPropertyConfigurationFactory propertyConfigurationFactory,
                                         IPostRedirectGetConfigurationFactory postRedirectGetConfigurationFactory,
                                         ITransferValuesConfigurationFactory transferValuesConfigurationFactory, 
-                                        IRequestFactoryConfigurationFactory requestFactoryConfigurationFactory)
+                                        IModelActivatorConfigurationFactory modelActivatorConfigurationFactory)
         {
             this.searchConfigurationFactory = searchConfigurationFactory;
             this.pageConfigurationFactory = pageConfigurationFactory;
@@ -36,7 +36,7 @@ namespace GenericSearch.Configuration.Factories
             this.propertyConfigurationFactory = propertyConfigurationFactory;
             this.postRedirectGetConfigurationFactory = postRedirectGetConfigurationFactory;
             this.transferValuesConfigurationFactory = transferValuesConfigurationFactory;
-            this.requestFactoryConfigurationFactory = requestFactoryConfigurationFactory;
+            this.modelActivatorConfigurationFactory = modelActivatorConfigurationFactory;
         }
 
         public IListConfiguration Create(IListDefinition source)
@@ -94,7 +94,7 @@ namespace GenericSearch.Configuration.Factories
 
             configuration.PostRedirectGetConfiguration = postRedirectGetConfigurationFactory.Create(source);
             configuration.TransferValuesConfiguration = transferValuesConfigurationFactory.Create(source);
-            configuration.RequestFactoryConfiguration = requestFactoryConfigurationFactory.Create(source);
+            configuration.ModelActivatorConfiguration = modelActivatorConfigurationFactory.Create(source);
 
             return configuration;
         }

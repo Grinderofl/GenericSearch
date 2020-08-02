@@ -12,19 +12,19 @@ namespace GenericSearch.ModelBinders
     public class GenericSearchModelBinder : IModelBinder
     {
         private readonly ListConfiguration configuration;
-        private readonly IRequestActivator requestActivator;
+        private readonly IModelActivator modelActivator;
         private readonly ISearchPropertyActivator requestPropertyActivator;
         private readonly IModelCache modelCache;
         private readonly IModelBinder fallbackModelBinder;
 
         public GenericSearchModelBinder(ListConfiguration configuration, 
-                                        IRequestActivator requestActivator,
+                                        IModelActivator modelActivator,
                                         ISearchPropertyActivator requestPropertyActivator,
                                         IModelCache modelCache,
                                         IModelBinder fallbackModelBinder)
         {
             this.configuration = configuration;
-            this.requestActivator = requestActivator;
+            this.modelActivator = modelActivator;
             this.requestPropertyActivator = requestPropertyActivator;
             this.modelCache = modelCache;
             this.fallbackModelBinder = fallbackModelBinder;
@@ -32,7 +32,7 @@ namespace GenericSearch.ModelBinders
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var model = requestActivator.Activate(configuration);
+            var model = modelActivator.Activate(configuration);
             if (model == null)
             {
                 await fallbackModelBinder.BindModelAsync(bindingContext);

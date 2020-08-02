@@ -37,7 +37,7 @@ namespace GenericSearch.UnitTests.Configuration
             var propertyConfigurationFactory = new PropertyConfigurationFactory();
             var postRedirectGetConfigurationFactory = new PostRedirectGetConfigurationFactory(optionsMock.Object);
             var transferValuesConfigurationFactory = new TransferValuesConfigurationFactory(optionsMock.Object);
-            var requestFactoryConfigurationFactory = new RequestFactoryConfigurationFactory(optionsMock.Object);
+            var requestFactoryConfigurationFactory = new ModelActivatorConfigurationFactory(optionsMock.Object);
             factory = new ListConfigurationFactory(filterConfigurationFactory,
                                                    pageConfigurationFactory,
                                                    rowsConfigurationFactory,

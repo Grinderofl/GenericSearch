@@ -17,9 +17,9 @@ namespace GenericSearch.Definition.Expressions
 
         public RequestFactoryExpression(Type factoryType)
         {
-            if (!factoryType.GetInterfaces().Contains(typeof(IRequestFactory)))
+            if (!factoryType.GetInterfaces().Contains(typeof(IModelFactory)))
             {
-                throw new ArgumentException($"{factoryType.FullName} does not implement {nameof(IRequestFactory)}.");
+                throw new ArgumentException($"{factoryType.FullName} does not implement {nameof(IModelFactory)}.");
             }
 
             FactoryType = factoryType;

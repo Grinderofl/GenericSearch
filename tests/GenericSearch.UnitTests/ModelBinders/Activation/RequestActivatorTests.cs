@@ -17,7 +17,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
         [Fact]
         public void Null_Configuration_Throws()
         {
-            var activator = new RequestActivator(null);
+            var activator = new ModelActivator(null);
 
             activator.Invoking(x => x.Activate(null))
                 .Should()
@@ -27,10 +27,10 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
         [Fact]
         public void FactoryMethod_Succeeds()
         {
-            var activator = new RequestActivator(null);
+            var activator = new ModelActivator(null);
             var source = new ListConfiguration(typeof(Request), typeof(Item), typeof(Result))
             {
-                RequestFactoryConfiguration = new RequestFactoryConfiguration(_ => new Request())
+                ModelActivatorConfiguration = new ModelActivatorConfiguration(_ => new Request())
             };
 
             var result = activator.Activate(source);
@@ -47,10 +47,10 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             hca.SetupGet(x => x.HttpContext).Returns(httpContext.Object);
             httpContext.SetupGet(x => x.RequestServices).Returns(serviceProvider);
 
-            var activator = new RequestActivator(hca.Object);
+            var activator = new ModelActivator(hca.Object);
             var source = new ListConfiguration(typeof(Request), typeof(Item), typeof(Result))
             {
-                RequestFactoryConfiguration = new RequestFactoryConfiguration((sp, x) => sp.GetService(x))
+                ModelActivatorConfiguration = new ModelActivatorConfiguration((sp, x) => sp.GetService(x))
             };
 
             var result = activator.Activate(source);
@@ -67,10 +67,10 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             hca.SetupGet(x => x.HttpContext).Returns(httpContext.Object);
             httpContext.SetupGet(x => x.RequestServices).Returns(serviceProvider);
 
-            var activator = new RequestActivator(hca.Object);
+            var activator = new ModelActivator(hca.Object);
             var source = new ListConfiguration(typeof(Request), typeof(Item), typeof(Result))
             {
-                RequestFactoryConfiguration = new RequestFactoryConfiguration(typeof(Factory))
+                ModelActivatorConfiguration = new ModelActivatorConfiguration(typeof(Factory))
             };
 
             var result = activator.Activate(source);
@@ -88,10 +88,10 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             hca.SetupGet(x => x.HttpContext).Returns(httpContext.Object);
             httpContext.SetupGet(x => x.RequestServices).Returns(serviceProvider);
 
-            var activator = new RequestActivator(hca.Object);
+            var activator = new ModelActivator(hca.Object);
             var source = new ListConfiguration(typeof(Request), typeof(Item), typeof(Result))
             {
-                RequestFactoryConfiguration = new RequestFactoryConfiguration(typeof(Factory))
+                ModelActivatorConfiguration = new ModelActivatorConfiguration(typeof(Factory))
             };
             
             var result = activator.Activate(source);
@@ -102,16 +102,37 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
         [Fact]
         public void NoFactory_Throws()
         {
-            var activator = new RequestActivator(null);
+            var activator = new ModelActivator(null);
             var source = new ListConfiguration(typeof(Request), typeof(Item), typeof(Result))
             {
-                RequestFactoryConfiguration = new RequestFactoryConfiguration()
+                ModelActivatorConfiguration = new ModelActivatorConfiguration(null, null, null)
             };
             
             activator.Invoking(x => x.Activate(source))
                 .Should()
                 .ThrowExactly<ArgumentException>();
         }
+
+        [Fact]
+        public void UnableToResolveFactory_Throws()
+        {
+            var serviceProvider = new ServiceCollection().BuildServiceProvider();
+            var httpContext = new Mock<HttpContext>();
+            var hca = new Mock<IHttpContextAccessor>();
+            hca.SetupGet(x => x.HttpContext).Returns(httpContext.Object);
+            httpContext.SetupGet(x => x.RequestServices).Returns(serviceProvider);
+
+            var activator = new ModelActivator(hca.Object);
+            var source = new ListConfiguration(typeof(Request), typeof(Item), typeof(Result))
+            {
+                ModelActivatorConfiguration = new ModelActivatorConfiguration(typeof(Request))
+            };
+            
+            activator.Invoking(x => x.Activate(source))
+                .Should()
+                .ThrowExactly<NullReferenceException>();
+        }
+
 
         private class Request
         {
@@ -125,11 +146,11 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
         {
         }
 
-        private class Factory : IRequestFactory
+        private class Factory : IModelFactory
         {
-            public object Create(Type requestType)
+            public object Create(Type modelType)
             {
-                return Activator.CreateInstance(requestType);
+                return Activator.CreateInstance(modelType);
             }
         }
     }

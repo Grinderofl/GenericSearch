@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using IRequestActivator = GenericSearch.ModelBinders.Activation.IRequestActivator;
 
 namespace GenericSearch.UnitTests.ModelBinders
 {
@@ -30,7 +29,7 @@ namespace GenericSearch.UnitTests.ModelBinders
         public void Null_Configuration_Succeeds()
         {
             var configurationProvider = new ListConfigurationProvider(new List<IListDefinitionSource>(), null, optionsMock.Object);
-            var requestActivator = new Mock<IRequestActivator>();
+            var requestActivator = new Mock<IModelActivator>();
             var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
 
             var services = new ServiceCollection()
@@ -55,7 +54,7 @@ namespace GenericSearch.UnitTests.ModelBinders
 
             var configurationProvider = new Mock<IListConfigurationProvider>();
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(configuration);
-            var requestActivator = new Mock<IRequestActivator>();
+            var requestActivator = new Mock<IModelActivator>();
             var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
             var modelCache = new Mock<IModelCache>();
 

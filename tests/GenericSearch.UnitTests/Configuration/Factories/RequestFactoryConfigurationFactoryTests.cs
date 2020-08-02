@@ -13,7 +13,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class RequestFactoryConfigurationFactoryTests : ConfigurationFactoryTestBase
     {
-        private RequestFactoryConfigurationFactory Factory => new RequestFactoryConfigurationFactory(Options);
+        private ModelActivatorConfigurationFactory Factory => new ModelActivatorConfigurationFactory(Options);
 
         [Fact]
         public void NoDefinition_Succeeds()
@@ -22,9 +22,9 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             
             var result = Factory.Create(definition);
 
-            result.FactoryMethod.Should().NotBeNull();
-            result.FactoryMethod.Should().Be(Options.Value.DefaultRequestFactoryMethod);
-            result.FactoryServiceProvider.Should().BeNull();
+            result.Method.Should().NotBeNull();
+            result.Method.Should().Be(Options.Value.DefaultModelActivatorMethod);
+            result.Factory.Should().BeNull();
             result.FactoryType.Should().BeNull();
         }
 
@@ -35,10 +35,10 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             definition.RequestFactoryDefinition = new RequestFactoryExpression(() => new Request());
             var result = Factory.Create(definition);
 
-            result.FactoryMethod.Should().NotBeNull();
-            var request = result.FactoryMethod(null) as Request;
+            result.Method.Should().NotBeNull();
+            var request = result.Method(null) as Request;
             request.Should().BeOfType<Request>();
-            result.FactoryServiceProvider.Should().BeNull();
+            result.Factory.Should().BeNull();
             result.FactoryType.Should().BeNull();
         }
 
@@ -49,8 +49,8 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             definition.RequestFactoryDefinition = new RequestFactoryExpression(typeof(TestFactory));
             var result = Factory.Create(definition);
 
-            result.FactoryMethod.Should().BeNull();
-            result.FactoryServiceProvider.Should().BeNull();
+            result.Method.Should().BeNull();
+            result.Factory.Should().BeNull();
             result.FactoryType.Should().Be<TestFactory>();
         }
 
@@ -62,9 +62,9 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             definition.RequestFactoryDefinition = new RequestFactoryExpression(sp => new Request());
             var result = Factory.Create(definition);
 
-            result.FactoryMethod.Should().BeNull();
-            result.FactoryServiceProvider.Should().NotBeNull();
-            result.FactoryServiceProvider(serviceProvider, typeof(Request)).Should().BeOfType<Request>();
+            result.Method.Should().BeNull();
+            result.Factory.Should().NotBeNull();
+            result.Factory(serviceProvider, typeof(Request)).Should().BeOfType<Request>();
             result.FactoryType.Should().BeNull();
         }
 
@@ -75,14 +75,14 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             definition.RequestFactoryDefinition = new Mock<IRequestFactoryDefinition>().Object;
             var result = Factory.Create(definition);
 
-            result.FactoryMethod.Should().Be(Options.Value.DefaultRequestFactoryMethod);
-            result.FactoryServiceProvider.Should().BeNull();
+            result.Method.Should().Be(Options.Value.DefaultModelActivatorMethod);
+            result.Factory.Should().BeNull();
             result.FactoryType.Should().BeNull();
         }
 
-        private class TestFactory : IRequestFactory
+        private class TestFactory : IModelFactory
         {
-            public object Create(Type requestType) => Activator.CreateInstance(requestType);
+            public object Create(Type modelType) => Activator.CreateInstance(modelType);
         }
 
         private class Item

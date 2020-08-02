@@ -34,7 +34,7 @@ namespace GenericSearch.UnitTests.ModelBinders
         {
             var request = new Request();
 
-            var requestActivator = new Mock<IRequestActivator>();
+            var requestActivator = new Mock<IModelActivator>();
             requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => request);
 
             var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
@@ -56,7 +56,7 @@ namespace GenericSearch.UnitTests.ModelBinders
         [Fact]
         public async Task Null_Activation_Succeeds()
         {
-            var requestActivator = new Mock<IRequestActivator>();
+            var requestActivator = new Mock<IModelActivator>();
             requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => null);
 
             var requestPropertyActivator = new Mock<ISearchPropertyActivator>();

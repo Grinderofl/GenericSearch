@@ -130,11 +130,11 @@ namespace GenericSearch
         IListExpression<TRequest, TEntity, TResult> ConstructUsing(Func<object> factoryMethod);
 
         /// <summary>
-        /// Configures the model binder to use a <see cref="IRequestFactory"/> when activating <typeparamref name="TRequest"/>.
+        /// Configures the model binder to use a <see cref="IModelFactory"/> when activating <typeparamref name="TRequest"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IListExpression<TRequest, TEntity, TResult> ConstructUsing<T>() where T : IRequestFactory;
+        IListExpression<TRequest, TEntity, TResult> ConstructUsing<T>() where T : IModelFactory;
 
         /// <summary>
         /// Configure the model binder to ue a service provider factory method when activating <typeparamref name="TRequest"/>.

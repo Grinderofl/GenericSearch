@@ -104,10 +104,10 @@ namespace GenericSearch
         IGenericSearchServicesBuilder AddList<TRequest, TEntity, TResult>(Action<IListExpression<TRequest, TEntity, TResult>> action = null);
 
         /// <summary>
-        /// Adds an <see cref="IRequestFactory"/> implementation to application services.
+        /// Adds an <see cref="IModelFactory"/> implementation to application services.
         /// </summary>
         /// <typeparam name="TRequestFactory"></typeparam>
         /// <returns></returns>
-        IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IRequestFactory;
+        IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IModelFactory;
     }
 }

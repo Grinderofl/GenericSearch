@@ -162,6 +162,67 @@ namespace GenericSearch.UnitTests.Configuration
         }
 
         [Fact]
+        public void ConfigureOptions_UseModelFactory_Generic_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.ConfigureOptions(x => x.UseModelFactory<TestModelFactory>());
+
+            var provider = services.BuildServiceProvider();
+            var options = provider.GetService<IOptions<GenericSearchOptions>>();
+            options.Value.DefaultModelActivatorType.Should().Be<TestModelFactory>();
+        }
+
+        [Fact]
+        public void ConfigureOptions_UseModelFactory_Type_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.ConfigureOptions(x => x.UseModelFactory(typeof(TestModelFactory)));
+
+            var provider = services.BuildServiceProvider();
+            var options = provider.GetService<IOptions<GenericSearchOptions>>();
+            options.Value.DefaultModelActivatorType.Should().Be<TestModelFactory>();
+        }
+
+        [Fact]
+        public void ConfigureOptions_UseModelFactory_Type_Throws()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.ConfigureOptions(x => x.UseModelFactory(typeof(Request)));
+            var provider = services.BuildServiceProvider();
+            var options = provider.GetService<IOptions<GenericSearchOptions>>();
+            options.Invoking(x => x.Value)
+                .Should()
+                .ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void ConfigureOptions_UseModelActivator_Method_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.ConfigureOptions(x => x.UseModelActivator(Activator.CreateInstance));
+
+            var provider = services.BuildServiceProvider();
+            var options = provider.GetService<IOptions<GenericSearchOptions>>();
+            options.Value.DefaultModelActivatorMethod.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ConfigureOptions_UseModelActivator_Generic_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.ConfigureOptions(x => x.UseModelActivator((sp, t) => Activator.CreateInstance(t)));
+
+            var provider = services.BuildServiceProvider();
+            var options = provider.GetService<IOptions<GenericSearchOptions>>();
+            options.Value.DefaultModelActivatorResolver.Should().NotBeNull();
+        }
+
+        [Fact]
         public void Configure_Succeeds()
         {
             var services = new ServiceCollection();
@@ -292,12 +353,12 @@ namespace GenericSearch.UnitTests.Configuration
             var builder = new GenericSearchServicesBuilder(services);
             builder.AddDefaultActivators()
                 .AddDefaultServices();
-            builder.AddRequestFactory<TestRequestFactory>();
+            builder.AddRequestFactory<TestModelFactory>();
 
             var provider = services.BuildServiceProvider();
 
-            var requestFactory = provider.CreateScope().ServiceProvider.GetRequiredService<IRequestFactory>();
-            requestFactory.Should().BeOfType<TestRequestFactory>();
+            var requestFactory = provider.CreateScope().ServiceProvider.GetRequiredService<IModelFactory>();
+            requestFactory.Should().BeOfType<TestModelFactory>();
         }
 
         public class AddDefaultActivators
@@ -336,9 +397,17 @@ namespace GenericSearch.UnitTests.Configuration
             }
         }
 
-        private class TestRequestFactory : IRequestFactory
+        private class TestModelActivator : IModelActivator
         {
-            public object Create(Type requestType)
+            public object Activate(ListConfiguration source)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class TestModelFactory : IModelFactory
+        {
+            public object Create(Type modelType)
             {
                 throw new NotImplementedException();
             }

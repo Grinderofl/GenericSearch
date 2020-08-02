@@ -148,7 +148,7 @@ namespace GenericSearch.Definition.Expressions
             return this;
         }
 
-        public IListExpression<TRequest, TEntity, TResult> ConstructUsing<T>() where T : IRequestFactory
+        public IListExpression<TRequest, TEntity, TResult> ConstructUsing<T>() where T : IModelFactory
         {
             RequestFactoryDefinition = new RequestFactoryExpression(typeof(T));
             return this;

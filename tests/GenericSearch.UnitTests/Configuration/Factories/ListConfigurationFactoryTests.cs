@@ -31,7 +31,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             var propertyConfigurationFactory = new PropertyConfigurationFactory();
             var postRedirectGetConfigurationFactory = new PostRedirectGetConfigurationFactory(optionsMock.Object);
             var transferValuesConfigurationFactory = new TransferValuesConfigurationFactory(optionsMock.Object);
-            var requestFactoryConfigurationFactory = new RequestFactoryConfigurationFactory(optionsMock.Object);
+            var requestFactoryConfigurationFactory = new ModelActivatorConfigurationFactory(optionsMock.Object);
             factory = new ListConfigurationFactory(filterConfigurationFactory,
                                                    pageConfigurationFactory,
                                                    rowsConfigurationFactory,
@@ -87,7 +87,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.TransferValuesConfiguration.ActionName.Should().Be("Index");
             configuration.TransferValuesConfiguration.Enabled.Should().BeTrue();
 
-            configuration.RequestFactoryConfiguration.Should().NotBeNull();
+            configuration.ModelActivatorConfiguration.Should().NotBeNull();
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.TransferValuesConfiguration.ActionName.Should().Be("Index");
             configuration.TransferValuesConfiguration.Enabled.Should().BeTrue();
 
-            configuration.RequestFactoryConfiguration.Should().NotBeNull();
+            configuration.ModelActivatorConfiguration.Should().NotBeNull();
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.TransferValuesConfiguration.ActionName.Should().Be("Index");
             configuration.TransferValuesConfiguration.Enabled.Should().BeTrue();
 
-            configuration.RequestFactoryConfiguration.Should().NotBeNull();
+            configuration.ModelActivatorConfiguration.Should().NotBeNull();
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
             configuration.TransferValuesConfiguration.ActionName.Should().Be("Index");
             configuration.TransferValuesConfiguration.Enabled.Should().BeTrue();
 
-            configuration.RequestFactoryConfiguration.Should().NotBeNull();
+            configuration.ModelActivatorConfiguration.Should().NotBeNull();
         }
         
         private class Item

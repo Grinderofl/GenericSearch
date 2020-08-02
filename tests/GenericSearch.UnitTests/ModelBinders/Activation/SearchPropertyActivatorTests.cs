@@ -44,7 +44,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
                                                        new PropertyConfigurationFactory(),
                                                        new PostRedirectGetConfigurationFactory(options),
                                                        new TransferValuesConfigurationFactory(options),
-                                                       new RequestFactoryConfigurationFactory(options));
+                                                       new ModelActivatorConfigurationFactory(options));
 
             var configuration = factory.Create(definition);
             

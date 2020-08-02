@@ -79,12 +79,12 @@ namespace GenericSearch.Configuration
             services.TryAddSingleton<IPropertyConfigurationFactory, PropertyConfigurationFactory>();
             services.TryAddSingleton<IPostRedirectGetConfigurationFactory, PostRedirectGetConfigurationFactory>();
             services.TryAddSingleton<ITransferValuesConfigurationFactory, TransferValuesConfigurationFactory>();
-            services.TryAddSingleton<IRequestFactoryConfigurationFactory, RequestFactoryConfigurationFactory>();
+            services.TryAddSingleton<IModelActivatorConfigurationFactory, ModelActivatorConfigurationFactory>();
             services.TryAddSingleton<IPropertyPathFinder, PascalCasePropertyPathFinder>();
 
             services.TryAddScoped<IRequestModelProvider, RequestModelProvider>();
             services.TryAddScoped<IGenericSearch, GenericSearch>();
-            services.TryAddSingleton<IRequestActivator, RequestActivator>();
+            services.TryAddSingleton<IModelActivator, ModelActivator>();
             services.TryAddScoped<ISearchPropertyActivator, SearchPropertyActivator>();
             services.TryAddScoped<ISearchActivatorFactory, SearchActivatorFactory>();
             
@@ -196,9 +196,9 @@ namespace GenericSearch.Configuration
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IRequestFactory
+        public IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IModelFactory
         {
-            services.AddScoped<IRequestFactory, TRequestFactory>();
+            services.AddScoped<IModelFactory, TRequestFactory>();
             return this;
         }
     }

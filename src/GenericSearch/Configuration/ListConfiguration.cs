@@ -27,6 +27,6 @@ namespace GenericSearch.Configuration
         public List<IPropertyConfiguration> PropertyConfigurations { get; } = new List<IPropertyConfiguration>();
         public IPostRedirectGetConfiguration PostRedirectGetConfiguration { get; set; }
         public ITransferValuesConfiguration TransferValuesConfiguration { get; set; }
-        public RequestFactoryConfiguration RequestFactoryConfiguration { get; set; }
+        public IModelActivatorConfiguration ModelActivatorConfiguration { get; set; }
     }
 }

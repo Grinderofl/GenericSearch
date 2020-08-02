@@ -739,11 +739,11 @@ namespace GenericSearch.UnitTests.Definition.Expressions
             expression.RequestFactoryDefinition.FactoryType.Should().Be<TestFactory>();
         }
 
-        private class TestFactory : IRequestFactory
+        private class TestFactory : IModelFactory
         {
-            public object Create(Type requestType)
+            public object Create(Type modelType)
             {
-                return Activator.CreateInstance(requestType);
+                return Activator.CreateInstance(modelType);
             }
         }
 
