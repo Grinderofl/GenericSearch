@@ -8,6 +8,7 @@ using System.Text;
 using FluentAssertions;
 using GenericSearch.Configuration;
 using GenericSearch.Definition;
+using GenericSearch.ModelBinders.Activation;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.DependencyInjection;
@@ -284,6 +285,21 @@ namespace GenericSearch.UnitTests.Configuration
             configuration.ResultType.Should().Be<Result>();
         }
 
+        [Fact]
+        public void AddRequestFactory_Succeeds()
+        {
+            var services = new ServiceCollection();
+            var builder = new GenericSearchServicesBuilder(services);
+            builder.AddDefaultActivators()
+                .AddDefaultServices();
+            builder.AddRequestFactory<TestRequestFactory>();
+
+            var provider = services.BuildServiceProvider();
+
+            var requestFactory = provider.CreateScope().ServiceProvider.GetRequiredService<IRequestFactory>();
+            requestFactory.Should().BeOfType<TestRequestFactory>();
+        }
+
         public class AddDefaultActivators
         {
             private static readonly Type[] AllTypes = typeof(GenericSearchOptions).Assembly.GetExportedTypes();
@@ -317,6 +333,14 @@ namespace GenericSearch.UnitTests.Configuration
             {
                 var activator = provider.GetService(type);
                 activator.Should().NotBeNull();
+            }
+        }
+
+        private class TestRequestFactory : IRequestFactory
+        {
+            public object Create(Type requestType)
+            {
+                throw new NotImplementedException();
             }
         }
 
