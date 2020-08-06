@@ -53,7 +53,7 @@ namespace GenericSearch.UnitTests.ModelBinders.Activation
             model = new Request();
             
             var activatorFactory = new SearchActivatorFactory(serviceProvider);
-            var activator = new SearchPropertyActivator(activatorFactory, serviceProvider);
+            var activator = new ModelPropertyActivator(activatorFactory, serviceProvider);
 
             activator.Activate(configuration, model);
         }

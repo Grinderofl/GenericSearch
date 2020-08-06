@@ -708,10 +708,10 @@ namespace GenericSearch.UnitTests.Definition.Expressions
             var expression = new ListExpression<Request, Item, Result>();
             expression.ConstructUsing(() => new Request());
 
-            expression.RequestFactoryDefinition.FactoryMethod.Should().NotBeNull();
-            expression.RequestFactoryDefinition.FactoryType.Should().BeNull();
-            expression.RequestFactoryDefinition.FactoryServiceProvider.Should().BeNull();
-            expression.RequestFactoryDefinition.FactoryMethod().Should().BeOfType<Request>();
+            expression.ModelActivatorDefinition.Method.Should().NotBeNull();
+            expression.ModelActivatorDefinition.FactoryType.Should().BeNull();
+            expression.ModelActivatorDefinition.Factory.Should().BeNull();
+            expression.ModelActivatorDefinition.Method(typeof(Request)).Should().BeOfType<Request>();
         }
 
         [Fact]
@@ -721,11 +721,11 @@ namespace GenericSearch.UnitTests.Definition.Expressions
             expression.ConstructUsing(sp => sp.GetRequiredService<Request>());
             var sp = new ServiceCollection().AddSingleton<Request>().BuildServiceProvider();
 
-            expression.RequestFactoryDefinition.FactoryMethod.Should().BeNull();
-            expression.RequestFactoryDefinition.FactoryType.Should().BeNull();
-            expression.RequestFactoryDefinition.FactoryServiceProvider.Should().NotBeNull();
+            expression.ModelActivatorDefinition.Method.Should().BeNull();
+            expression.ModelActivatorDefinition.FactoryType.Should().BeNull();
+            expression.ModelActivatorDefinition.Factory.Should().NotBeNull();
 
-            expression.RequestFactoryDefinition.FactoryServiceProvider(sp).Should().BeOfType<Request>();
+            expression.ModelActivatorDefinition.Factory(sp, typeof(Request)).Should().BeOfType<Request>();
         }
 
         [Fact]
@@ -734,9 +734,9 @@ namespace GenericSearch.UnitTests.Definition.Expressions
             var expression = new ListExpression<Request, Item, Result>();
             expression.ConstructUsing<TestFactory>();
 
-            expression.RequestFactoryDefinition.FactoryMethod.Should().BeNull();
-            expression.RequestFactoryDefinition.FactoryServiceProvider.Should().BeNull();
-            expression.RequestFactoryDefinition.FactoryType.Should().Be<TestFactory>();
+            expression.ModelActivatorDefinition.Method.Should().BeNull();
+            expression.ModelActivatorDefinition.Factory.Should().BeNull();
+            expression.ModelActivatorDefinition.FactoryType.Should().Be<TestFactory>();
         }
 
         private class TestFactory : IModelFactory

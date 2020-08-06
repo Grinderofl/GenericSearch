@@ -399,7 +399,7 @@ namespace GenericSearch.UnitTests.Configuration
 
         private class TestModelActivator : IModelActivator
         {
-            public object Activate(ListConfiguration source)
+            public object Activate(IListConfiguration source)
             {
                 throw new NotImplementedException();
             }

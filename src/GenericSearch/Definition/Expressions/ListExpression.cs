@@ -25,7 +25,7 @@ namespace GenericSearch.Definition.Expressions
         public Dictionary<PropertyInfo, IPropertyDefinition> PropertyDefinitions { get; } = new Dictionary<PropertyInfo, IPropertyDefinition>();
         public IPostRedirectGetDefinition PostRedirectGetDefinition { get; set; }
         public ITransferValuesDefinition TransferValuesDefinition { get; set; }
-        public IRequestFactoryDefinition RequestFactoryDefinition { get; set; }
+        public IModelActivatorDefinition ModelActivatorDefinition { get; set; }
 
         public IListExpression<TRequest, TEntity, TResult> Search(Expression<Func<TRequest, ISearch>> property, Action<ISearchExpression<TRequest, TEntity, TResult>> action = null)
         {
@@ -144,19 +144,19 @@ namespace GenericSearch.Definition.Expressions
 
         public IListExpression<TRequest, TEntity, TResult> ConstructUsing(Func<object> factoryMethod)
         {
-            RequestFactoryDefinition = new RequestFactoryExpression(factoryMethod);
+            ModelActivatorDefinition = new ModelActivatorExpression(_ => factoryMethod());
             return this;
         }
 
         public IListExpression<TRequest, TEntity, TResult> ConstructUsing<T>() where T : IModelFactory
         {
-            RequestFactoryDefinition = new RequestFactoryExpression(typeof(T));
+            ModelActivatorDefinition = new ModelActivatorExpression(typeof(T));
             return this;
         }
 
         public IListExpression<TRequest, TEntity, TResult> ConstructUsing(Func<IServiceProvider, object> activator)
         {
-            RequestFactoryDefinition = new RequestFactoryExpression(activator);
+            ModelActivatorDefinition = new ModelActivatorExpression((sp, _) => activator(sp));
             return this;
         }
     }

@@ -30,7 +30,7 @@ namespace GenericSearch.UnitTests.ModelBinders
         {
             var configurationProvider = new ListConfigurationProvider(new List<IListDefinitionSource>(), null, optionsMock.Object);
             var requestActivator = new Mock<IModelActivator>();
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
 
             var services = new ServiceCollection()
                 .AddSingleton<IListConfigurationProvider>(configurationProvider)
@@ -55,7 +55,7 @@ namespace GenericSearch.UnitTests.ModelBinders
             var configurationProvider = new Mock<IListConfigurationProvider>();
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(configuration);
             var requestActivator = new Mock<IModelActivator>();
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             var modelCache = new Mock<IModelCache>();
 
             var httpContext = new Mock<HttpContext>();

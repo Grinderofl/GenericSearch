@@ -24,6 +24,6 @@ namespace GenericSearch.Definition
 
         IPostRedirectGetDefinition PostRedirectGetDefinition { get; }
         ITransferValuesDefinition TransferValuesDefinition { get; }
-        IRequestFactoryDefinition RequestFactoryDefinition { get; }
+        IModelActivatorDefinition ModelActivatorDefinition { get; }
     }
 }

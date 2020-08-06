@@ -37,7 +37,7 @@ namespace GenericSearch.UnitTests.ModelBinders
             var requestActivator = new Mock<IModelActivator>();
             requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => request);
 
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             requestPropertyActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>(), It.IsAny<object>()));
 
             var fallbackModelBinder = new Mock<IModelBinder>();
@@ -59,7 +59,7 @@ namespace GenericSearch.UnitTests.ModelBinders
             var requestActivator = new Mock<IModelActivator>();
             requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => null);
 
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             requestPropertyActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>(), It.IsAny<object>()));
 
             var fallbackModelBinder = new Mock<IModelBinder>();

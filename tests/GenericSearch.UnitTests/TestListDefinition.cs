@@ -32,6 +32,6 @@ namespace GenericSearch.UnitTests
         public Dictionary<PropertyInfo, IPropertyDefinition> PropertyDefinitions { get; set; } = new Dictionary<PropertyInfo, IPropertyDefinition>();
         public IPostRedirectGetDefinition PostRedirectGetDefinition { get; set; }
         public ITransferValuesDefinition TransferValuesDefinition { get; set; }
-        public IRequestFactoryDefinition RequestFactoryDefinition { get; set; }
+        public IModelActivatorDefinition ModelActivatorDefinition { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace GenericSearch.UnitTests.Definition.Expressions
         [Fact]
         public void NotFactory_Throws()
         {
-            Func<RequestFactoryExpression> func = () => new RequestFactoryExpression(typeof(NotFactory));
+            Func<ModelActivatorExpression> func = () => new ModelActivatorExpression(typeof(NotFactory));
             func.Invoking(x => x.Invoke())
                 .Should()
                 .ThrowExactly<ArgumentException>();

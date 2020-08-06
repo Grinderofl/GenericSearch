@@ -22,16 +22,16 @@ namespace GenericSearch.Configuration.Factories
 
         public IModelActivatorConfiguration Create(IListDefinition source)
         {
-            if (source.RequestFactoryDefinition == null)
+            if (source.ModelActivatorDefinition == null)
             {
                 return defaultConfiguration;
             }
 
-            var definition = source.RequestFactoryDefinition;
+            var definition = source.ModelActivatorDefinition;
 
-            if (definition.FactoryMethod != null)
+            if (definition.Method != null)
             {
-                return new ModelActivatorConfiguration(_ => definition.FactoryMethod());
+                return new ModelActivatorConfiguration(definition.Method);
             }
 
             if (definition.FactoryType != null)
@@ -39,9 +39,9 @@ namespace GenericSearch.Configuration.Factories
                 return new ModelActivatorConfiguration(definition.FactoryType);
             }
 
-            if (definition.FactoryServiceProvider != null)
+            if (definition.Factory != null)
             {
-                return new ModelActivatorConfiguration((sp, _) => definition.FactoryServiceProvider(sp));
+                return new ModelActivatorConfiguration(definition.Factory);
             }
 
             return defaultConfiguration;

@@ -12,16 +12,21 @@ namespace GenericSearch.Searches.Activation.Factories
 
         public ISearchActivator Create(Type searchType)
         {
+            // Since the SearchActivatorFactory is created with a scoped lifespan by the
+            // service provider, we can cache the search activator instances for the remainder
+            // of the request and prevent unnecessary initialisations.
+
             if (cache.ContainsKey(searchType))
             {
                 return cache[searchType];
             }
 
             var activatorType = typeof(ISearchActivator<>).MakeGenericType(searchType);
-            var resolved = serviceProvider.GetService(activatorType) as ISearchActivator ??
-                           new FallbackSearchActivator(searchType);
-            cache[searchType] = resolved;
-            return resolved;
+            var searchActivator = serviceProvider.GetService(activatorType) as ISearchActivator ??
+                                  new FallbackSearchActivator(searchType);
+
+            cache[searchType] = searchActivator;
+            return searchActivator;
         }
     }
 }

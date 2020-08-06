@@ -29,7 +29,7 @@ namespace GenericSearch.UnitTests
             var scopedProvider = rootProvider.CreateScope().ServiceProvider;
 
             var search = scopedProvider.GetRequiredService<IGenericSearch>();
-            var activator = scopedProvider.GetRequiredService<ISearchPropertyActivator>();
+            var activator = scopedProvider.GetRequiredService<IModelPropertyActivator>();
             var configuration = scopedProvider.GetRequiredService<IListConfigurationProvider>().GetConfiguration(typeof(TRequest));
 
             var request = new TRequest();

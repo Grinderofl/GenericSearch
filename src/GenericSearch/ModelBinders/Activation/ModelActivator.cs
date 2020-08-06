@@ -14,7 +14,7 @@ namespace GenericSearch.ModelBinders.Activation
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public object Activate(ListConfiguration source)
+        public object Activate(IListConfiguration source)
         {
             var configuration = source.ModelActivatorConfiguration;
 
@@ -22,6 +22,8 @@ namespace GenericSearch.ModelBinders.Activation
             {
                 return configuration.Method(source.RequestType);
             }
+
+            // TODO: Add some sort of null check for httpContextAccessor?
 
             if (configuration.Factory != null)
             {
@@ -33,7 +35,7 @@ namespace GenericSearch.ModelBinders.Activation
                 var factory = ActivatorUtilities.GetServiceOrCreateInstance(httpContextAccessor.HttpContext.RequestServices, configuration.FactoryType) as IModelFactory;
                 if (factory == null)
                 {
-                    throw new NullReferenceException($"Unable to activate an instance of '{configuration.FactoryType.FullName}'.");
+                    throw new NullReferenceException($"Unable to create an instance of '{configuration.FactoryType.FullName}'.");
                 }
 
                 return factory.Create(source.RequestType);

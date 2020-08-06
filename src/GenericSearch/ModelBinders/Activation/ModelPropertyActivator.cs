@@ -7,12 +7,12 @@ using GenericSearch.Searches.Activation.Factories;
 
 namespace GenericSearch.ModelBinders.Activation
 {
-    public class SearchPropertyActivator : ISearchPropertyActivator
+    public class ModelPropertyActivator : IModelPropertyActivator
     {
         private readonly ISearchActivatorFactory searchActivatorFactory;
         private readonly IServiceProvider serviceProvider;
 
-        public SearchPropertyActivator(ISearchActivatorFactory searchActivatorFactory, IServiceProvider serviceProvider)
+        public ModelPropertyActivator(ISearchActivatorFactory searchActivatorFactory, IServiceProvider serviceProvider)
         {
             this.searchActivatorFactory = searchActivatorFactory;
             this.serviceProvider = serviceProvider;

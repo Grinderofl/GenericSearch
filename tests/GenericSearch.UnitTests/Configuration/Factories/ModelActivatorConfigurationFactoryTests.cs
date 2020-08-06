@@ -11,7 +11,7 @@ using Xunit;
 namespace GenericSearch.UnitTests.Configuration.Factories
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
-    public class RequestFactoryConfigurationFactoryTests : ConfigurationFactoryTestBase
+    public class ModelActivatorConfigurationFactoryTests : ConfigurationFactoryTestBase
     {
         private ModelActivatorConfigurationFactory Factory => new ModelActivatorConfigurationFactory(Options);
 
@@ -32,7 +32,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         public void FactoryMethod_Succeeds()
         {
             var definition = TestListDefinition.Create<Request, Item, Result>();
-            definition.RequestFactoryDefinition = new RequestFactoryExpression(() => new Request());
+            definition.ModelActivatorDefinition = new ModelActivatorExpression(_ => new Request());
             var result = Factory.Create(definition);
 
             result.Method.Should().NotBeNull();
@@ -46,7 +46,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         public void FactoryType_Succeeds()
         {
             var definition = TestListDefinition.Create<Request, Item, Result>();
-            definition.RequestFactoryDefinition = new RequestFactoryExpression(typeof(TestFactory));
+            definition.ModelActivatorDefinition = new ModelActivatorExpression(typeof(TestFactory));
             var result = Factory.Create(definition);
 
             result.Method.Should().BeNull();
@@ -59,7 +59,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         {
             var definition = TestListDefinition.Create<Request, Item, Result>();
             var serviceProvider = new ServiceCollection().BuildServiceProvider();
-            definition.RequestFactoryDefinition = new RequestFactoryExpression(sp => new Request());
+            definition.ModelActivatorDefinition = new ModelActivatorExpression((sp, _) => new Request());
             var result = Factory.Create(definition);
 
             result.Method.Should().BeNull();
@@ -72,7 +72,7 @@ namespace GenericSearch.UnitTests.Configuration.Factories
         public void Succeeds()
         {
             var definition = TestListDefinition.Create<Request, Item, Result>();
-            definition.RequestFactoryDefinition = new Mock<IRequestFactoryDefinition>().Object;
+            definition.ModelActivatorDefinition = new Mock<IModelActivatorDefinition>().Object;
             var result = Factory.Create(definition);
 
             result.Method.Should().Be(Options.Value.DefaultModelActivatorMethod);

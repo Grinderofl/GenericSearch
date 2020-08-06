@@ -85,7 +85,7 @@ namespace GenericSearch.Configuration
             services.TryAddScoped<IRequestModelProvider, RequestModelProvider>();
             services.TryAddScoped<IGenericSearch, GenericSearch>();
             services.TryAddSingleton<IModelActivator, ModelActivator>();
-            services.TryAddScoped<ISearchPropertyActivator, SearchPropertyActivator>();
+            services.TryAddScoped<IModelPropertyActivator, ModelPropertyActivator>();
             services.TryAddScoped<ISearchActivatorFactory, SearchActivatorFactory>();
             
 
