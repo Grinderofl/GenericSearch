@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GenericSearch.Configuration;
-using GenericSearch.ModelBinders.Activation;
+using GenericSearch.Internal.Activation;
+using GenericSearch.Internal.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

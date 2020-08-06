@@ -2,11 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using GenericSearch.Configuration.Factories;
-using GenericSearch.Definition.Expressions;
+using GenericSearch.Internal.Activation.Finders;
+using GenericSearch.Internal.Configuration.Factories;
+using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
-using GenericSearch.Searches.Activation.Finders;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;

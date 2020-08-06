@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GenericSearch.Configuration.Factories;
-using GenericSearch.Definition.Expressions;
 using GenericSearch.Exceptions;
+using GenericSearch.Internal.Configuration.Factories;
+using GenericSearch.Internal.Definition.Expressions;
 using Xunit;
 
 namespace GenericSearch.UnitTests.Configuration.Factories

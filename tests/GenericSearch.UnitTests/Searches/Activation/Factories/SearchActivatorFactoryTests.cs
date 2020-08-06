@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using GenericSearch.Internal.Activation.Factories;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
-using GenericSearch.Searches.Activation.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;

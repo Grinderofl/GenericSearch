@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using GenericSearch.Definition;
-using GenericSearch.Definition.Expressions;
+using GenericSearch.Internal.Definition;
+using GenericSearch.Internal.Definition.Expressions;
 
 namespace GenericSearch
 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GenericSearch.Configuration;
 using GenericSearch.Internal;
-using GenericSearch.ModelBinders;
-using GenericSearch.ModelBinders.Activation;
+using GenericSearch.Internal.Activation;
+using GenericSearch.Internal.Configuration;
+using GenericSearch.ModelBinding;
 using GenericSearch.Searches;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;

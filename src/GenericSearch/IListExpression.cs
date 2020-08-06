@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using GenericSearch.Definition;
 using GenericSearch.Searches;
 
 namespace GenericSearch

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using GenericSearch.Configuration;
-using GenericSearch.Definition;
 using GenericSearch.Internal;
-using GenericSearch.ModelBinders;
-using GenericSearch.ModelBinders.Activation;
+using GenericSearch.Internal.Activation;
+using GenericSearch.Internal.Configuration;
+using GenericSearch.Internal.Definition;
+using GenericSearch.ModelBinding;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;

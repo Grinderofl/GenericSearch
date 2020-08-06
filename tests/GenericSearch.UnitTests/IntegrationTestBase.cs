@@ -1,6 +1,6 @@
-using GenericSearch.Configuration;
 using GenericSearch.Extensions;
-using GenericSearch.ModelBinders.Activation;
+using GenericSearch.Internal.Activation;
+using GenericSearch.Internal.Configuration;
 using GenericSearch.UnitTests.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

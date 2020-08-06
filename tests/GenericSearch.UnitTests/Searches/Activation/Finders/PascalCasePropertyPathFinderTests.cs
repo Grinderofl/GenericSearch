@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GenericSearch.Exceptions;
+using GenericSearch.Internal.Activation.Finders;
 using GenericSearch.Searches;
-using GenericSearch.Searches.Activation.Finders;
 using Xunit;
 
 namespace GenericSearch.UnitTests.Searches.Activation.Finders

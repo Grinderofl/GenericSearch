@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using GenericSearch.Configuration;
+using GenericSearch.Internal.Configuration;
 using GenericSearch.Searches;
 using Microsoft.AspNetCore.Routing;
 

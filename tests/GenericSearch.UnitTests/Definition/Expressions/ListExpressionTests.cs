@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using GenericSearch.Definition.Expressions;
+using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.DependencyInjection;

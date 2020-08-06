@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using GenericSearch.Definition;
+using GenericSearch.Internal.Definition;
 using GenericSearch.Searches.Activation;
 
 namespace GenericSearch

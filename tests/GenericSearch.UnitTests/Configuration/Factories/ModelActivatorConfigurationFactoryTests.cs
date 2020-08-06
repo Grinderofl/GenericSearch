@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GenericSearch.Configuration.Factories;
-using GenericSearch.Definition;
-using GenericSearch.Definition.Expressions;
+using GenericSearch.Internal.Configuration.Factories;
+using GenericSearch.Internal.Definition;
+using GenericSearch.Internal.Definition.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;

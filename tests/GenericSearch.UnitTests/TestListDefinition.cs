@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using GenericSearch.Definition;
+using GenericSearch.Internal.Definition;
 
 namespace GenericSearch.UnitTests
 {

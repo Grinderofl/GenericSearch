@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Internal\Configuration\" />
+    <Folder Include="ModelBinding\Activation\" />
   </ItemGroup>
 
 </Project>

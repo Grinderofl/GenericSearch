@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GenericSearch.Definition.Expressions;
+using GenericSearch.Internal.Definition.Expressions;
 using Xunit;
 
 namespace GenericSearch.UnitTests.Definition.Expressions

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using GenericSearch.Configuration;
 using GenericSearch.Exceptions;
 using GenericSearch.Internal;
+using GenericSearch.Internal.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
