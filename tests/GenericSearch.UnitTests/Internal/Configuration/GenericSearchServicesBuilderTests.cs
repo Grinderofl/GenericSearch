@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using FluentAssertions;
 using GenericSearch.Internal.Activation;
 using GenericSearch.Internal.Configuration;
 using GenericSearch.Internal.Definition;
 using GenericSearch.Searches;
-using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Configuration
+namespace GenericSearch.UnitTests.Internal.Configuration
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class GenericSearchServicesBuilderTests

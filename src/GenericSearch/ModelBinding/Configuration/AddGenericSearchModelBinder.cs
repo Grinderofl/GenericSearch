@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace GenericSearch.ModelBinding.Configuration
 {
     [ExcludeFromCodeCoverage]
-    public class ConfigureMvcModelBinders : IConfigureOptions<MvcOptions>
+    public class AddGenericSearchModelBinder : IConfigureOptions<MvcOptions>
     {
         public void Configure(MvcOptions options)
         {

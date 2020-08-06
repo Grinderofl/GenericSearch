@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using GenericSearch.Exceptions;
 using GenericSearch.Internal.Activation.Finders;
 using GenericSearch.Internal.Configuration;
 using GenericSearch.Internal.Configuration.Factories;
 using GenericSearch.Internal.Definition;
-using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Configuration
+namespace GenericSearch.UnitTests.Internal.Configuration
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class ListConfigurationProviderTests

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection;
 using FluentAssertions;
 using GenericSearch.Internal.Activation;
 using GenericSearch.Internal.Activation.Factories;
@@ -14,13 +12,13 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace GenericSearch.UnitTests.ModelBinders.Activation
+namespace GenericSearch.UnitTests.Internal.Activation
 {
-    public class SearchPropertyActivatorTests
+    public class SearchActivatorTests
     {
         private readonly Request model;
         
-        public SearchPropertyActivatorTests()
+        public SearchActivatorTests()
         {
             var definition = new ListExpression<Request, Item, Result>();
             

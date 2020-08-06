@@ -118,9 +118,9 @@ namespace GenericSearch.Internal.Configuration
 
         public IGenericSearchServicesBuilder AddModelBinder()
         {
-            if (services.All(x => x.ImplementationType != typeof(ConfigureMvcModelBinders)))
+            if (services.All(x => x.ImplementationType != typeof(AddGenericSearchModelBinder)))
             {
-                services.ConfigureOptions<ConfigureMvcModelBinders>();
+                services.ConfigureOptions<AddGenericSearchModelBinder>();
             }
             
             return this;

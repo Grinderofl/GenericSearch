@@ -6,7 +6,7 @@ using GenericSearch.Internal.Configuration.Factories;
 using GenericSearch.Internal.Definition.Expressions;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Configuration.Factories
+namespace GenericSearch.UnitTests.Internal.Configuration.Factories
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class PropertyConfigurationFactoryTests

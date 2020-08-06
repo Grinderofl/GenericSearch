@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
-using GenericSearch.Exceptions;
+﻿using FluentAssertions;
 using GenericSearch.Internal.Activation.Finders;
 using GenericSearch.Searches;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Searches.Activation.Finders
+namespace GenericSearch.UnitTests.Internal.Activation.Finders
 {
     public class PascalCasePropertyPathFinderTests
     {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Searches.Activation.Factories
+namespace GenericSearch.UnitTests.Internal.Activation.Factories
 {
     public class SearchActivatorFactoryTests
     {

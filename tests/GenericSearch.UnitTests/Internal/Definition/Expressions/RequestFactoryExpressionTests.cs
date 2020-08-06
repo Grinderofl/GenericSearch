@@ -4,7 +4,7 @@ using FluentAssertions;
 using GenericSearch.Internal.Definition.Expressions;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Definition.Expressions
+namespace GenericSearch.UnitTests.Internal.Definition.Expressions
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class RequestFactoryExpressionTests

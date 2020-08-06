@@ -6,12 +6,11 @@ using GenericSearch.Internal.Activation.Finders;
 using GenericSearch.Internal.Configuration.Factories;
 using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
-using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Configuration.Factories
+namespace GenericSearch.UnitTests.Internal.Configuration.Factories
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class ListConfigurationFactoryTests

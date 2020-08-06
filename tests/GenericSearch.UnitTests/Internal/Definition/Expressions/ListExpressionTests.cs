@@ -5,11 +5,10 @@ using System.Linq;
 using FluentAssertions;
 using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
-using GenericSearch.Searches.Activation;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Definition.Expressions
+namespace GenericSearch.UnitTests.Internal.Definition.Expressions
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class ListExpressionTests

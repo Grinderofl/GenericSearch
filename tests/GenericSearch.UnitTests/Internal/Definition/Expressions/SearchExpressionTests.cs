@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Definition.Expressions
+namespace GenericSearch.UnitTests.Internal.Definition.Expressions
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class SearchExpressionTests

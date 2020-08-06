@@ -5,7 +5,7 @@ using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Configuration.Factories
+namespace GenericSearch.UnitTests.Internal.Configuration.Factories
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class TransferValuesConfigurationFactoryTests : ConfigurationFactoryTestBase

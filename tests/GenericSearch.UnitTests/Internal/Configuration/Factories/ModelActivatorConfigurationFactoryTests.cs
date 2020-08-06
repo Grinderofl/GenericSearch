@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace GenericSearch.UnitTests.Configuration.Factories
+namespace GenericSearch.UnitTests.Internal.Configuration.Factories
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
     public class ModelActivatorConfigurationFactoryTests : ConfigurationFactoryTestBase

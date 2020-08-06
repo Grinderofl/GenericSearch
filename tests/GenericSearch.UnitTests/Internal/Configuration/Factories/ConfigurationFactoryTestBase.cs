@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 
-namespace GenericSearch.UnitTests.Configuration.Factories
+namespace GenericSearch.UnitTests.Internal.Configuration.Factories
 {
     public abstract class ConfigurationFactoryTestBase
     {

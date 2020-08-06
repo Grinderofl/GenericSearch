@@ -8,10 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace GenericSearch.UnitTests.ModelBinders.Activation
+namespace GenericSearch.UnitTests.Internal.Activation
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
-    public class RequestActivatorTests
+    public class ModelActivatorTests
     {
 
         [Fact]
