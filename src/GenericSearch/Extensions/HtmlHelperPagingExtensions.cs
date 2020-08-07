@@ -22,18 +22,12 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
         /// <param name="htmlHelper"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        /// <exception cref="NullReferenceException"><see cref="HttpRequest"/> is not accessible from the current <paramref name="htmlHelper"/>.</exception>
-        /// <exception cref="NullReferenceException">Default implementation of <see cref="IListConfigurationProvider"/> has not been registered. See also <see cref="GenericSearchServicesBuilder.AddDefaultServices"/>.</exception>
         /// <exception cref="ModelProviderException">The query model was not found in the current request pipeline.</exception>
         /// <exception cref="MissingConfigurationException">Configuration for the current query model type was not found. See also <see cref="ListProfile"/>.</exception>
         /// <exception cref="NullReferenceException">Page Configuration for the current model type was not found.</exception>
         public static string GetUrlForPage(this IHtmlHelper htmlHelper, int page)
         {
-            var httpContext = htmlHelper.ViewContext.HttpContext?.Request;
-            if (httpContext == null)
-            {
-                throw new NullReferenceException($"HttpRequest of the current HttpContext is null. Is the calling assembly an ASP.NET Core application?");
-            }
+            var request = htmlHelper.ViewContext.HttpContext.Request;
 
             var modelProvider = htmlHelper.GetRequestService<IRequestModelProvider>();
             var model = modelProvider.GetCurrentRequestModel();
@@ -43,11 +37,6 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
             }
 
             var configurationProvider = htmlHelper.GetRequestService<IListConfigurationProvider>();
-            if (configurationProvider == null)
-            {
-                throw new NullReferenceException($"Unable to resolve List Configuration Provider. Make sure default GenericSearch services have been registered.");
-            }
-
             var configuration = configurationProvider.GetConfiguration(model.GetType());
             if (configuration == null)
             {
@@ -60,7 +49,7 @@ namespace Microsoft.AspNetCore.Mvc.Rendering
                 throw new NullReferenceException($"Page Configuration is null. Is pagination enabled in GenericSearchOptions?");
             }
 
-            var queryString = httpContext.QueryString.Value;
+            var queryString = request.QueryString.Value;
             var query = QueryHelpers.ParseQuery(queryString);
             var parameter = (pageConfiguration.RequestProperty?.Name ?? pageConfiguration.Name).ToLowerInvariant();
             
