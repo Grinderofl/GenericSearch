@@ -106,8 +106,8 @@ namespace GenericSearch
         /// <summary>
         /// Adds an <see cref="IModelFactory"/> implementation to application services.
         /// </summary>
-        /// <typeparam name="TRequestFactory"></typeparam>
+        /// <typeparam name="TModelFactory"></typeparam>
         /// <returns></returns>
-        IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IModelFactory;
+        IGenericSearchServicesBuilder AddModelFactory<TModelFactory>() where TModelFactory : class, IModelFactory;
     }
 }

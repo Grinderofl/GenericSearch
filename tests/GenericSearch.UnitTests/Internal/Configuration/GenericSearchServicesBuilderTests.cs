@@ -350,7 +350,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration
             var builder = new GenericSearchServicesBuilder(services);
             builder.AddDefaultActivators()
                 .AddDefaultServices();
-            builder.AddRequestFactory<TestModelFactory>();
+            builder.AddModelFactory<TestModelFactory>();
 
             var provider = services.BuildServiceProvider();
 

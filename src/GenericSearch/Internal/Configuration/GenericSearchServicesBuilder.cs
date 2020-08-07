@@ -194,7 +194,7 @@ namespace GenericSearch.Internal.Configuration
             return this;
         }
 
-        public IGenericSearchServicesBuilder AddRequestFactory<TRequestFactory>() where TRequestFactory : class, IModelFactory
+        public IGenericSearchServicesBuilder AddModelFactory<TRequestFactory>() where TRequestFactory : class, IModelFactory
         {
             services.AddScoped<IModelFactory, TRequestFactory>();
             return this;
