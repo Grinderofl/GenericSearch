@@ -24,15 +24,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Old\**" />
-    <Compile Remove="Old\Extensions\**" />
-    <EmbeddedResource Remove="Old\**" />
-    <EmbeddedResource Remove="Old\Extensions\**" />
-    <None Remove="Old\**" />
-    <None Remove="Old\Extensions\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

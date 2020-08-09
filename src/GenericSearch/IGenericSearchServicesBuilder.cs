@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using GenericSearch.Definition;
+using GenericSearch.Internal.Definition;
 using GenericSearch.Searches.Activation;
 
 namespace GenericSearch
@@ -61,10 +61,16 @@ namespace GenericSearch
         IGenericSearchServicesBuilder AddModelBinder();
 
         /// <summary>
-        /// Adds POST-redirect-GET and Transfer Values action filters to GenericSearch services.
+        /// Adds Transfer Values action filter to MVC pipeline.
         /// </summary>
         /// <returns></returns>
-        IGenericSearchServicesBuilder AddActionFilters();
+        IGenericSearchServicesBuilder AddTransferValuesActionFilter();
+
+        /// <summary>
+        /// Adds POST-Redirect-GET action filter to MVC pipeline.
+        /// </summary>
+        /// <returns></returns>
+        IGenericSearchServicesBuilder AddPostRedirectGetActionFilter();
 
         /// <summary>
         /// Adds a search activator to GenericSearch services.
@@ -86,5 +92,22 @@ namespace GenericSearch
         /// <param name="configureAction"></param>
         /// <returns></returns>
         IGenericSearchServicesBuilder Configure(Action<ListProfile> configureAction);
+
+        /// <summary>
+        /// Adds a new list definition to GenericSearch pipeline.
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        IGenericSearchServicesBuilder AddList<TRequest, TEntity, TResult>(Action<IListExpression<TRequest, TEntity, TResult>> action = null);
+
+        /// <summary>
+        /// Adds an <see cref="IModelFactory"/> implementation to application services.
+        /// </summary>
+        /// <typeparam name="TModelFactory"></typeparam>
+        /// <returns></returns>
+        IGenericSearchServicesBuilder AddModelFactory<TModelFactory>() where TModelFactory : class, IModelFactory;
     }
 }

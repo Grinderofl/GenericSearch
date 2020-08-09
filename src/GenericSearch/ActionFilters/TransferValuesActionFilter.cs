@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GenericSearch.Configuration;
 using GenericSearch.Internal;
+using GenericSearch.Internal.Configuration;
 using GenericSearch.Internal.Extensions;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;

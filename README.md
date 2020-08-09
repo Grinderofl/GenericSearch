@@ -1,7 +1,6 @@
 # GenericSearch for ASP.NET Core
 
-[![Build Status](https://dev.azure.com/sulenero/GenericSearch/_apis/build/status/GenericSearch?branchName=master)](https://dev.azure.com/sulenero/GenericSearch/_build/latest?definitionId=11&branchName=master)
-![Build](https://github.com/Grinderofl/GenericSearch/workflows/Build/badge.svg)
+![CI](https://github.com/Grinderofl/GenericSearch/workflows/CI/badge.svg?branch=master)
 
 
 ## Table of Contents
@@ -17,13 +16,19 @@
 
 ## Description
 
-GenericSearch is a library to add **filtering, sorting, and pagination** functionality with minimal boilerplate code to web applications built with ASP.NET Core by following a convention-based approach. It is especially useful for projects featuring a number of list views which require this type of functionality.
+GenericSearch is a new library for ASP.NET Core to simplify adding **filtering**, **sorting**, and **pagination** functionality with minimal boilerplate code. It follows the convention over configuration paradigm while still being extensible enough to support more complex scenarios, and is especially useful for projects which feature a large number of list views such as admin interfaces.
 
-Commonly used approaches and examples provided in various tutorials tend to involve a nest of conditional statements. While this is acceptable in small projects which have limited list views and columns, bigger projects need a more maintainable way of providing said features. In addition, there is another layer of pain when persisting filters through different pages and retaining the functionality of the browser back-button.
+> * Are your search boxes and facets a spaghetti of *if's*, *switches*, complex LINQ building? 
+>
+> * Do you dread having to add pagination and sorting on top of that?
 
-There have been many attempts to solve these problems, ranging from base classes and boxing magic to heavyweight services and frontend libraries, but so far the ease of use and ability to fit into developers' workflow has been lacking.
+**Then GenericSearch is for you!**
 
-GenericSearch aims to change this and take advantage of convention-over-configuration design to provide reusability, and once-only data collection during startup for efficient runtime performance.
+While it's normal for proof of concepts and  smaller projects to search lengthy lists with a couple of *if*-statements, larger projects need a more sophisticated and maintainable approach.
+
+GenericSearch also solves another two problems - pagination and back-forward browser functionality. This is done through intercepting a `POST` request to the controller action method for the list page, creating a `RouteValueDictionary` of submitted post data which differ from their default values, and finally redirecting the user to the same action method with `GET` as the request method.
+
+The library comes with number of commonly used filter types, ranging from "contains text" to "is one of the dates from a multi select list". It's also very easy to extend built-in filters, add your own filters, and use said filters in your lists.
 
 
 
@@ -48,47 +53,15 @@ GenericSearch aims to change this and take advantage of convention-over-configur
 2. Register and configure GenericSearch with your application services:
 
    ```c#
-   // Option 1: ConfigureOptions() in GenericSearch service builder
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddDefaultGenericSearch()
-           .ConfigureOptions(x => 
-   		{
-               x.CreateFilter<Request, Entity, Result>();
-           });
-   }
-   
-   // Option 2: Configure<GenericSearchOptions>() in application service builder
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddDefaultGenericSearch();
-       services.Configure<GenericSearchOptions>(x => 
-   	{
-           x.CreateFilter<Request, Entity, Result>();
-       });
-   }
-   
-   // Option 3: Implement IConfigureOptions<GenericSearchOptions>
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddDefaultGenericSearch();
-       services.ConfigureOptions<ConfigureGenericSearchOptions>();
-   }
-   
-   public class ConfigureGenericSearchOptions : IConfigureOptions<GenericSearchOptions>
-   {
-       public void Configure(GenericSearchOptions options)
-       {
-           options.CreateFilter<Request, Entity, Result>();
-       }
-   }
-   
-   // Option 4: Extend ListProfile
    public void ConfigureServices(IServiceCollection services)
    {
        services.AddDefaultGenericSearch(typeof(SearchProfile).Assembly);
    }
+   ```
    
+3. Extend `ListProfile` and declare your search types
+
+   ```c#
    public class SearchProfile : ListProfile
    {
        public SearchProfile()
@@ -96,10 +69,9 @@ GenericSearch aims to change this and take advantage of convention-over-configur
            CreateFilter<Request, Entity, Result>();
        }
    }
-   
    ```
-   
-3. Add features!
+
+4. Add your features
 
 ## Quickstart tutorial
 

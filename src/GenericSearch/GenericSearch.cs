@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using GenericSearch.Configuration;
 using GenericSearch.Exceptions;
 using GenericSearch.Internal;
+using GenericSearch.Internal.Configuration;
 using GenericSearch.Searches;
 
 namespace GenericSearch

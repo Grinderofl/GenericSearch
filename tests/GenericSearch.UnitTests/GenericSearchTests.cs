@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GenericSearch.Configuration;
-using GenericSearch.Configuration.Factories;
-using GenericSearch.Definition.Expressions;
 using GenericSearch.Exceptions;
 using GenericSearch.Extensions;
 using GenericSearch.Internal;
+using GenericSearch.Internal.Activation.Finders;
+using GenericSearch.Internal.Configuration;
+using GenericSearch.Internal.Configuration.Factories;
+using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
 using GenericSearch.Searches.Activation;
-using GenericSearch.Searches.Activation.Finders;
 using GenericSearch.UnitTests.ModelBinders;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -38,7 +38,7 @@ namespace GenericSearch.UnitTests
                                                        new PropertyConfigurationFactory(),
                                                        new PostRedirectGetConfigurationFactory(options),
                                                        new TransferValuesConfigurationFactory(options),
-                                                       new RequestFactoryConfigurationFactory(options));
+                                                       new ModelActivatorConfigurationFactory(options));
 
             var configuration = factory.Create(definition);
 

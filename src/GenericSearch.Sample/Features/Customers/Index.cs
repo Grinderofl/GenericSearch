@@ -115,7 +115,7 @@ namespace GenericSearch.Sample.Features.Customers
         {
             public SearchProfile()
             {
-                Create<Query, Projection, Model>()
+                AddList<Query, Projection, Model>()
                     .Search(x => x.FreeText, x => x.Ignore());
             }
         }

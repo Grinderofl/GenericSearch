@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using GenericSearch.Configuration;
-using GenericSearch.Definition;
-using GenericSearch.Definition.Expressions;
+using System.Linq;
+using GenericSearch.Internal.Configuration;
+using GenericSearch.Internal.Definition;
+using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
 
 namespace GenericSearch
@@ -14,14 +15,14 @@ namespace GenericSearch
     {
         public GenericSearchOptions()
         {
-            DefaultRequestFactoryMethod = Activator.CreateInstance;
-            DefaultRequestFactoryServiceProvider = null;
-            DefaultRequestFactoryType = null;
+            DefaultModelActivatorMethod = Activator.CreateInstance;
+            DefaultModelActivatorResolver = null;
+            DefaultModelActivatorType = null;
         }
 
         internal List<IListDefinition> Definitions { get; } = new List<IListDefinition>();
 
-        public IListExpression<TRequest, TEntity, TResult> CreateFilter<TRequest, TEntity, TResult>()
+        public IListExpression<TRequest, TEntity, TResult> AddList<TRequest, TEntity, TResult>()
         {
             var expression = new ListExpression<TRequest, TEntity, TResult>();
             Definitions.Add(expression);
@@ -111,11 +112,57 @@ namespace GenericSearch
         /// </summary>
         public bool TransferValuesEnabled { get; set; } = true;
 
-        public Type DefaultRequestFactoryType { get; set; }
+        /// <summary>
+        /// Specifies the <see cref="IModelFactory"/> to use to activate request models.
+        /// <remarks>
+        /// The default value is null.
+        /// </remarks>
+        /// </summary>
+        public Type DefaultModelActivatorType { get; set; }
 
-        public Func<IServiceProvider, Type, object> DefaultRequestFactoryServiceProvider { get; set; }
+        /// <summary>
+        /// Specifies the service provider factory method to use to activate request models.
+        /// <remarks>
+        /// The default value is null.
+        /// </remarks>
+        /// </summary>
+        public Func<IServiceProvider, Type, object> DefaultModelActivatorResolver { get; set; }
 
-        public Func<Type, object> DefaultRequestFactoryMethod { get; set; }
+        /// <summary>
+        /// Specifies the factory method to use to activate request models.
+        /// <remarks>
+        /// The default value is <code>Activator.CreateInstance</code>.
+        /// </remarks>
+        /// </summary>
+        public Func<Type, object> DefaultModelActivatorMethod { get; set; }
 
+        public GenericSearchOptions UseModelFactory<T>() where T : class, IModelFactory
+        {
+            DefaultModelActivatorType = typeof(T);
+            return this;
+        }
+
+        public GenericSearchOptions UseModelFactory(Type type)
+        {
+            if (!type.GetInterfaces().Contains(typeof(IModelFactory)))
+            {
+                throw new ArgumentException($"Provided type does not implement {nameof(IModelFactory)}", nameof(type));
+            }
+
+            DefaultModelActivatorType = type;
+            return this;
+        }
+
+        public GenericSearchOptions UseModelActivator(Func<Type, object> method)
+        {
+            DefaultModelActivatorMethod = method;
+            return this;
+        }
+
+        public GenericSearchOptions UseModelActivator(Func<IServiceProvider, Type, object> resolver)
+        {
+            DefaultModelActivatorResolver = resolver;
+            return this;
+        }
     }
 }

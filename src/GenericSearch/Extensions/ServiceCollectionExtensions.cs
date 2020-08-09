@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
-using GenericSearch.Configuration;
+using GenericSearch.Internal.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericSearch.Extensions
@@ -29,7 +29,8 @@ namespace GenericSearch.Extensions
                 .AddDefaultServices()
                 .AddDefaultActivators()
                 .AddModelBinder()
-                .AddActionFilters()
+                .AddTransferValuesActionFilter()
+                .AddPostRedirectGetActionFilter()
                 .ConfigureOptions(configureOptions);
 
             foreach (var assembly in assemblies)

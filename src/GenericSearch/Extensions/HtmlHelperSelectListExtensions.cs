@@ -6,8 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using GenericSearch;
-using GenericSearch.Configuration;
 using GenericSearch.Internal;
+using GenericSearch.Internal.Configuration;
 using GenericSearch.Internal.Extensions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 

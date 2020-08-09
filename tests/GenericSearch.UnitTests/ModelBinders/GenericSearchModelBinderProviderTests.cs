@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using GenericSearch.Configuration;
-using GenericSearch.Definition;
 using GenericSearch.Internal;
-using GenericSearch.ModelBinders;
-using GenericSearch.ModelBinders.Activation;
+using GenericSearch.Internal.Activation;
+using GenericSearch.Internal.Configuration;
+using GenericSearch.Internal.Definition;
+using GenericSearch.ModelBinding;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using IRequestActivator = GenericSearch.ModelBinders.Activation.IRequestActivator;
 
 namespace GenericSearch.UnitTests.ModelBinders
 {
@@ -30,8 +29,8 @@ namespace GenericSearch.UnitTests.ModelBinders
         public void Null_Configuration_Succeeds()
         {
             var configurationProvider = new ListConfigurationProvider(new List<IListDefinitionSource>(), null, optionsMock.Object);
-            var requestActivator = new Mock<IRequestActivator>();
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestActivator = new Mock<IModelActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
 
             var services = new ServiceCollection()
                 .AddSingleton<IListConfigurationProvider>(configurationProvider)
@@ -55,8 +54,8 @@ namespace GenericSearch.UnitTests.ModelBinders
 
             var configurationProvider = new Mock<IListConfigurationProvider>();
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(configuration);
-            var requestActivator = new Mock<IRequestActivator>();
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestActivator = new Mock<IModelActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             var modelCache = new Mock<IModelCache>();
 
             var httpContext = new Mock<HttpContext>();

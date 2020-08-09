@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GenericSearch.Configuration;
 using GenericSearch.Internal;
-using GenericSearch.ModelBinders;
-using GenericSearch.ModelBinders.Activation;
+using GenericSearch.Internal.Activation;
+using GenericSearch.Internal.Configuration;
+using GenericSearch.ModelBinding;
 using GenericSearch.Searches;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
@@ -34,10 +34,10 @@ namespace GenericSearch.UnitTests.ModelBinders
         {
             var request = new Request();
 
-            var requestActivator = new Mock<IRequestActivator>();
+            var requestActivator = new Mock<IModelActivator>();
             requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => request);
 
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             requestPropertyActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>(), It.IsAny<object>()));
 
             var fallbackModelBinder = new Mock<IModelBinder>();
@@ -56,10 +56,10 @@ namespace GenericSearch.UnitTests.ModelBinders
         [Fact]
         public async Task Null_Activation_Succeeds()
         {
-            var requestActivator = new Mock<IRequestActivator>();
+            var requestActivator = new Mock<IModelActivator>();
             requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => null);
 
-            var requestPropertyActivator = new Mock<ISearchPropertyActivator>();
+            var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             requestPropertyActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>(), It.IsAny<object>()));
 
             var fallbackModelBinder = new Mock<IModelBinder>();
