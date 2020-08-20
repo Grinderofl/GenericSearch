@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       
       - name: Checkout
@@ -15,15 +15,6 @@ jobs:
       - name: Fetch tags for GitVersion
         run: git fetch --prune --unshallow
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9
         with:
@@ -34,6 +25,14 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0.9
         with:
           useConfigFile: true
+      
+      - run: |
+          echo "NuGetVersionV2: ${{ steps.gitversion.outputs.nuGetVersionV2 }}"
+          echo "NuGetPreReleaseTagV2: ${{ steps.gitversion.outputs.CommitsSinceVersionSourcePadded }}"
+      
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
 
       - name: Restore packages
         run: dotnet restore
@@ -43,6 +42,10 @@ jobs:
       
       - name: Test
         run: dotnet test --no-restore --verbosity normal
+      
+      - name: Pack with dotnet
+        run: dotnet pack src/GenericSearch/GenericSearch.csproj --output artifacts --configuration Release -p:PackageVersion=${{ steps.gitversion.outputs.nuGetVersionV2 }}-${{ steps.gitversion.outputs.CommitsSinceVersionSourcePadded }} 
+    
       
       - uses: actions/upload-artifact@v2
         with:
