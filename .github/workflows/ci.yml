@@ -15,21 +15,6 @@ jobs:
       - name: Fetch tags for GitVersion
         run: git fetch --prune --unshallow
 
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9
-        with:
-          versionSpec: '5.1.x'
-          
-      - name: Use GitVersion
-        id: gitversion # step id used as reference for output values
-        uses: gittools/actions/gitversion/execute@v0.9
-        with:
-          useConfigFile: true
-      
-      - run: |
-          echo "NuGetVersionV2: ${{ steps.gitversion.outputs.nuGetVersionV2 }}"
-          echo "NuGetPreReleaseTagV2: ${{ steps.gitversion.outputs.CommitsSinceVersionSourcePadded }}"
-      
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
