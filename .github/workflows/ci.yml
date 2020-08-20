@@ -15,8 +15,10 @@ jobs:
         if: github.ref != 'refs/heads/master'
         run: git branch --create-reflog master origin/master
       - name: GitVersion
-        id: gitversion  # step id used as reference for output values
-        uses: roryprimrose/rungitversion@v1.0.0
+        id: gitversion
+        uses: nmcc/actions/gitversion@v1
+        with:
+          path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
       - name: Restore packages
         run: dotnet restore
       - name: Build
