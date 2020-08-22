@@ -1,5 +1,8 @@
 ﻿namespace GenericSearch
 {
+    /// <summary>
+    /// Provides an interface for a view model which is used for pagination.
+    /// </summary>
     public interface IPagedResult
     {
         /// <summary>

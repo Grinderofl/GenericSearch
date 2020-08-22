@@ -5,6 +5,9 @@ using GenericSearch.Searches.Activation;
 
 namespace GenericSearch
 {
+    /// <summary>
+    /// Provides an interface for configuring GenericSearch services.
+    /// </summary>
     public interface IGenericSearchServicesBuilder
     {
         /// <summary>

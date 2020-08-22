@@ -4,6 +4,9 @@ using GenericSearch.Internal.Definition.Expressions;
 
 namespace GenericSearch
 {
+    /// <summary>
+    /// Base class to configure request, entity, and model types for GenericSearch.
+    /// </summary>
     public class ListProfile : IListDefinitionSource
     {
         /// <summary>

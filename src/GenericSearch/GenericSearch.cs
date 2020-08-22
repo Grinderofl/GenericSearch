@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using GenericSearch.Exceptions;
@@ -8,6 +9,7 @@ using GenericSearch.Searches;
 
 namespace GenericSearch
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class GenericSearch : IGenericSearch
     {
         protected IListConfigurationProvider ConfigurationProvider { get; }

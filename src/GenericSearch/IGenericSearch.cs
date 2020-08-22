@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 
 namespace GenericSearch
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IGenericSearch
     {
         IQueryable<T> Search<T>(IQueryable<T> query, object request);
