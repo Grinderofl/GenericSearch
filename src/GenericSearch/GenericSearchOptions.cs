@@ -118,7 +118,20 @@ namespace GenericSearch
         /// The default value is null.
         /// </remarks>
         /// </summary>
-        public Type DefaultModelActivatorType { get; set; }
+        public Type DefaultModelActivatorType {
+            get => defaultModelActivatorType;
+            set
+            {
+                if (!value.GetInterfaces().Contains(typeof(IModelFactory)))
+                {
+                    throw new ArgumentException($"Provided type does not implement {nameof(IModelFactory)}", nameof(value));
+                }
+
+                defaultModelActivatorType = value;
+            }
+        }
+
+        private Type defaultModelActivatorType;
 
         /// <summary>
         /// Specifies the service provider factory method to use to activate request models.
@@ -144,11 +157,6 @@ namespace GenericSearch
 
         public GenericSearchOptions UseModelFactory(Type type)
         {
-            if (!type.GetInterfaces().Contains(typeof(IModelFactory)))
-            {
-                throw new ArgumentException($"Provided type does not implement {nameof(IModelFactory)}", nameof(type));
-            }
-
             DefaultModelActivatorType = type;
             return this;
         }
