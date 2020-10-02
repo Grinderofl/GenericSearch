@@ -63,6 +63,10 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+          
     - name: Restore packages
       run: dotnet restore
     - name: Build
