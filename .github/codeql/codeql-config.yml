@@ -9,4 +9,4 @@ paths:
   - src
 
 queries:
-  - uses: lgtm-full
+  - uses: security-extended
