@@ -9,4 +9,4 @@ paths:
   - src
 
 queries:
-  - uses: codeql-lgtm-full
+  - uses: lgtm-full
