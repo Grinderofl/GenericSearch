@@ -1,0 +1,12 @@
+name: "CodeQL Config"
+
+disable-default-queries: true
+
+paths-ignore:
+  - src/GenericSearch.Sample
+
+paths:
+  - src
+
+queries:
+  - uses: codeql-lgtm-full
