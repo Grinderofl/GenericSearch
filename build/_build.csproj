@@ -18,7 +18,7 @@
     </PackageReference>
     <PackageReference Include="Nuke.CodeGeneration" Version="0.24.11" />
     <PackageReference Include="Nuke.Common" Version="0.24.11" />
-    <PackageReference Include="Nuke.GitHub" Version="1.6.0" />
+    <PackageReference Include="Nuke.GitHub" Version="1.6.2" />
   </ItemGroup>
 
   <ItemGroup>
