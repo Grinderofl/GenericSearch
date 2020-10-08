@@ -35,7 +35,7 @@ namespace GenericSearch.Searches
         {
         }
 
-        public DateSearch(string property) : base(property)
+        public DateSearch(params string[] properties) : base(properties)
         {
         }
 

@@ -15,7 +15,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var expression = new SearchExpression<Request, Entity, Result>(x => x.SubEntityValue);
             expression.On(x => x.SubEntity.Value);
             
-            expression.ItemPropertyPath.Should().Be("SubEntity.Value");
+            expression.ItemPropertyPaths[0].Should().Be("SubEntity.Value");
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var expression = new SearchExpression<Request, Entity, Result>(x => x.SubEntityValue);
             expression.On("SubEntity.Value");
             
-            expression.ItemPropertyPath.Should().Be("SubEntity.Value");
+            expression.ItemPropertyPaths[0].Should().Be("SubEntity.Value");
         }
 
         private class Request

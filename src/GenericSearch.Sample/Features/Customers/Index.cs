@@ -19,7 +19,7 @@ namespace GenericSearch.Sample.Features.Customers
     {
         public class Query : IRequest<Model>, ISortOrder
         {
-            public CustomerFreeTextSearch FreeText { get; set; }
+            public TextSearch FreeText { get; set; }
             public TextSearch CompanyName { get; set; }
             public TextSearch ContactName { get; set; }
             public TextSearch City { get; set; }
@@ -42,7 +42,7 @@ namespace GenericSearch.Sample.Features.Customers
             }
 
             [Display(Name = "Query")]
-            public CustomerFreeTextSearch FreeText { get; set; }
+            public TextSearch FreeText { get; set; }
 
             [Display(Name = "Company Name")]
             public TextSearch CompanyName { get; set; }
@@ -116,7 +116,7 @@ namespace GenericSearch.Sample.Features.Customers
             public SearchProfile()
             {
                 AddList<Query, Projection, Model>()
-                    .Search(x => x.FreeText, x => x.Ignore());
+                    .Search(x => x.FreeText, x => x.On(c => c.CompanyName, c => c.ContactName, c => c.Region, c => c.City));
             }
         }
 

@@ -22,7 +22,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().BeNull();
@@ -38,7 +38,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Name.Should().Be("Text");
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().BeNull();
@@ -54,14 +54,32 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().Be("Text");
+            definition.Value.ItemPropertyPaths[0].Should().Be("Text");
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().BeNull();
             definition.Value.Activator.Should().BeNull();
         }
 
+        
         [Fact]
+        public void Search_Property_On_Properties_Succeeds()
+        {
+            var expression = new ListExpression<Request, Item, Result>();
+            expression.Search(x => x.Text, x => x.On(m => m.Text, m => m.MoreText));
+
+            var definition = expression.SearchDefinitions.First();
+            definition.Key.Name.Should().Be("Text");
+            definition.Value.RequestProperty.Name.Should().Be("Text");
+            definition.Value.ItemPropertyPaths[0].Should().Be("Text");
+            definition.Value.ItemPropertyPaths[1].Should().Be("MoreText");
+            definition.Value.ResultProperty.Should().BeNull();
+            definition.Value.Ignored.Should().BeFalse();
+            definition.Value.Constructor.Should().BeNull();
+            definition.Value.Activator.Should().BeNull();
+        }
+
+                [Fact]
         public void Search_Property_Ignore_Succeeds()
         {
             var expression = new ListExpression<Request, Item, Result>();
@@ -70,7 +88,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeTrue();
             definition.Value.Constructor.Should().BeNull();
@@ -86,7 +104,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().NotBeNull();
@@ -102,7 +120,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().BeNull();
@@ -119,7 +137,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().BeNull();
@@ -136,7 +154,7 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
             var definition = expression.SearchDefinitions.First();
             definition.Key.Name.Should().Be("Text");
             definition.Value.RequestProperty.Name.Should().Be("Text");
-            definition.Value.ItemPropertyPath.Should().BeNull();
+            definition.Value.ItemPropertyPaths.Should().BeNull();
             definition.Value.ResultProperty.Should().BeNull();
             definition.Value.Ignored.Should().BeFalse();
             definition.Value.Constructor.Should().BeNull();
@@ -749,6 +767,8 @@ namespace GenericSearch.UnitTests.Internal.Definition.Expressions
         private class Item
         {
             public string Text { get; set; }
+
+            public string MoreText { get; set; }
         }
 
         private class Request

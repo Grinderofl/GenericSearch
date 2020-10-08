@@ -5,6 +5,6 @@ namespace GenericSearch.Searches.Activation
 {
     public abstract class SearchActivator<TSearch> : ISearchActivator<TSearch> where TSearch : ISearch
     {
-        public abstract ISearch Activate(string entityPath);
+        public abstract ISearch Activate(params string[] entityPaths);
     }
 }

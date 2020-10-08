@@ -4,7 +4,7 @@ namespace GenericSearch
 {
     public interface ISearchActivator
     {
-        ISearch Activate(string entityPath);
+        ISearch Activate(params string[] entityPaths);
     }
 
     public interface ISearchActivator<TSearch> : ISearchActivator where TSearch : ISearch

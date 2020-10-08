@@ -5,6 +5,6 @@ namespace GenericSearch.Searches.Activation
 {
     public class OptionalBooleanSearchActivator : SearchActivator<OptionalBooleanSearch>
     {
-        public override ISearch Activate(string entityPath) => new OptionalBooleanSearch(entityPath);
+        public override ISearch Activate(params string[] entityPaths) => new OptionalBooleanSearch(entityPaths);
     }
 }

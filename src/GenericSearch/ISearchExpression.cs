@@ -24,16 +24,16 @@ namespace GenericSearch
         /// <summary>
         /// Configures the entity property to use when performing search.
         /// </summary>
-        /// <param name="property"></param>
+        /// <param name="properties"></param>
         /// <returns></returns>
-        ISearchExpression<TRequest, TEntity, TResult> On(Expression<Func<TEntity, object>> property);
+        ISearchExpression<TRequest, TEntity, TResult> On(params Expression<Func<TEntity, object>>[] properties);
 
         /// <summary>
         /// Configures the entity property to use when performing search.
         /// </summary>
-        /// <param name="propertyPath"></param>
+        /// <param name="propertyPaths"></param>
         /// <returns></returns>
-        ISearchExpression<TRequest, TEntity, TResult> On(string propertyPath);
+        ISearchExpression<TRequest, TEntity, TResult> On(params string[] propertyPaths);
 
         /// <summary>
         /// Configures the request property to be activated using a factory method.

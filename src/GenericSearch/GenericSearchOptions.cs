@@ -122,6 +122,11 @@ namespace GenericSearch
             get => defaultModelActivatorType;
             set
             {
+                if (value == null)
+                {
+                    return;
+                }
+
                 if (!value.GetInterfaces().Contains(typeof(IModelFactory)))
                 {
                     throw new ArgumentException($"Provided type does not implement {nameof(IModelFactory)}", nameof(value));

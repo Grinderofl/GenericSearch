@@ -61,6 +61,45 @@ FROM [Posts] AS [p]
 INNER JOIN [Blogs] AS [b] ON [p].[BlogId] = [b].[Id]
 WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
         }
+        
+        [Fact]
+        public void Entity_Contains_Succeeds()
+        {
+            var (search, request) = Create<PostRequest, PostProfile>();
+
+            request.BlogName.Is = TextSearch.Comparer.Contains;
+            request.BlogName.Term = "Blog of Foo";
+
+            var query = Context.Posts.Search(search, request);
+
+            var result = query.ToSql();
+
+            testOutputHelper.WriteLine(result);
+
+            result.Should().Be(@"SELECT [p].[Id], [p].[AuthorId], [p].[BlogId], [p].[Content], [p].[Created], [p].[Published], [p].[Title]
+FROM [Posts] AS [p]
+INNER JOIN [Blogs] AS [b] ON [p].[BlogId] = [b].[Id]
+WHERE [b].[Name] IS NOT NULL AND (CHARINDEX(N'Blog of Foo', [b].[Name]) > 0)");
+        }
+
+        [Fact]
+        public void Entity_Multiple_Contains_Succeeds()
+        {
+            var (search, request) = Create<PostRequest, PostProfile>();
+
+            request.Query.Is = TextSearch.Comparer.Contains;
+            request.Query.Term = "My Content";
+
+            var query = Context.Posts.Search(search, request);
+
+            var result = query.ToSql();
+
+            testOutputHelper.WriteLine(result);
+
+            result.Should().Be(@"SELECT [p].[Id], [p].[AuthorId], [p].[BlogId], [p].[Content], [p].[Created], [p].[Published], [p].[Title]
+FROM [Posts] AS [p]
+WHERE ([p].[Title] IS NOT NULL AND (CHARINDEX(N'My Content', [p].[Title]) > 0)) OR ([p].[Content] IS NOT NULL AND (CHARINDEX(N'My Content', [p].[Content]) > 0))");
+        }
 
 
         private class TextRequest
@@ -106,18 +145,23 @@ WHERE [b].[Name] IS NOT NULL AND ([b].[Name] = N'Blog of Foo')");
         private class PostRequest
         {
             public TextSearch BlogName { get; set; }
+
+            public TextSearch Query { get; set; }
         }
 
         private class PostResult
         {
             public TextSearch BlogName { get; set; }
+
+            public TextSearch Query { get; set; }
         }
 
         private class PostProfile : ListProfile
         {
             public PostProfile()
             {
-                AddList<PostRequest, Post, PostResult>();
+                AddList<PostRequest, Post, PostResult>()
+                    .Search(x => x.Query, x => x.On(q => q.Title, q => q.Content));
             }
         }
     }

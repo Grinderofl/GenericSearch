@@ -7,7 +7,7 @@ namespace GenericSearch.Internal.Definition
     {
         bool Ignored { get; }
         PropertyInfo RequestProperty { get; }
-        string ItemPropertyPath { get; }
+        string[] ItemPropertyPaths { get; }
         
         //PropertyInfo EntityPath { get; }
         PropertyInfo ResultProperty { get; }

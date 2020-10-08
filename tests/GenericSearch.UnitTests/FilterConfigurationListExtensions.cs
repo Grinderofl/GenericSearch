@@ -13,7 +13,7 @@ namespace GenericSearch.UnitTests
             return configuration.SearchConfigurations.ResultPropertyFor(requestPropertyName);
         }
 
-        public static string ItemPropertyPathFor(this IListConfiguration configuration, string requestPropertyName)
+        public static string[] ItemPropertyPathFor(this IListConfiguration configuration, string requestPropertyName)
         {
             return configuration.SearchConfigurations.ItemPropertyPathFor(requestPropertyName);
         }
@@ -29,7 +29,7 @@ namespace GenericSearch.UnitTests
             return list.Find(requestPropertyName).ResultProperty;
         }
 
-        public static string ItemPropertyPathFor(this IEnumerable<ISearchConfiguration> list, string requestPropertyName)
+        public static string[] ItemPropertyPathFor(this IEnumerable<ISearchConfiguration> list, string requestPropertyName)
         {
             return list.Find(requestPropertyName).ItemPropertyPath;
         }

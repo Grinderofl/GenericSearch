@@ -7,7 +7,7 @@ namespace GenericSearch.Internal.Configuration
     {
         bool Ignored { get; }
         PropertyInfo RequestProperty { get; }
-        string ItemPropertyPath { get; }
+        string[] ItemPropertyPath { get; }
         PropertyInfo ResultProperty { get; }
         Func<ISearch> Constructor { get; }
         Func<IServiceProvider, ISearchActivator> Activator { get; }

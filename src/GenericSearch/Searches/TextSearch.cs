@@ -24,7 +24,7 @@ namespace GenericSearch.Searches
         {
         }
 
-        public TextSearch(string property) : base(property)
+        public TextSearch(params string[] properties) : base(properties)
         {
         }
 
