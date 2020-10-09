@@ -29,7 +29,10 @@ namespace GenericSearch.Searches
 
         public IQueryable<T> ApplyToQuery<T>(IQueryable<T> query)
         {
-            if (Properties == null || !Properties.Any() || !IsActive()) return query;
+            if (Properties == null || !Properties.Any() || !IsActive())
+            {
+                return query;
+            }
 
             var parameter = Expression.Parameter(typeof(T), "p");
             Expression filterExpression = null;
@@ -57,14 +60,6 @@ namespace GenericSearch.Searches
                 return query;
             }
             
-            //var parts = Property.Split('.');
-
-            //var parameter = Expression.Parameter(typeof(T), "p");
-
-            //var filterExpression = BuildFilterExpressionWithNullChecks(null, parameter, null, parts);
-
-            //if (filterExpression == null) return query;
-
             var predicate = Expression.Lambda<Func<T, bool>>(filterExpression, parameter);
             return query.Where(predicate);
         }
