@@ -10,6 +10,7 @@ namespace GenericSearch.Internal.Activation
     /// </summary>
     public interface IModelActivator
     {
-        object Activate(IListConfiguration source);
+
+        object CreateInstance(IListConfiguration source);
     }
 }

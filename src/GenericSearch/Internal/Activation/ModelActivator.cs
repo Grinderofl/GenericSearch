@@ -14,7 +14,18 @@ namespace GenericSearch.Internal.Activation
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public object Activate(IListConfiguration source)
+        /// <summary>
+        /// Attempts to create an instance of <see cref="IListConfiguration.RequestType"/>.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <exception cref="NullReferenceException">
+        /// An instance of <see cref="IModelFactory"/> could not be created by <see cref="ActivatorUtilities.GetServiceOrCreateInstance"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// No model factories or factory methods have been defined in <see cref="IListConfiguration.ModelActivatorConfiguration"/>.
+        /// </exception>
+        /// <returns></returns>
+        public object CreateInstance(IListConfiguration source)
         {
             var configuration = source.ModelActivatorConfiguration;
 

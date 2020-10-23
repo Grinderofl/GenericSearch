@@ -396,7 +396,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration
 
         private class TestModelActivator : IModelActivator
         {
-            public object Activate(IListConfiguration source)
+            public object CreateInstance(IListConfiguration source)
             {
                 throw new NotImplementedException();
             }

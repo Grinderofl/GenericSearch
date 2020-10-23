@@ -29,7 +29,7 @@ namespace GenericSearch.ModelBinding
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var model = modelActivator.Activate(configuration);
+            var model = modelActivator.CreateInstance(configuration);
             if (model == null)
             {
                 await fallbackModelBinder.BindModelAsync(bindingContext);
