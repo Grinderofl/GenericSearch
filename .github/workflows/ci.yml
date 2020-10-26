@@ -50,7 +50,7 @@ jobs:
 
 
       - name: Generate NuGet packages
-        run: dotnet pack src/GenericSearch/GenericSearch.csproj
+        run: dotnet pack --configuration Release src/GenericSearch/GenericSearch.csproj
 
 
       - name: Upload artifacts
