@@ -1,9 +1,10 @@
 ﻿using GenericSearch.Internal.Configuration;
+using GenericSearch.ModelBinding;
 
 namespace GenericSearch.Internal.Activation
 {
     /// <summary>
-    /// Used by <see cref="ModelActivator"/> to activate and initialise all relevant
+    /// Used by <see cref="GenericSearchModelBinder"/> to activate and initialise all relevant
     /// properties specified in the <see cref="IListConfiguration"/>.
     /// </summary>
     public interface IModelPropertyActivator

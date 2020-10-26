@@ -35,7 +35,7 @@ namespace GenericSearch.Searches
         {
         }
 
-        public IntegerSearch(string property) : base(property)
+        public IntegerSearch(params string[] properties) : base(properties)
         {
         }
 

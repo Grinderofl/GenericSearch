@@ -56,9 +56,9 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             configuration.ResultType.Should().Be<Result>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Text");
-            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text")[0].Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Integer");
-            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer")[0].Should().Be("Integer");
             
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("Page");
@@ -103,9 +103,9 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             configuration.ResultType.Should().Be<DifferentFiltersResult>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Integer");
-            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text")[0].Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Text");
-            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer")[0].Should().Be("Integer");
 
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("Page");
@@ -150,9 +150,9 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             configuration.ResultType.Should().Be<DifferentPageAndRowsResult>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Text");
-            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text")[0].Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Integer");
-            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer")[0].Should().Be("Integer");
 
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("CurrentPage");
@@ -197,9 +197,9 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             configuration.ResultType.Should().Be<DifferentPageAndRowsResult>();
             
             configuration.ResultPropertyFor("Text").Name.Should().Be("Text");
-            configuration.ItemPropertyPathFor("Text").Should().Be("Text");
+            configuration.ItemPropertyPathFor("Text")[0].Should().Be("Text");
             configuration.ResultPropertyFor("Integer").Name.Should().Be("Integer");
-            configuration.ItemPropertyPathFor("Integer").Should().Be("Integer");
+            configuration.ItemPropertyPathFor("Integer")[0].Should().Be("Integer");
 
             configuration.PageConfiguration.RequestProperty.Name.Should().Be("Page");
             configuration.PageConfiguration.ResultProperty.Name.Should().Be("CurrentPage");

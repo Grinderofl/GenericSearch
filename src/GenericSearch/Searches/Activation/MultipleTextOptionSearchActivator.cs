@@ -5,6 +5,6 @@ namespace GenericSearch.Searches.Activation
 {
     public class MultipleTextOptionSearchActivator : SearchActivator<MultipleTextOptionSearch>
     {
-        public override ISearch Activate(string entityPath) => new MultipleTextOptionSearch(entityPath);
+        public override ISearch Activate(params string[] entityPaths) => new MultipleTextOptionSearch(entityPaths);
     }
 }

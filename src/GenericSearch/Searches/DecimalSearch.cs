@@ -35,7 +35,7 @@ namespace GenericSearch.Searches
         {
         }
 
-        public DecimalSearch(string property) : base(property)
+        public DecimalSearch(params string[] properties) : base(properties)
         {
         }
 

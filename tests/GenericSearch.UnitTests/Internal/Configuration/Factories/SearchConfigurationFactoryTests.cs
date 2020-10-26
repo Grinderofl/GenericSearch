@@ -27,7 +27,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -44,7 +44,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -61,7 +61,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Bar");
             result.Ignored.Should().BeFalse();
         }
@@ -78,7 +78,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Bar");
+            result.ItemPropertyPath[0].Should().Be("Bar");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -95,7 +95,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("ChildBaz");
-            result.ItemPropertyPath.Should().Be("Child.Baz");
+            result.ItemPropertyPath[0].Should().Be("Child.Baz");
             result.ResultProperty.Name.Should().Be("ChildBaz");
             result.Ignored.Should().BeFalse();
         }
@@ -112,7 +112,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("ChildBaz");
-            result.ItemPropertyPath.Should().Be("Child.Baz");
+            result.ItemPropertyPath[0].Should().Be("Child.Baz");
             result.ResultProperty.Name.Should().Be("ChildBaz");
             result.Ignored.Should().BeFalse();
         }
@@ -129,7 +129,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("ChildBaz");
-            result.ItemPropertyPath.Should().Be("Child.Baz");
+            result.ItemPropertyPath[0].Should().Be("Child.Baz");
             result.ResultProperty.Name.Should().Be("ChildBaz");
             result.Ignored.Should().BeFalse();
         }
@@ -146,7 +146,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeTrue();
         }
@@ -163,7 +163,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().NotBeNull();
             result.Activator.Should().BeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
         }
@@ -180,7 +180,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Constructor.Should().BeNull();
             result.Activator.Should().NotBeNull();
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
 
@@ -205,7 +205,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Activator.Should().NotBeNull();
             result.Activator.Should().BeOfType(typeof(Func<IServiceProvider, ISearchActivator>));
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
 
@@ -230,7 +230,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration.Factories
             result.Activator.Should().NotBeNull();
             result.Activator.Should().BeOfType(typeof(Func<IServiceProvider, ISearchActivator>));
             result.RequestProperty.Name.Should().Be("Text");
-            result.ItemPropertyPath.Should().Be("Text");
+            result.ItemPropertyPath[0].Should().Be("Text");
             result.ResultProperty.Name.Should().Be("Text");
             result.Ignored.Should().BeFalse();
 

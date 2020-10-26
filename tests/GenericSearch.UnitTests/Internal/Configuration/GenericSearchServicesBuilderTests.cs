@@ -396,7 +396,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration
 
         private class TestModelActivator : IModelActivator
         {
-            public object Activate(IListConfiguration source)
+            public object CreateInstance(IListConfiguration source)
             {
                 throw new NotImplementedException();
             }
@@ -412,7 +412,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration
 
         private class ActivatorFoo : ISearchActivator<TextSearch>
         {
-            public ISearch Activate(string entityPath)
+            public ISearch Activate(params string[] entityPaths)
             {
                 throw new NotImplementedException();
             }
@@ -420,7 +420,7 @@ namespace GenericSearch.UnitTests.Internal.Configuration
 
         private class ActivatorBar : ISearchActivator
         {
-            public ISearch Activate(string entityPath)
+            public ISearch Activate(params string[] entityPaths)
             {
                 throw new NotImplementedException();
             }

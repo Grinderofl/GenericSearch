@@ -13,9 +13,9 @@ namespace GenericSearch.Searches
     [ExcludeFromCodeCoverage]
     public abstract class AbstractSearch : ISearch
     {
-        protected AbstractSearch(string property)
+        protected AbstractSearch(params string[] properties)
         {
-            Property = property;
+            Properties = properties;
         }
 
         protected AbstractSearch()
@@ -23,22 +23,43 @@ namespace GenericSearch.Searches
         }
 
         [JsonIgnore]
-        protected internal string Property { get; set; }
+        protected internal string[] Properties { get; set; }
 
         public abstract bool IsActive();
 
         public IQueryable<T> ApplyToQuery<T>(IQueryable<T> query)
         {
-            if (Property == null || !IsActive()) return query;
-
-            var parts = Property.Split('.');
+            if (Properties == null || !Properties.Any() || !IsActive())
+            {
+                return query;
+            }
 
             var parameter = Expression.Parameter(typeof(T), "p");
+            Expression filterExpression = null;
 
-            var filterExpression = BuildFilterExpressionWithNullChecks(null, parameter, null, parts);
+            foreach (var property in Properties)
+            {
+                var parts = property.Split('.');
+                var expression = BuildFilterExpressionWithNullChecks(null, parameter, null, parts);
+                if (expression == null)
+                {
+                    continue;
+                }
 
-            if (filterExpression == null) return query;
+                if (filterExpression == null)
+                {
+                    filterExpression = expression;
+                    continue;
+                }
 
+                filterExpression = Expression.OrElse(filterExpression, expression);
+            }
+
+            if (filterExpression == null)
+            {
+                return query;
+            }
+            
             var predicate = Expression.Lambda<Func<T, bool>>(filterExpression, parameter);
             return query.Where(predicate);
         }

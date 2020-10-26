@@ -35,7 +35,7 @@ namespace GenericSearch.UnitTests.ModelBinders
             var request = new Request();
 
             var requestActivator = new Mock<IModelActivator>();
-            requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => request);
+            requestActivator.Setup(x => x.CreateInstance(It.IsAny<ListConfiguration>())).Returns(() => request);
 
             var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             requestPropertyActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>(), It.IsAny<object>()));
@@ -57,7 +57,7 @@ namespace GenericSearch.UnitTests.ModelBinders
         public async Task Null_Activation_Succeeds()
         {
             var requestActivator = new Mock<IModelActivator>();
-            requestActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>())).Returns(() => null);
+            requestActivator.Setup(x => x.CreateInstance(It.IsAny<ListConfiguration>())).Returns(() => null);
 
             var requestPropertyActivator = new Mock<IModelPropertyActivator>();
             requestPropertyActivator.Setup(x => x.Activate(It.IsAny<ListConfiguration>(), It.IsAny<object>()));

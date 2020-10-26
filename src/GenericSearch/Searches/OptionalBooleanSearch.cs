@@ -7,7 +7,7 @@ namespace GenericSearch.Searches
 {
     public class OptionalBooleanSearch : AbstractSearch
     {
-        public OptionalBooleanSearch(string property) : base(property)
+        public OptionalBooleanSearch(params string[] properties) : base(properties)
         {
         }
 

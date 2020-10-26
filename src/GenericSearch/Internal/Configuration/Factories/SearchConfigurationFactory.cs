@@ -19,8 +19,8 @@ namespace GenericSearch.Internal.Configuration.Factories
                                  source.ResultType.GetProperty(requestProperty.Name);
             var ignored = search?.Ignored ?? false;
 
-            var entityPath = search?.ItemPropertyPath ??
-                             propertyPathFinder.Find(source.ItemType, requestProperty.Name);
+            var itemPropertyPaths = search?.ItemPropertyPaths ??
+                                    new[] {propertyPathFinder.Find(source.ItemType, requestProperty.Name)};
 
             var factory = search?.Constructor;
             var activator = search?.ActivatorType != null
@@ -30,7 +30,7 @@ namespace GenericSearch.Internal.Configuration.Factories
             return new SearchConfiguration(requestProperty)
             {
                 ResultProperty = resultProperty,
-                ItemPropertyPath = entityPath,
+                ItemPropertyPath = itemPropertyPaths,
                 Ignored = ignored,
                 Constructor = factory,
                 Activator = activator

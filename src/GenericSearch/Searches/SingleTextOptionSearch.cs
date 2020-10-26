@@ -7,7 +7,7 @@ namespace GenericSearch.Searches
 {
     public class SingleTextOptionSearch : AbstractSearch
     {
-        public SingleTextOptionSearch(string property) : base(property)
+        public SingleTextOptionSearch(params string[] properties) : base(properties)
         {
         }
 

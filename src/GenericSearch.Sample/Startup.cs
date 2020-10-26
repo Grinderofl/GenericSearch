@@ -5,6 +5,7 @@ using GenericSearch.Sample.Data;
 using GenericSearch.Sample.Features.Employees;
 using GenericSearch.Sample.Features.Startup;
 using Grinderofl.FeatureFolders;
+using HibernatingRhinos.Profiler.Appender.EntityFramework;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -56,6 +57,7 @@ namespace GenericSearch.Sample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            EntityFrameworkProfiler.Initialize();
             services.AddDbContext<NorthwindDbContext>(ConfigureDbContextOptionsBuilder);
 
             services

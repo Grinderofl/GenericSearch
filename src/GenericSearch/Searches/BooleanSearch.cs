@@ -6,7 +6,7 @@ namespace GenericSearch.Searches
 {
     public class BooleanSearch : AbstractSearch
     {
-        public BooleanSearch(string property) : base(property)
+        public BooleanSearch(params string[] properties) : base(properties)
         {
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using GenericSearch.Internal.Extensions;
@@ -11,7 +12,7 @@ namespace GenericSearch.Internal.Definition.Expressions
 
         public bool Ignored { get; private set; }
 
-        public string ItemPropertyPath { get; private set; }
+        public string[] ItemPropertyPaths { get; private set; }
 
         public PropertyInfo ResultProperty { get; private set; }
 
@@ -36,17 +37,15 @@ namespace GenericSearch.Internal.Definition.Expressions
             return this;
         }
 
-        public ISearchExpression<TRequest, TEntity, TResult> On(Expression<Func<TEntity, object>> property)
+        public ISearchExpression<TRequest, TEntity, TResult> On(params Expression<Func<TEntity, object>>[] properties)
         {
-            var propertyPath = property.GetPropertyPath();
-            //var expression = property.ToString();
-            //var propertyPath = expression.Split(".").Skip(1);
-            return On(string.Join(".", propertyPath));
+            var propertyPaths = properties.Select(x => string.Join(".", x.GetPropertyPath())).ToArray();
+            return On(propertyPaths);
         }
 
-        public ISearchExpression<TRequest, TEntity, TResult> On(string propertyPath)
+        public ISearchExpression<TRequest, TEntity, TResult> On(params string[] propertyPaths)
         {
-            ItemPropertyPath = propertyPath;
+            ItemPropertyPaths = propertyPaths;
             return this;
         }
 

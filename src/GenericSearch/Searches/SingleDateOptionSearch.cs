@@ -9,7 +9,7 @@ namespace GenericSearch.Searches
 {
     public class SingleDateOptionSearch : AbstractSearch
     {
-        public SingleDateOptionSearch(string property) : base(property)
+        public SingleDateOptionSearch(params string[] properties) : base(properties)
         {
         }
 

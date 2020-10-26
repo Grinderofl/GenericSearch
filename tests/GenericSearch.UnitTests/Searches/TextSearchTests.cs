@@ -24,6 +24,16 @@ namespace GenericSearch.UnitTests.Searches
         }
 
         [Fact]
+        public void Multiple_Succeeds()
+        {
+            var search = new TextSearch(nameof(Baz.Value1), nameof(Baz.Value2));
+
+            var result = search.ApplyToQuery(Bazes().AsQueryable()).ToArray();
+
+            result.Length.Should().Be(3);
+        }
+
+        [Fact]
         public void Is_Succeeds()
         {
             var search = new TextSearch(nameof(Item.Value))
@@ -51,6 +61,22 @@ namespace GenericSearch.UnitTests.Searches
             result.Length.Should().Be(2);
             result[0].Id.Should().Be(2);
             result[1].Id.Should().Be(3);
+        }
+
+        [Fact]
+        public void Multiple_Contains_Succeeds()
+        {
+            var search = new TextSearch(nameof(Baz.Value1), nameof(Baz.Value2))
+            {
+                Term = "Bar",
+                Is = TextSearch.Comparer.Contains
+            };
+
+            var result = search.ApplyToQuery(Bazes().AsQueryable()).ToArray();
+
+            result.Length.Should().Be(2);
+            result[0].Id.Should().Be(1);
+            result[1].Id.Should().Be(2);
         }
 
         [Fact]
@@ -174,6 +200,20 @@ namespace GenericSearch.UnitTests.Searches
             public string Value { get; }
         }
 
+        private class Baz
+        {
+            public Baz(int id, string value1, string value2)
+            {
+                Id = id;
+                Value1 = value1;
+                Value2 = value2;
+            }
+
+            public int Id { get; }
+            public string Value1 { get; }
+            public string Value2 { get; }
+        }
+
         private IEnumerable<Item> Items()
         {
             yield return new Item(1, "Foo");
@@ -191,6 +231,13 @@ namespace GenericSearch.UnitTests.Searches
         {
             yield return new Foo(6) {Bars = {new Bar(4, "Bar"), new Bar(5, "Baz")}};
             yield return new Foo(7) {Bars = {new Bar(6, "Foo"), new Bar(7, "Qux")}};
+        }
+
+        private IEnumerable<Baz> Bazes()
+        {
+            yield return new Baz(1, "Foo1", "Bar1");
+            yield return new Baz(2, "Bar2", "Baz1");
+            yield return new Baz(3, "Baz2", "Baz4");
         }
     }
 }

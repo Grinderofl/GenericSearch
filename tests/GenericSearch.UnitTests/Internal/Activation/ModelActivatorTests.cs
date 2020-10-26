@@ -19,7 +19,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
         {
             var activator = new ModelActivator(null);
 
-            activator.Invoking(x => x.Activate(null))
+            activator.Invoking(x => x.CreateInstance(null))
                 .Should()
                 .ThrowExactly<NullReferenceException>();
         }
@@ -33,7 +33,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                 ModelActivatorConfiguration = new ModelActivatorConfiguration(_ => new Request())
             };
 
-            var result = activator.Activate(source);
+            var result = activator.CreateInstance(source);
             result.Should().BeOfType<Request>();
 
         }
@@ -53,7 +53,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                 ModelActivatorConfiguration = new ModelActivatorConfiguration((sp, x) => sp.GetService(x))
             };
 
-            var result = activator.Activate(source);
+            var result = activator.CreateInstance(source);
 
             result.Should().BeOfType<Request>();
         }
@@ -73,7 +73,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                 ModelActivatorConfiguration = new ModelActivatorConfiguration(typeof(Factory))
             };
 
-            var result = activator.Activate(source);
+            var result = activator.CreateInstance(source);
 
             result.Should().BeOfType<Request>();
         }
@@ -94,7 +94,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                 ModelActivatorConfiguration = new ModelActivatorConfiguration(typeof(Factory))
             };
             
-            var result = activator.Activate(source);
+            var result = activator.CreateInstance(source);
 
             result.Should().BeOfType<Request>();
         }
@@ -108,7 +108,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                 ModelActivatorConfiguration = new ModelActivatorConfiguration(null, null, null)
             };
             
-            activator.Invoking(x => x.Activate(source))
+            activator.Invoking(x => x.CreateInstance(source))
                 .Should()
                 .ThrowExactly<ArgumentException>();
         }
@@ -128,7 +128,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                 ModelActivatorConfiguration = new ModelActivatorConfiguration(typeof(Request))
             };
             
-            activator.Invoking(x => x.Activate(source))
+            activator.Invoking(x => x.CreateInstance(source))
                 .Should()
                 .ThrowExactly<NullReferenceException>();
         }
