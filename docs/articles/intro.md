@@ -1,13 +1,8 @@
-# Introduction
+# GenericSearch
 
-## Description
+GenericSearch is a library to provide strongly-typed and reusable **filtering**, **sorting**, and **pagination** functionality for ASP.NET Core web applications which make use of LINQ-based data source providers. It covers a number of common scenarios out of the box, and can be extended with minimal effort to support more complicated ones.
 
-GenericSearch is a new library for ASP.NET Core to simplify adding **filtering**, **sorting**, and **pagination** functionality with minimal boilerplate code. It follows the convention over configuration paradigm while still being strongly typed and extensible enough to support more complex scenarios, and is especially useful for projects which feature a large number of list views such as admin interfaces.
-
-> * Are your search boxes and facets a spaghetti of *if's*, *switches*, complex LINQ building? 
-> * Do you dread having to add pagination and sorting on top of that?
-
-**Then GenericSearch is for you!**
+## Why?
 
 While it's normal for proof of concepts and  smaller projects to search lengthy lists with a couple of *if*-statements, larger projects need a more sophisticated and maintainable approach.
 
