@@ -6,13 +6,17 @@ namespace GenericSearch.Internal.Definition
     public interface ISearchDefinition
     {
         bool Ignored { get; }
+
         PropertyInfo RequestProperty { get; }
+
         string[] ItemPropertyPaths { get; }
-        
-        //PropertyInfo EntityPath { get; }
+
         PropertyInfo ResultProperty { get; }
+
         Func<ISearch> Constructor { get; }
+
         Func<IServiceProvider, ISearchActivator> Activator { get; }
+
         Type ActivatorType { get; }
     }
 }

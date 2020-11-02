@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using GenericSearch.Internal.Configuration;
 using GenericSearch.Searches;
 using Microsoft.AspNetCore.Routing;
 
@@ -11,21 +10,17 @@ namespace GenericSearch.ActionFilters.Visitors
     /// </summary>
     public class ModelPropertyVisitor : RouteValuePropertyVisitor
     {
-        private readonly IListConfiguration configuration;
         private readonly object model;
         private readonly RouteValueDictionary routeValueDictionary;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ModelPropertyVisitor"/>
         /// </summary>
-        /// <param name="configuration">Filter Configuration</param>
         /// <param name="model">Value of the model property</param>
         /// <param name="routeValueDictionary">RouteValueDictionary to populate</param>
-        public ModelPropertyVisitor(IListConfiguration configuration, 
-                                    object model,
-                                    RouteValueDictionary routeValueDictionary) : base(routeValueDictionary)
+        public ModelPropertyVisitor(object model, RouteValueDictionary routeValueDictionary) 
+            : base(routeValueDictionary)
         {
-            this.configuration = configuration;
             this.model = model;
             this.routeValueDictionary = routeValueDictionary;
         }
@@ -60,17 +55,6 @@ namespace GenericSearch.ActionFilters.Visitors
             }
             
             PopulateRouteValues(propertyInfo.Name, propertyInfo, propertyValue);
-        }
-
-        /// <inheritdoc />
-        protected override bool IsDefaultPropertyValue(PropertyInfo propertyInfo, object value)
-        {
-            if (base.IsDefaultPropertyValue(propertyInfo, value))
-            {
-                return true;
-            }
-            
-            return false;
         }
     }
 }

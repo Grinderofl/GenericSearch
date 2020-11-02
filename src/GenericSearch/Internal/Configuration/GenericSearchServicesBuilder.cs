@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using GenericSearch.ActionFilters;
 using GenericSearch.ActionFilters.Configuration;
 using GenericSearch.Internal.Activation;
 using GenericSearch.Internal.Activation.Factories;
@@ -83,6 +84,7 @@ namespace GenericSearch.Internal.Configuration
             services.TryAddScoped<IRequestModelProvider, RequestModelProvider>();
             services.TryAddScoped<IGenericSearch, GenericSearch>();
             services.TryAddSingleton<IModelActivator, ModelActivator>();
+            services.TryAddScoped<IGenericSearchRouteValueTransformer, GenericSearchRouteValueTransformer>();
             services.TryAddScoped<IModelPropertyActivator, ModelPropertyActivator>();
             services.TryAddScoped<ISearchActivatorFactory, SearchActivatorFactory>();
             

@@ -28,8 +28,11 @@ namespace GenericSearch.UnitTests.ActionFilters
         {
             var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
             actionFilter.Order.Should().Be(1);
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ControllerActionDescriptor());
@@ -54,8 +57,11 @@ namespace GenericSearch.UnitTests.ActionFilters
         {
             var modelProvider = new Mock<IRequestModelProvider>();
             var configurationProvider = new Mock<IListConfigurationProvider>();
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
             actionFilter.Order.Should().Be(1);
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new PageActionDescriptor());
@@ -81,8 +87,11 @@ namespace GenericSearch.UnitTests.ActionFilters
             var modelProvider = new Mock<IRequestModelProvider>();
             modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(null);
             var configurationProvider = new Mock<IListConfigurationProvider>();
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
 
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ControllerActionDescriptor());
@@ -109,10 +118,15 @@ namespace GenericSearch.UnitTests.ActionFilters
             var modelProvider = new Mock<IRequestModelProvider>();
             modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns((ListConfiguration) null);
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
+
+            
             actionFilter.Order.Should().Be(1);
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ControllerActionDescriptor());
@@ -139,15 +153,18 @@ namespace GenericSearch.UnitTests.ActionFilters
             var modelProvider = new Mock<IRequestModelProvider>();
             modelProvider.Setup(x => x.GetCurrentRequestModel()).Returns(model);
             var configurationProvider = new Mock<IListConfigurationProvider>();
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
 
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
             var listConfiguration = new ListConfiguration(typeof(TestRequest), typeof(TestItem), typeof(TestResult))
             {
                 PostRedirectGetConfiguration = new PostRedirectGetConfiguration("Index", true)
             };
-
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(listConfiguration);
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
+
             actionFilter.Order.Should().Be(1);
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ControllerActionDescriptor(){ActionName = "List"});
@@ -182,7 +199,12 @@ namespace GenericSearch.UnitTests.ActionFilters
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(listConfiguration);
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
+
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
+
             actionFilter.Order.Should().Be(1);
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ControllerActionDescriptor(){ActionName = "Index"});
@@ -220,8 +242,12 @@ namespace GenericSearch.UnitTests.ActionFilters
             };
 
             configurationProvider.Setup(x => x.GetConfiguration(It.IsAny<Type>())).Returns(listConfiguration);
+            var routeValueTransformer = new Mock<IGenericSearchRouteValueTransformer>();
+            routeValueTransformer.Setup(x => x.Transform(It.IsAny<object>(), It.IsAny<Type>()))
+                .Returns(new RouteValueDictionary());
 
-            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object);
+            var actionFilter = new PostRedirectGetActionFilter(modelProvider.Object, configurationProvider.Object, routeValueTransformer.Object);
+
             actionFilter.Order.Should().Be(1);
             var httpContext = new Mock<HttpContext>();
             var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ControllerActionDescriptor(){ActionName = "Index"});

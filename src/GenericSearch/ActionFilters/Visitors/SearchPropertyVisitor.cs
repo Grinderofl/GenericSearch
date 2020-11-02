@@ -30,11 +30,6 @@ namespace GenericSearch.ActionFilters.Visitors
         /// <param name="propertyInfo">Property to visit</param>
         public override void Visit(PropertyInfo propertyInfo)
         {
-            if (ShouldSkipProperty(propertyInfo))
-            {
-                return;
-            }
-
             var propertyValue = propertyInfo.GetValue(searchPropertyValue);
 
             if (IsDefaultPropertyValue(propertyInfo, propertyValue) || IsDefaultPropertyValue(modelPropertyInfo, propertyValue))

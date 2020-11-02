@@ -39,10 +39,8 @@ namespace GenericSearch
             return RequestModelProvider.GetCurrentRequestModel();
         }
 
-        public virtual IQueryable<T> Search<T>(IQueryable<T> query, object request)
+        public IQueryable<T> Search<T>(IQueryable<T> query, IListConfiguration configuration, object request)
         {
-            var configuration = GetRequestModelListConfiguration(request);
-
             foreach (var searchConfiguration in configuration.SearchConfigurations.Where(x => !x.Ignored))
             {
                 var search = searchConfiguration.RequestProperty.GetValue(request) as ISearch;
@@ -60,6 +58,12 @@ namespace GenericSearch
 
             return query;
         }
+
+        public virtual IQueryable<T> Search<T>(IQueryable<T> query, object request)
+        {
+            var configuration = GetRequestModelListConfiguration(request);
+            return Search(query, configuration, request);
+        }
         
         public virtual IQueryable<T> Search<T>(IQueryable<T> query)
         {
@@ -67,10 +71,8 @@ namespace GenericSearch
             return Search(query, request);
         }
 
-        public virtual IQueryable<T> Sort<T>(IQueryable<T> query, object request)
+        public IQueryable<T> Sort<T>(IQueryable<T> query, IListConfiguration configuration, object request)
         {
-            var configuration = GetRequestModelListConfiguration(request);
-
             var sortColumn = (string) configuration.SortColumnConfiguration?.RequestProperty?.GetValue(request);
             
             var sortDirection = (Direction?) configuration.SortDirectionConfiguration?.RequestProperty?.GetValue(request);
@@ -84,7 +86,12 @@ namespace GenericSearch
             return sortDirection == Direction.Ascending
                 ? query.OrderBy(expression)
                 : query.OrderByDescending(expression);
+        }
 
+        public virtual IQueryable<T> Sort<T>(IQueryable<T> query, object request)
+        {
+            var configuration = GetRequestModelListConfiguration(request);
+            return Sort(query, configuration, request);
         }
 
         public virtual IQueryable<T> Sort<T>(IQueryable<T> query)
@@ -93,10 +100,8 @@ namespace GenericSearch
             return Sort(query, request);
         }
 
-        public virtual IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
+        public IQueryable<T> Paginate<T>(IQueryable<T> query, IListConfiguration configuration, object request)
         {
-            var configuration = GetRequestModelListConfiguration(request);
-
             // TODO: Get Name property value from a querystringvalueModelProvider or something similar?
 
             var page = (int?) configuration.PageConfiguration?.RequestProperty?.GetValue(request);
@@ -124,6 +129,12 @@ namespace GenericSearch
 
             var skip = (page.Value - 1) * rows.Value;
             return query.Skip(skip).Take(rows.Value);
+        }
+
+        public virtual IQueryable<T> Paginate<T>(IQueryable<T> query, object request)
+        {
+            var configuration = GetRequestModelListConfiguration(request);
+            return Paginate(query, configuration, request);
         }
 
         public virtual IQueryable<T> Paginate<T>(IQueryable<T> query)

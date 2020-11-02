@@ -3,6 +3,7 @@ using FluentAssertions;
 using GenericSearch.Internal.Activation;
 using GenericSearch.Internal.Activation.Factories;
 using GenericSearch.Internal.Activation.Finders;
+using GenericSearch.Internal.Configuration;
 using GenericSearch.Internal.Configuration.Factories;
 using GenericSearch.Internal.Definition.Expressions;
 using GenericSearch.Searches;
@@ -17,6 +18,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
     public class SearchActivatorTests
     {
         private readonly Request model;
+        private readonly IListConfiguration configuration;
         
         public SearchActivatorTests()
         {
@@ -44,7 +46,7 @@ namespace GenericSearch.UnitTests.Internal.Activation
                                                        new TransferValuesConfigurationFactory(options),
                                                        new ModelActivatorConfigurationFactory(options));
 
-            var configuration = factory.Create(definition);
+            configuration = factory.Create(definition);
             
             var serviceProvider = new ServiceCollection().BuildServiceProvider();
 
@@ -73,6 +75,8 @@ namespace GenericSearch.UnitTests.Internal.Activation
             var value = model.GetType().GetProperty(property).GetValue(model);
             value.Should().BeOfType(expected);
         }
+
+
 
         private class Request
         {

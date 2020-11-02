@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GenericSearch.ActionFilters.Visitors;
 using GenericSearch.Internal;
 using GenericSearch.Internal.Configuration;
 using GenericSearch.Internal.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Routing;
 
 namespace GenericSearch.ActionFilters
 {
@@ -18,12 +16,15 @@ namespace GenericSearch.ActionFilters
     {
         private readonly IRequestModelProvider requestModelProvider;
         private readonly IListConfigurationProvider configurationProvider;
+        private readonly IGenericSearchRouteValueTransformer routeValueTransformer;
 
         public PostRedirectGetActionFilter(IRequestModelProvider requestModelProvider,
-                                           IListConfigurationProvider configurationProvider)
+                                           IListConfigurationProvider configurationProvider,
+                                           IGenericSearchRouteValueTransformer routeValueTransformer)
         {
             this.requestModelProvider = requestModelProvider;
             this.configurationProvider = configurationProvider;
+            this.routeValueTransformer = routeValueTransformer;
         }
 
         public int Order => 1;
@@ -75,12 +76,7 @@ namespace GenericSearch.ActionFilters
                 return false;
             }
 
-            var rvd = new RouteValueDictionary();
-            var visitor = new ModelPropertyVisitor(configuration, model, rvd);
-            foreach (var property in configuration.RequestType.GetProperties())
-            {
-                visitor.Visit(property);
-            }
+            var rvd = routeValueTransformer.Transform(model, configuration.RequestType);
 
             context.Result = new RedirectToActionResult(descriptor.ActionName, descriptor.ControllerName, rvd);
             return true;
